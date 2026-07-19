@@ -134,3 +134,57 @@ describe('ServiceLineKPIBanner - 4-state render (AUDIT-098)', () => {
     expect(text).not.toContain('Live Data');
   });
 });
+
+// ---------------- The roster count against apiFetch's REAL return shape (2026-07-19) ----------------
+// The suite above mocked apiFetch as `{ count: 789 }` - the raw envelope. That is NOT what
+// apiFetch returns: it unwraps `json.data` (api.ts), and for /modules/:slug/patients `data` is
+// the patient ARRAY, so the backend's sibling `count` is discarded by the unwrap. The component
+// tested `resp?.count` then `resp?.data`, and an array has neither - so every Service Line
+// banner rendered "Patient Roster -" permanently while this suite stayed green against the
+// wrong shape. These cases pin the real contract.
+describe('ServiceLineKPIBanner - roster count vs apiFetch real (unwrapped) shape', () => {
+  test('unwrapped ARRAY (what apiFetch actually returns) yields the roster count', async () => {
+    mockUseModuleDashboard.mockReturnValue({
+      data: { summary: { totalPatients: 1234, totalOpenGaps: 56 } },
+      loading: false,
+      error: null,
+    });
+    // apiFetch strips { success, data, count } down to `data` - here a 3-patient array.
+    mockApiFetch.mockResolvedValue([{ id: 'p1' }, { id: 'p2' }, { id: 'p3' }]);
+
+    await render();
+    await flush();
+
+    const text = container.textContent || '';
+    expect(text).toContain('3'); // roster count derived from the array length
+    expect(text).not.toMatch(/Patient Roster\s*-\s*$/); // never the permanent dash
+  });
+
+  test('empty roster array renders 0, not a dash (an honest zero is a real answer)', async () => {
+    mockUseModuleDashboard.mockReturnValue({
+      data: { summary: { totalPatients: 10, totalOpenGaps: 2 } },
+      loading: false,
+      error: null,
+    });
+    mockApiFetch.mockResolvedValue([]);
+
+    await render();
+    await flush();
+
+    expect(container.textContent || '').toContain('0');
+  });
+
+  test('envelope shapes still work (defensive fallbacks kept if apiFetch stops unwrapping)', async () => {
+    mockUseModuleDashboard.mockReturnValue({
+      data: { summary: { totalPatients: 10, totalOpenGaps: 2 } },
+      loading: false,
+      error: null,
+    });
+    mockApiFetch.mockResolvedValue({ data: [{ id: 'a' }, { id: 'b' }] });
+
+    await render();
+    await flush();
+
+    expect(container.textContent || '').toContain('2');
+  });
+});

@@ -3400,7 +3400,10 @@ const VDClinicalGapDetectionDashboard: React.FC<VDClinicalGapDetectionDashboardP
   // Real patient total from module dashboard endpoint. When present, overrides
   // the mock-summed totalPatients for the header display. Opportunity stays
   // computed from gap data since the dashboard endpoint doesn't expose revenue.
-  const realTotalPatients: number | undefined = moduleDashboard?.data?.summary?.totalPatients;
+  // AUDIT-098 recurrence fix (2026-07-19): apiFetch already unwraps the { success, data }
+  // envelope (api.ts), so the extra `.data` made this permanently undefined and the mock
+  // total rendered under a "Live Data" pill. Single unwrap is correct.
+  const realTotalPatients: number | undefined = moduleDashboard?.summary?.totalPatients;
   const hasLiveData = dataSource === 'api' || typeof realTotalPatients === 'number';
   const displayPatients = typeof realTotalPatients === 'number' ? realTotalPatients : totalPatients;
 

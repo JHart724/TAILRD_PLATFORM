@@ -22,8 +22,16 @@ const ServiceLineKPIBanner: React.FC<ServiceLineKPIBannerProps> = ({
     apiFetch(`/modules/${moduleSlug}/patients?limit=500`)
       .then((resp: any) => {
         if (cancelled) return;
+        // AUDIT-098 class (2026-07-19): apiFetch already unwraps the { success, data, count }
+        // envelope and returns `data` - which for this route is the patient ARRAY, so the
+        // backend's `count` is discarded by the unwrap. Both prior branches therefore always
+        // missed (an array has neither .count nor .data) and every Service Line banner
+        // rendered "Patient Roster -" permanently. Test the unwrapped array first; the
+        // envelope shapes stay as defensive fallbacks in case apiFetch stops unwrapping.
         const n =
-          typeof resp?.count === 'number'
+          Array.isArray(resp)
+            ? resp.length
+            : typeof resp?.count === 'number'
             ? resp.count
             : Array.isArray(resp?.data)
             ? resp.data.length

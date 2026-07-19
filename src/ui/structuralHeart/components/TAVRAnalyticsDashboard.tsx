@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { toFixed } from '../../../utils/formatters';
+import DemoDataBadge from '../../../components/shared/DemoDataBadge';
 import {
   Heart, 
   Activity, 
   Target, 
   TrendingUp, 
   TrendingDown, 
-  Zap, 
-  RefreshCw, 
-  Download, 
+  Zap,
+  Download,
   AlertTriangle,
   Users,
   Clock,
@@ -63,8 +63,8 @@ interface ComplianceData {
 
 const TAVRAnalyticsDashboard: React.FC = () => {
   const [activeView, setActiveView] = useState<'real-time' | 'risk-analysis' | 'outcomes' | 'geography'>('real-time');
-  const [isLiveMode, setIsLiveMode] = useState(true);
-  const [lastUpdate, setLastUpdate] = useState(new Date());
+  // AUDIT-303 class: isLiveMode / lastUpdate removed with the Math.random() simulation
+  // they existed to drive. This dashboard renders static demo values, badged as such.
   const [selectedFilters, setSelectedFilters] = useState({
  riskCategory: 'all',
  valveType: 'all',
@@ -73,7 +73,7 @@ const TAVRAnalyticsDashboard: React.FC = () => {
   });
 
   // TAVR Key Metrics
-  const [tavrMetrics, setTAVRMetrics] = useState<TAVRMetric[]>([
+  const [tavrMetrics] = useState<TAVRMetric[]>([
  { value: 96.8, trend: 1.2, timestamp: new Date() }, // Success Rate
  { value: 2.1, trend: -0.3, timestamp: new Date() }, // 30-day Mortality
  { value: 4.2, trend: -0.8, timestamp: new Date() }, // Avg Length of Stay
@@ -156,7 +156,7 @@ const TAVRAnalyticsDashboard: React.FC = () => {
   ]);
 
   // Quality Metrics
-  const [qualityMetrics, setQualityMetrics] = useState<QualityMetric[]>([
+  const [qualityMetrics] = useState<QualityMetric[]>([
  { measure: '30-Day Mortality', value: 2.1, target: 3.0, trend: -0.3, category: 'Mortality' },
  { measure: 'In-Hospital Mortality', value: 1.4, target: 2.0, trend: -0.2, category: 'Mortality' },
  { measure: 'Stroke Rate', value: 1.8, target: 2.5, trend: 0.1, category: 'Morbidity' },
@@ -199,29 +199,14 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  }
   ]);
 
-  // Real-time data simulation
-  useEffect(() => {
- if (!isLiveMode) return;
-
- const interval = setInterval(() => {
- setTAVRMetrics(prev => prev.map(metric => ({
- ...metric,
- value: Math.max(0, metric.value + (Math.random() - 0.5) * 0.1),
- trend: metric.trend + (Math.random() - 0.5) * 0.05,
- timestamp: new Date()
- })));
-
- setQualityMetrics(prev => prev.map(metric => ({
- ...metric,
- value: Math.max(0, metric.value + (Math.random() - 0.5) * 0.02),
- trend: metric.trend + (Math.random() - 0.5) * 0.02
- })));
-
- setLastUpdate(new Date());
- }, 4000);
-
- return () => clearInterval(interval);
-  }, [isLiveMode]);
+  // HONESTY FIX (AUDIT-303 class, 2026-07-19): a setInterval used to mutate these
+  // clinical quality metrics every 4s via Math.random(), behind a "Live Updates" label
+  // with a pulsing dot and a spinning refresh icon. Nothing was live - the motion was a
+  // random-number generator drifting fabricated numbers, presented to clinicians as
+  // real-time TAVR quality data. That violates two NEVER-DO rules at once: Math.random()
+  // in clinical surfaces, and a "Live" label on static data. The simulation is REMOVED
+  // (not toggled, not hidden) - the metrics render their static demo values and the tier
+  // carries a DemoDataBadge. Do not reintroduce synthesized motion here.
 
   const exportClinicalReport = () => {
  const reportData = {
@@ -296,30 +281,18 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  </div>
  
  <div className="flex items-center gap-4">
- <div className="flex items-center gap-2 text-sm text-titanium-600">
- <div className={`w-2 h-2 rounded-full ${isLiveMode ? 'bg-titanium-300 animate-pulse' : 'bg-gray-400'}`}></div>
- {isLiveMode ? 'Live Updates' : 'Paused'}
- </div>
- 
- <button
- onClick={() => setIsLiveMode(!isLiveMode)}
- className={`p-2 rounded-lg transition-colors ${
- isLiveMode ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-700'
- }`}
- >
- <RefreshCw className={`w-4 h-4 ${isLiveMode ? 'animate-spin' : ''}`} />
- </button>
- 
+ {/* HONESTY FIX (AUDIT-303 class): the "Live Updates" pill, its pulsing dot, the
+     live/paused toggle, its spinning icon, and the "Last updated <clock>" stamp all
+     advertised freshness for numbers that were static demo values drifted by
+     Math.random(). All removed; the tier states its real provenance instead. */}
+ <DemoDataBadge />
+
  <button
  onClick={exportClinicalReport}
  className="p-2 rounded-lg bg-porsche-100 text-porsche-700 hover:bg-porsche-200 transition-colors"
  >
  <Download className="w-4 h-4" />
  </button>
- 
- <div className="text-xs text-titanium-500">
- Last updated: {lastUpdate.toLocaleTimeString()}
- </div>
  </div>
  </div>
 
@@ -332,7 +305,10 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  }`}
  >
  <Zap className="w-4 h-4" />
- Real-time Dashboard
+ {/* AUDIT-303 class: "Real-time" dropped - this view renders static demo values.
+     The internal view id stays 'real-time' (renaming it is a no-op rename with
+     wider blast radius); only the false user-facing claim is corrected. */}
+ Program Dashboard
  </button>
  <button
  onClick={() => setActiveView('risk-analysis')}
@@ -421,7 +397,11 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  <div className="space-y-6">
  <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
  <Activity className="w-5 h-5 text-porsche-600" />
- Live TAVR Performance Dashboard
+ {/* AUDIT-303 class: "Live" dropped - these are static demo values (the
+     Math.random() feed that once justified the word is removed). Found in the
+     operator Chrome verify after the first sweep, which matched "Live Updates"
+     and isLiveMode but not a bare "Live <X>" heading. */}
+ TAVR Performance Dashboard
  </h3>
  
  {/* Key Metrics Row */}
@@ -487,7 +467,6 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  <div>
  <h4 className="text-lg font-semibold mb-4 flex items-center gap-2">
  Recent TAVR Procedures
- {isLiveMode && <div className="w-2 h-2 bg-titanium-300 rounded-full animate-pulse"></div>}
  </h4>
  
  <div className="space-y-3">
