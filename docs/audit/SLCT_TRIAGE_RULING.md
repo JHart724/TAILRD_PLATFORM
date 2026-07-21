@@ -105,6 +105,31 @@ Total top-10 ~= 8,183 lines. Full orphan-component + orphan-config deletion ~= 1
 
 ---
 
+## 1a. OPERATOR RULING (RULED 2026-07-19)
+
+This document is APPROVED as the arc plan of record. Dispositions and judgment calls ruled below; the per-tier tables in section 7 stand as tabled.
+
+### Dispositions - APPROVED as tabled
+WIRE ~14 / KEEP-AND-BADGE ~105 / KEEP-CALC ~34 / KILL ~33 (22 orphan components + 8 orphan-config files + 3 rendered), of which **5 are KILL-WITH-HARVEST** (the gap-KB-reading `serviceLineConfig` pipeline panels, section 3). No rendered panel is a mis-triaged kill; coverage-preservation is proven (every live gap dashboard carries the module `_CLINICAL_GAPS` KB).
+
+### The 8 judgment calls - RULED
+1. **Harvest pipelines (HFAdvancedTherapyPipeline / EPDeviceAblationPipeline / TAVRCandidatePipeline / CADInterventionPipeline / PVVascularPipeline):** KILL in the kill batch WITH resurrection-register entries; the gap-driven pipeline logic is HARVESTED into each module's converge batch (not a standalone step). The orphan config file is deleted once its pipeline is harvested.
+2. **HFCareNetworkVisualization:** KILL-to-shim - replace with the EmptyState shim, matching the AUDIT-300 class treatment of the other 4-5 fabricated networks (consistency over per-panel badging).
+3. **AutomatedReportingSystem on the EP `reporting` tab:** KILL-from-EP (remove the mount from the EP tier); other mounts of the shared component are judged by their own rows.
+4. **The ~105 KEEP-AND-BADGE panels:** BADGE now; each promotes to WIRE per-signal as the backend threads the underlying data - coverage rises through data-threading, not a second UI pass. Badging is the floor.
+5. **PV `PADRiskCalculators`** (descriptive-only text): KILL the panel - the real WIfI calculator ships on the adjacent `wifi` tab, so no capability is lost.
+6. **The ticking-clock class** ("Last updated: <clock>" over static data): the AUDIT-303 acceptability ruling is **SUPERSEDED for this arc**. Clocks are replaced by the DemoDataBadge convention as the converge batches touch each surface. (A dated supersede note lands in the register WHEN the converge batches edit those files - NOT now; recorded here as ruled.)
+7. **Cross-tier gap-dashboard duplication (x6):** SL keeps the full gap dashboard; CT keeps a FILTERED, actionable-now view (not the unfiltered full list). Lands in the per-module converge batches.
+8. **CrossReferralEngine:** BADGE the panel AND disable the dead `/referral/:id` links. The route-existence question stays homed under AUDIT-161 (orphan-routes dimension), not this arc.
+
+### THE RULED SEQUENCE (inverted from the draft: wire before kill)
+(i) **This doc merges as plan of record.**
+(ii) **Research / trials WIRE arc FIRST** - the flagship depth increase: the three-state eligibility surface (ELIGIBLE / INELIGIBLE / INDETERMINATE) + the registry maker-checker loop (submit / approve / reject), including the missing `api.ts` clients `submitRegistryCase` + `rejectRegistryCase`, the retype of `getTrialEligiblePatients`, and the net-new INDETERMINATE widget + honest states.
+(iii) **The KILL batch** - mechanical dead-code removal; ABSORBS the AUDIT-152 sweep (and its `CoronaryExecutiveView.test.tsx:39` `jest.mock('../components/executive/CADFinancialWaterfall')` gotcha - that test must be updated when the file is deleted); resurrection register included. MAY interleave with (ii) since they share no files.
+(iv) **Per-module CONVERGE batches** - SL first; CT after the operator's CT-doctrine ruling (a separate ruling). Each batch carries its module's badges + dedupes + harvests + relocations TOGETHER - there is no standalone badge pass.
+
+---
+
 ## 2. THE FOUR-WAY TEST (applied per panel)
 - **KEEP-AND-WIRE** - a live endpoint (or the gap engine) exists and should feed the panel. Endpoint named.
 - **KEEP-AND-BADGE** - no engine yet, but a REAL clinical spec anchors it (KB gap, guideline COR/LOE, registry measure). The badge is the UI form of INDETERMINATE honesty. Anchor named.
