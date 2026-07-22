@@ -96,13 +96,10 @@ jobs:
           cache-to: type=gha,mode=max
 
       # --- Deploy to Aptible ----------------------------------------------
-      - name: Install Aptible CLI
+     - name: Install Aptible CLI
         run: |
-          wget -qO - https://packagecloud.io/aptible/toolbelt/gpgkey | sudo apt-key add -
-          echo "deb https://packagecloud.io/aptible/toolbelt/ubuntu/ focal main" \
-            | sudo tee /etc/apt/sources.list.d/aptible.list
-          sudo apt-get update -y
-          sudo apt-get install -y aptible-toolbelt
+          curl -fsSL https://raw.githubusercontent.com/aptible/aptible-cli/master/scripts/install-linux.sh | bash
+          echo "/usr/local/bin" >> "$GITHUB_PATH"
 
       - name: Generate a fresh ECR registry token
         id: token
