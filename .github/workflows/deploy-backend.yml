@@ -97,9 +97,7 @@ jobs:
 
       # --- Deploy to Aptible ----------------------------------------------
       - name: Install Aptible CLI
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/aptible/aptible-cli/master/scripts/install-linux.sh | bash
-          echo "/usr/local/bin" >> "$GITHUB_PATH"
+        run: sudo gem install aptible-cli
 
       - name: Generate a fresh ECR registry token
         id: token
