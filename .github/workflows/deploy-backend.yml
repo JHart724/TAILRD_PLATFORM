@@ -1,0 +1,135 @@
+# ===========================================================================
+# TAILRD backend: build -> ECR -> Aptible
+#
+# Security model:
+#   - AWS access via OIDC. No AWS keys are stored in GitHub. The runner
+#     assumes an IAM role and receives short-lived credentials per run.
+#   - The ECR registry password is generated fresh at deploy time and never
+#     stored. This is the correct pattern for ECR (its tokens expire in 12h).
+#   - The only stored secret is a dedicated Aptible service account, scoped
+#     and independently revocable.
+#
+# Trigger: manual (workflow_dispatch), or a version tag like v1.2.3.
+# Images are tagged immutably with the git SHA (and the tag, if present).
+# ===========================================================================
+name: Deploy Backend to Aptible
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "deploy" to confirm a production deploy'
+        required: true
+        default: ''
+  push:
+    tags:
+      - 'v*.*.*'
+
+concurrency:
+  group: deploy-backend-production
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: tailrd-backend
+  APTIBLE_ENVIRONMENT: tailrd-production
+  APTIBLE_APP: tailrd-api
+
+permissions:
+  id-token: write   # required for OIDC
+  contents: read
+
+jobs:
+  deploy:
+    name: Build, push, and deploy
+    runs-on: ubuntu-latest
+    environment: production   # enables GitHub approval gates if configured
+
+    steps:
+      - name: Guard manual runs
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.confirm != 'deploy'
+        run: |
+          echo "::error::Confirmation not provided. Type 'deploy' to proceed."
+          exit 1
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Derive immutable image tag
+        id: meta
+        run: |
+          SHA_TAG="sha-$(echo "${GITHUB_SHA}" | cut -c1-12)"
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/}"
+          else
+            VERSION="$SHA_TAG"
+          fi
+          echo "sha_tag=$SHA_TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Image will be tagged: $VERSION (and $SHA_TAG)"
+
+      # --- AWS via OIDC: no stored keys -----------------------------------
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          provenance: false          # keep the manifest simple for Aptible
+          tags: |
+            ${{ steps.ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ steps.meta.outputs.version }}
+            ${{ steps.ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ steps.meta.outputs.sha_tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # --- Deploy to Aptible ----------------------------------------------
+      - name: Install Aptible CLI
+        run: |
+          wget -qO - https://packagecloud.io/aptible/toolbelt/gpgkey | sudo apt-key add -
+          echo "deb https://packagecloud.io/aptible/toolbelt/ubuntu/ focal main" \
+            | sudo tee /etc/apt/sources.list.d/aptible.list
+          sudo apt-get update -y
+          sudo apt-get install -y aptible-toolbelt
+
+      - name: Generate a fresh ECR registry token
+        id: token
+        run: |
+          TOKEN="$(aws ecr get-login-password --region "${AWS_REGION}")"
+          echo "::add-mask::$TOKEN"
+          echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to Aptible
+        env:
+          APTIBLE_USERNAME: ${{ secrets.APTIBLE_USERNAME }}
+          APTIBLE_PASSWORD: ${{ secrets.APTIBLE_PASSWORD }}
+        run: |
+          aptible login \
+            --email "$APTIBLE_USERNAME" \
+            --password "$APTIBLE_PASSWORD"
+
+          aptible deploy \
+            --app "${APTIBLE_APP}" \
+            --environment "${APTIBLE_ENVIRONMENT}" \
+            --docker-image "${{ steps.ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ steps.meta.outputs.version }}" \
+            --private-registry-username AWS \
+            --private-registry-password "${{ steps.token.outputs.token }}"
+
+      - name: Record deployed version
+        run: |
+          echo "### Deployed" >> "$GITHUB_STEP_SUMMARY"
+          echo "- App: ${APTIBLE_APP} (${APTIBLE_ENVIRONMENT})" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Image tag: ${{ steps.meta.outputs.version }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Commit: ${GITHUB_SHA}" >> "$GITHUB_STEP_SUMMARY"
