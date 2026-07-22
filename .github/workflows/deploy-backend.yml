@@ -97,7 +97,10 @@ jobs:
 
       # --- Deploy to Aptible ----------------------------------------------
       - name: Install Aptible CLI
-        run: sudo gem install aptible-cli
+        run: |
+          curl -fsSL -o aptible-toolbelt.deb "https://omnibus-aptible-toolbelt.s3.amazonaws.com/aptible/omnibus-aptible-toolbelt/latest/aptible-toolbelt_latest_ubuntu-1604_amd64.deb"
+          sudo dpkg -i aptible-toolbelt.deb || sudo apt-get install -f -y
+          rm -f aptible-toolbelt.deb
 
       - name: Generate a fresh ECR registry token
         id: token
