@@ -35,4 +35,11 @@ EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3001/health',(r)=>{process.exit(r.statusCode===200?0:1)}).on('error',()=>process.exit(1))"
 
+# AUDIT-218: bake the build SHA into the image (deploy.yml passes --build-arg GIT_SHA=github.sha).
+# Placed late so it does not invalidate the npm ci / tsc cache layers on every SHA change. Runtime code
+# reads APP_GIT_SHA for execution-vehicle fidelity (e.g. backfillProcedures.ts startup emit); defaults
+# to 'dev' for local builds that pass no build-arg.
+ARG GIT_SHA=dev
+ENV APP_GIT_SHA=${GIT_SHA}
+
 CMD ["sh", "-c", "npx prisma migrate deploy && node dist/server.js"]
