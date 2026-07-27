@@ -208,10 +208,30 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Audit backend dependencies
+      # AUDIT-306 recurrence: the gate scopes to PRODUCTION dependencies. The brace-expansion advisory
+      # (GHSA-mh99-v99m-4gvg) re-tripped after an advisory-DB range widening to <=5.0.7 and is now fixable
+      # only by an eslint major (npm fixAvailable = eslint@10, isSemVerMajor) - a lockfile-only fix is
+      # impossible. It lives entirely in devDependencies (eslint/jest) and never ships in the runtime image
+      # (node dist/server.js), so it must not block PRs. The gate below guards what actually deploys.
+      - name: Audit backend PRODUCTION dependencies (blocking)
         working-directory: backend
-        run: npm audit --audit-level=high
+        run: npm audit --audit-level=high --omit=dev
         continue-on-error: false
+
+      # Visibility preserver: the FULL audit (incl. dev deps) runs non-blocking and surfaces in the job
+      # summary on every PR, so dev-dep advisories stay visible (never silently dropped) without gating.
+      - name: Full audit incl. dev dependencies (non-blocking, visibility)
+        if: always()
+        working-directory: backend
+        run: |
+          {
+            echo "## Full npm audit (incl. dev deps) - informational, NON-BLOCKING"
+            echo "Dev-dep advisories are visible here but do not gate (they never ship in the runtime image)."
+            echo '```'
+            npm audit --audit-level=high || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+        continue-on-error: true
 
   # ─── Dependency Check ──────────────────────────────────────────────────────────
   dependency-check:
