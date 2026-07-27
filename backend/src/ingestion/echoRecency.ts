@@ -3,9 +3,14 @@
  *
  * echo_months = whole months since the patient's MOST-RECENT echocardiogram, derived from the union of
  *   (a) echo PROCEDURE dates - SNOMED 40701008 (Echocardiography) / 433236007 (Transthoracic echo) /
- *       105376000 (Transesophageal echo); source-confirmed PRESENT in the Synthea procedures.csv feed
- *       (Stage 1b source-check: 40701008 x1037 + 433236007 x283 + 105376000 x7 in an 845K-row sample) -
- *       the stronger, direct "echo performed" signal, and
+ *       105376000 (Transesophageal echo). PRESENT in the SOURCE procedures.csv (full-file counts,
+ *       s3://.../synthea/nyc-population-2026/csv/procedures.csv, 5,480,901 rows, verified 2026-07-22:
+ *       40701008 x7205 + 433236007 x2030 + 105376000 x73). The earlier "x1037/x283/x7" figures were an
+ *       845K-row SAMPLE, not the full file - relabeled here to avoid presenting a sample as full-file
+ *       confirmation (AUDIT-218). CAVEAT: these procedures were NOT PERSISTED for the demo tenants until
+ *       the AUDIT-218 backfill (the proof CSV path counted-and-dropped them, so patient.procedures was
+ *       empty; see scripts/backfillProcedures.ts) - so branch (a) contributed NOTHING pre-backfill and
+ *       the derivation ran entirely on branch (b), and
  *   (b) the LVEF observation date - Synthea's echo-numeric proxy (LOINC 10230-1 -> slug 'lvef') - as fallback.
  * Most-recent-of-either = the complete "when last echo'd" signal.
  *

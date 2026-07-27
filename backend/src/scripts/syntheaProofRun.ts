@@ -215,7 +215,11 @@ async function ingestMedications(): Promise<void> {
 }
 
 async function ingestProcedures(): Promise<void> {
-  // SNOMED procedures: no authoritative SNOMED->CPT map -> count only (expected under-fire, not persisted).
+  // SNOMED procedures: this proof path COUNTS ONLY (does not persist) - the original "no SNOMED->CPT map"
+  // rationale left the procedures table empty (AUDIT-218). Procedure PERSISTENCE now lives in the dedicated
+  // `backfillProcedures.ts` runner (raw SNOMED, deterministic idempotency key, structurally isolated to the
+  // procedures table), per the AUDIT-218 rulings. This counter is retained only as a proof-run stream metric;
+  // it is NOT the persistence path. See scripts/backfillProcedures.ts.
   const gate: SampleGate = { seen: 0, miss: 0 };
   await forEachRow('procedures.csv', (cells, idx) => {
     const pid = (cells[idx('patient')] || '').trim();
@@ -266,6 +270,9 @@ function assembleRow(pid: string, rowNumber: number): ParsedRow {
 
   const meds = medsByPatient.get(pid);
   data.medication_records = meds ? [...meds.values()] : [];
+  // Procedures are NOT assembled here and NOT persisted by this path (AUDIT-218) - the writePatients
+  // path never wrote procedures, and this proof runner counts-only (see ingestProcedures). Procedure
+  // persistence lives in the dedicated scripts/backfillProcedures.ts runner. Left [] intentionally.
   data.procedures = [];
 
   return { rowNumber, data, errors: [], warnings: [] };
