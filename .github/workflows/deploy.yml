@@ -145,16 +145,48 @@ jobs:
         if: steps.smoke_gate.outputs.run_build == 'true'
         uses: aws-actions/amazon-ecr-login@f2e9fc6c2b355c1890b65e6f6f0e2ac3e6e22f78 # v2
 
-      - name: Build, tag, and push image
+      # AUDIT-219: the SHA-emit fidelity mechanism (APP_GIT_SHA baked from --build-arg GIT_SHA) silently
+      # regressed to the Dockerfile default 'dev' on the plain-CLI `docker build --build-arg` path (the
+      # runner's older Docker/BuildKit did not bind the build-arg; NOT reproducible in local Docker 29.3,
+      # where the identical invocation bakes correctly). Migrated to the proven docker/build-push-action
+      # build-args path (the same mechanism deploy-backend.yml uses reliably) + a hard fidelity gate that
+      # inspects the built image BEFORE any push. A fidelity mechanism that can silently regress to 'dev'
+      # is not a mechanism (Coverage-of-an-Invariant): the check ships with the fix.
+      - name: Set up Docker Buildx
+        if: steps.smoke_gate.outputs.run_build == 'true'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image (load locally; fidelity gate runs before any push)
+        if: steps.smoke_gate.outputs.run_build == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          load: true
+          push: false
+          provenance: false
+          build-args: |
+            GIT_SHA=${{ github.sha }}
+          tags: |
+            ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+            ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
+
+      - name: SHA-emit fidelity gate + push (AUDIT-219)
         if: steps.smoke_gate.outputs.run_build == 'true'
         env:
           ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          cd backend
-          docker build --build-arg GIT_SHA=$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          IMG="$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          BAKED=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$IMG" | sed -n 's/^APP_GIT_SHA=//p')
+          echo "APP_GIT_SHA baked=[$BAKED] expected=[$IMAGE_TAG]"
+          if [ "$BAKED" != "$IMAGE_TAG" ]; then
+            echo "::error::AUDIT-219 SHA-emit fidelity gate FAILED: built image self-attests APP_GIT_SHA='[$BAKED]' but this commit is '[$IMAGE_TAG]'. Refusing to push/deploy a build whose execution-vehicle SHA is wrong (this gate blocks the AUDIT-218 execute path). A regression to 'dev'/empty is a HARD build failure, never a silent pass."
+            exit 1
+          fi
+          echo "AUDIT-219 fidelity gate PASS: image self-attests the correct commit SHA."
+          docker push "$IMG"
+          docker push "$ECR_REGISTRY/$ECR_REPOSITORY:latest"
 
       - name: Deploy to ECS and verify
         if: steps.smoke_gate.outputs.run_build == 'true'
