@@ -13,6 +13,7 @@ import {
   processProcedureStream,
   assertTenantPopulated,
   assertStreamProgress,
+  isIdempotentSkip,
   resolveBuildSha,
   MalformedProcedureRowError,
   ProcedureRow,
@@ -110,19 +111,35 @@ describe('non-progress tripwire guards (AUDIT-115/016)', () => {
   });
 
   it('assertStreamProgress throws on 0 source rows read', () => {
-    expect(() => assertStreamProgress({ sourceRows: 0, resolved: 0, inserted: 0, execute: false }))
+    expect(() => assertStreamProgress({ sourceRows: 0, resolved: 0, inserted: 0, execute: false, priorExisting: 0 }))
       .toThrow(/0 source rows/);
   });
 
-  it('assertStreamProgress throws on execute inserting 0 despite resolved rows', () => {
-    expect(() => assertStreamProgress({ sourceRows: 100, resolved: 90, inserted: 0, execute: true }))
+  it('assertStreamProgress throws on execute inserting 0 with an EMPTY store (true anomaly, priorExisting < resolved)', () => {
+    expect(() => assertStreamProgress({ sourceRows: 100, resolved: 90, inserted: 0, execute: true, priorExisting: 0 }))
       .toThrow(/inserted 0 rows despite 90 resolved/);
+    // partial pre-existing is still an anomaly (the resolved set is not fully present)
+    expect(() => assertStreamProgress({ sourceRows: 100, resolved: 90, inserted: 0, execute: true, priorExisting: 50 }))
+      .toThrow(/not idempotent-skip/);
+  });
+
+  it('AUDIT-220: assertStreamProgress ACCEPTS an idempotent 0-insert (priorExisting >= resolved)', () => {
+    expect(() => assertStreamProgress({ sourceRows: 100, resolved: 90, inserted: 0, execute: true, priorExisting: 90 })).not.toThrow();
+    expect(() => assertStreamProgress({ sourceRows: 100, resolved: 90, inserted: 0, execute: true, priorExisting: 5480901 })).not.toThrow();
+  });
+
+  it('AUDIT-220: isIdempotentSkip distinguishes idempotent-skip from anomaly', () => {
+    expect(isIdempotentSkip({ sourceRows: 100, resolved: 90, inserted: 0, execute: true, priorExisting: 90 })).toBe(true); // full set present
+    expect(isIdempotentSkip({ sourceRows: 100, resolved: 90, inserted: 0, execute: true, priorExisting: 0 })).toBe(false); // empty store = anomaly
+    expect(isIdempotentSkip({ sourceRows: 100, resolved: 90, inserted: 0, execute: true, priorExisting: 50 })).toBe(false); // partial = anomaly
+    expect(isIdempotentSkip({ sourceRows: 100, resolved: 90, inserted: 90, execute: true, priorExisting: 0 })).toBe(false); // inserted > 0 is not a skip
+    expect(isIdempotentSkip({ sourceRows: 100, resolved: 90, inserted: 0, execute: false, priorExisting: 90 })).toBe(false); // dry-run is never a mutating skip
   });
 
   it('assertStreamProgress passes: execute with inserts, dry-run with 0 inserts, and 0-resolved (all-orphan)', () => {
-    expect(() => assertStreamProgress({ sourceRows: 100, resolved: 90, inserted: 90, execute: true })).not.toThrow();
-    expect(() => assertStreamProgress({ sourceRows: 100, resolved: 90, inserted: 0, execute: false })).not.toThrow(); // dry-run never inserts
-    expect(() => assertStreamProgress({ sourceRows: 100, resolved: 0, inserted: 0, execute: true })).not.toThrow(); // not the "despite resolved" case
+    expect(() => assertStreamProgress({ sourceRows: 100, resolved: 90, inserted: 90, execute: true, priorExisting: 0 })).not.toThrow();
+    expect(() => assertStreamProgress({ sourceRows: 100, resolved: 90, inserted: 0, execute: false, priorExisting: 0 })).not.toThrow(); // dry-run never inserts
+    expect(() => assertStreamProgress({ sourceRows: 100, resolved: 0, inserted: 0, execute: true, priorExisting: 0 })).not.toThrow(); // not the "despite resolved" case
   });
 });
 
@@ -162,8 +179,14 @@ describe('processProcedureStream (integration invariant)', () => {
     const w = new MemWriter();
     const first = await processProcedureStream(fromLines(FIXTURE), PMAP, 'demo-synthea-threaded', true, w);
     expect(first.inserted).toBe(4);
+    const priorExisting = w.store.size; // 4 already present before the second pass
     const second = await processProcedureStream(fromLines(FIXTURE), PMAP, 'demo-synthea-threaded', true, w);
     expect(second.inserted).toBe(0); // deterministic key + skipDuplicates -> no re-insert
     expect(w.store.size).toBe(4);
+    // AUDIT-220: the guard now ACCEPTS this idempotent second pass (would exit 0), not abort.
+    const resolved2 = second.sourceRows - second.orphansDropped - second.inCsvCollisions; // 4
+    const prog2 = { sourceRows: second.sourceRows, resolved: resolved2, inserted: second.inserted, execute: true, priorExisting };
+    expect(isIdempotentSkip(prog2)).toBe(true);
+    expect(() => assertStreamProgress(prog2)).not.toThrow();
   });
 });

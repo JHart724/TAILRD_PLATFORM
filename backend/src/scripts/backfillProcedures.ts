@@ -188,15 +188,32 @@ export function assertTenantPopulated(patientMapSize: number, tenant: string): v
   }
 }
 
-export interface StreamProgress { sourceRows: number; resolved: number; inserted: number; execute: boolean; }
+export interface StreamProgress { sourceRows: number; resolved: number; inserted: number; execute: boolean; priorExisting: number; }
 
-/** Post-stream: a 0-row read, or an execute run that inserts 0 despite resolved rows, is a silent no-op. */
+/**
+ * AUDIT-220: an execute pass inserted 0 rows because the full resolved set was ALREADY present (an
+ * idempotent re-run: every row is a deterministic-key skipDuplicates collision), as opposed to a genuine
+ * 0-insert anomaly. The distinguishing signal is `priorExisting` - the tenant's procedure count measured
+ * BEFORE the write - NOT `resolved - inserted`: the latter is circular (Prisma createMany returns only the
+ * insert count, so `resolved - inserted` is ALWAYS `resolved` when inserted==0, which would blind the guard
+ * to real anomalies). inserted==0 is idempotent iff the store already held at least the resolved set.
+ */
+export function isIdempotentSkip(p: StreamProgress): boolean {
+  return p.execute && p.resolved > 0 && p.inserted === 0 && p.priorExisting >= p.resolved;
+}
+
+/**
+ * Post-stream tripwire (AUDIT-115/016 non-progress class). Throws on an empty read, or on an execute pass
+ * that inserts 0 despite resolved rows - UNLESS that 0 is a provable idempotent skip (see isIdempotentSkip).
+ * A true patient-FK / no-op anomaly (inserted 0, resolved > 0, priorExisting < resolved) still throws.
+ * (AUDIT-220 refinement: idempotent re-runs are now accepted, exit 0.)
+ */
 export function assertStreamProgress(p: StreamProgress): void {
   if (p.sourceRows === 0) {
     throw new Error('[proc-backfill] ABORT: 0 source rows read from procedures.csv (empty/failed S3 stream).');
   }
-  if (p.execute && p.resolved > 0 && p.inserted === 0) {
-    throw new Error(`[proc-backfill] ABORT: execute inserted 0 rows despite ${p.resolved} resolved (patient-FK/skipDuplicates anomaly).`);
+  if (p.execute && p.resolved > 0 && p.inserted === 0 && !isIdempotentSkip(p)) {
+    throw new Error(`[proc-backfill] ABORT: execute inserted 0 rows despite ${p.resolved} resolved and only ${p.priorExisting} pre-existing (patient-FK/no-op anomaly, not idempotent-skip).`);
   }
 }
 
@@ -286,6 +303,10 @@ async function main(): Promise<void> {
     createMany: (rows) => prisma.procedure.createMany({ data: rows as any, skipDuplicates: true }),
   };
 
+  // AUDIT-220: capture the tenant's procedure count BEFORE any write - the independent idempotency signal
+  // for assertStreamProgress (a 0-insert execute pass is idempotent iff the resolved set was already there).
+  const priorExisting = EXECUTE ? await prisma.procedure.count({ where: { hospitalId: TARGET_TENANT } }) : 0;
+
   // 2. Stream + process. Progress cadence logged inside via a wrapper generator.
   let streamed = 0;
   async function* withProgress(src: AsyncIterable<string>): AsyncGenerator<string> {
@@ -296,12 +317,17 @@ async function main(): Promise<void> {
   }
   const res = await processProcedureStream(withProgress(s3Lines(PROCEDURES_KEY)), patientIdByMrn, TARGET_TENANT, EXECUTE, writer);
 
-  // 3. Post-stream non-progress tripwires (AUDIT-115/016) - THROW, never report exit-0 success.
+  // 3. Post-stream non-progress tripwire (AUDIT-115/016; AUDIT-220 idempotent-skip aware) - THROW on a real
+  //    no-op, but ACCEPT a provable idempotent re-run (inserted 0 with the resolved set already present).
   const resolved = res.sourceRows - res.orphansDropped - res.inCsvCollisions;
-  assertStreamProgress({ sourceRows: res.sourceRows, resolved, inserted: res.inserted, execute: EXECUTE });
+  const progress: StreamProgress = { sourceRows: res.sourceRows, resolved, inserted: res.inserted, execute: EXECUTE, priorExisting };
+  assertStreamProgress(progress);
+  const idempotent = isIdempotentSkip(progress);
+  const skipped = resolved - res.inserted; // rows resolved but not inserted (duplicates on a re-run)
 
-  // 4. Audit the write (execute only) - one durable summary row, system actor, tenant-scoped.
-  if (EXECUTE) {
+  // 4. Audit the write ONLY when it actually mutated (inserted > 0). A zero-mutation idempotent pass records
+  //    nothing (an audit row attests a mutation) - the DONE-idempotent log line is the sole trace.
+  if (EXECUTE && res.inserted > 0) {
     await prisma.auditLog.create({
       data: {
         hospitalId: TARGET_TENANT,
@@ -317,15 +343,21 @@ async function main(): Promise<void> {
     });
   }
 
-  plog('[proc-backfill] DONE', {
-    mode: EXECUTE ? 'EXECUTE' : 'DRY-RUN',
-    sourceRows: res.sourceRows,
-    orphansDropped: res.orphansDropped,
-    inCsvCollisions: res.inCsvCollisions,
-    resolved,
-    [EXECUTE ? 'inserted' : 'wouldInsert']: res.inserted,
-    echoSnomed: res.echoSnomed,
-  });
+  if (idempotent) {
+    // A successful no-op re-run: distinct log line, exit 0, no audit row.
+    plog('[proc-backfill] DONE idempotent', { inserted: 0, skipped, resolved, priorExisting });
+  } else {
+    plog('[proc-backfill] DONE', {
+      mode: EXECUTE ? 'EXECUTE' : 'DRY-RUN',
+      sourceRows: res.sourceRows,
+      orphansDropped: res.orphansDropped,
+      inCsvCollisions: res.inCsvCollisions,
+      resolved,
+      [EXECUTE ? 'inserted' : 'wouldInsert']: res.inserted,
+      ...(EXECUTE ? { skipped } : {}),
+      echoSnomed: res.echoSnomed,
+    });
+  }
 }
 
 if (require.main === module) {
