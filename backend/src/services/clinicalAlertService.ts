@@ -17,6 +17,7 @@ import { TherapyGapType, UserRole } from '@prisma/client';
 import { writeAuditLog } from '../middleware/auditLogger';
 import { ModuleType } from '@prisma/client';
 import { Request } from 'express';
+import { clinicianResolvedWhere } from './gapResolutionActor';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -193,7 +194,9 @@ export async function sendWeeklySummary(hospitalId: string): Promise<number> {
 
   const [newGaps, closedGaps, totalOpen] = await Promise.all([
     prisma.therapyGap.count({ where: { hospitalId, identifiedAt: { gte: weekAgo } } }),
-    prisma.therapyGap.count({ where: { hospitalId, resolvedAt: { gte: weekAgo } } }),
+    // AUDIT-222 retirement blast-radius: closedGaps drives the closureRate % in the weekly summary EMAIL
+    // sent to hospital leaders, so system retirements must not be reported to them as clinical closures.
+    prisma.therapyGap.count({ where: clinicianResolvedWhere({ hospitalId, resolvedAt: { gte: weekAgo } }) }),
     prisma.therapyGap.count({ where: { hospitalId, resolvedAt: null } }),
   ]);
 
