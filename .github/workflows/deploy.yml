@@ -145,25 +145,27 @@ jobs:
         if: steps.smoke_gate.outputs.run_build == 'true'
         uses: aws-actions/amazon-ecr-login@f2e9fc6c2b355c1890b65e6f6f0e2ac3e6e22f78 # v2
 
-      # AUDIT-219: the SHA-emit fidelity mechanism (APP_GIT_SHA baked from --build-arg GIT_SHA) silently
-      # regressed to the Dockerfile default 'dev' on the plain-CLI `docker build --build-arg` path (the
-      # runner's older Docker/BuildKit did not bind the build-arg; NOT reproducible in local Docker 29.3,
-      # where the identical invocation bakes correctly). Migrated to the proven docker/build-push-action
-      # build-args path (the same mechanism deploy-backend.yml uses reliably) + a hard fidelity gate that
-      # inspects the built image BEFORE any push. A fidelity mechanism that can silently regress to 'dev'
-      # is not a mechanism (Coverage-of-an-Invariant): the check ships with the fix.
+      # AUDIT-221: the AUDIT-219 gate inspected the pre-push, load:true LOCAL image - but the artifact that
+      # docker push sent to ECR could DIVERGE from it. Proven on :398/ecf3daa: the build exported config
+      # da1bba7f (ecf3daa-baked) and the gate PASSED, yet the ECR ecf3daa tag resolved to config 3441e264
+      # (APP_GIT_SHA=dev) and the deployed container emitted 'dev'. Under the buildx docker-container driver
+      # the loaded image and the pushed artifact are not guaranteed identical, so a pre-push LOCAL check does
+      # not gate what actually deploys. FIX (principle: VERIFY THE REGISTRY ARTIFACT) - one invocation builds
+      # AND pushes (no load-vs-push divergence), then the gate PULLS the pushed DIGEST back from ECR and
+      # inspects ITS config for APP_GIT_SHA == github.sha; the deploy uses that same verified digest. This
+      # supersedes the AUDIT-219 pre-push local-image check (which verified a different artifact than shipped).
       - name: Set up Docker Buildx
         if: steps.smoke_gate.outputs.run_build == 'true'
         uses: docker/setup-buildx-action@v3
 
-      - name: Build image (load locally; fidelity gate runs before any push)
+      - name: Build and push image (single invocation - one artifact is built, pushed, and verified)
+        id: build
         if: steps.smoke_gate.outputs.run_build == 'true'
         uses: docker/build-push-action@v6
         with:
           context: ./backend
           file: ./backend/Dockerfile
-          load: true
-          push: false
+          push: true
           provenance: false
           build-args: |
             GIT_SHA=${{ github.sha }}
@@ -171,30 +173,34 @@ jobs:
             ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
             ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
 
-      - name: SHA-emit fidelity gate + push (AUDIT-219)
+      - name: Verify pushed REGISTRY artifact SHA (AUDIT-221 fidelity gate)
+        id: verify
         if: steps.smoke_gate.outputs.run_build == 'true'
         env:
           ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
+          DIGEST: ${{ steps.build.outputs.digest }}
         run: |
-          IMG="$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          BAKED=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$IMG" | sed -n 's/^APP_GIT_SHA=//p')
-          echo "APP_GIT_SHA baked=[$BAKED] expected=[$IMAGE_TAG]"
+          REF="$ECR_REGISTRY/$ECR_REPOSITORY@$DIGEST"
+          echo "Verifying the REGISTRY artifact by digest (NOT a local build image): $REF"
+          docker pull "$REF"
+          BAKED=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$REF" | sed -n 's/^APP_GIT_SHA=//p')
+          echo "registry APP_GIT_SHA baked=[$BAKED] expected=[$IMAGE_TAG] digest=[$DIGEST]"
           if [ "$BAKED" != "$IMAGE_TAG" ]; then
-            echo "::error::AUDIT-219 SHA-emit fidelity gate FAILED: built image self-attests APP_GIT_SHA='[$BAKED]' but this commit is '[$IMAGE_TAG]'. Refusing to push/deploy a build whose execution-vehicle SHA is wrong (this gate blocks the AUDIT-218 execute path). A regression to 'dev'/empty is a HARD build failure, never a silent pass."
+            echo "::error::AUDIT-221 registry-artifact fidelity gate FAILED: the PUSHED image $REF self-attests APP_GIT_SHA='[$BAKED]' but this commit is '[$IMAGE_TAG]'. The deployed artifact would be wrong; refusing to deploy. (This is precisely the AUDIT-219 gap - verifying the pre-push local image is not verifying what reaches the registry.)"
             exit 1
           fi
-          echo "AUDIT-219 fidelity gate PASS: image self-attests the correct commit SHA."
-          docker push "$IMG"
-          docker push "$ECR_REGISTRY/$ECR_REPOSITORY:latest"
+          echo "AUDIT-221 registry fidelity gate PASS: the pushed artifact self-attests the correct commit SHA."
+          echo "deploy_ref=$REF" >> "$GITHUB_OUTPUT"
 
       - name: Deploy to ECS and verify
         if: steps.smoke_gate.outputs.run_build == 'true'
         env:
           ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
+          DEPLOY_REF: ${{ steps.verify.outputs.deploy_ref }}
         run: |
-          # Register new task definition with this commit's image
+          # Register new task definition with the VERIFIED registry artifact (digest-pinned, AUDIT-221)
           aws ecs describe-task-definition \
             --task-definition $ECS_TASK_FAMILY \
             --query 'taskDefinition' \
@@ -204,7 +210,7 @@ jobs:
           import json, os
           with open('/tmp/taskdef.json') as f:
               td = json.load(f)
-          td['containerDefinitions'][0]['image'] = '${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}'
+          td['containerDefinitions'][0]['image'] = '${DEPLOY_REF}'  # AUDIT-221: deploy the digest-verified artifact, not a re-resolvable tag
           for key in ['taskDefinitionArn','revision','status','requiresAttributes',
                       'compatibilities','registeredAt','registeredBy','deregisteredAt']:
               td.pop(key, None)
