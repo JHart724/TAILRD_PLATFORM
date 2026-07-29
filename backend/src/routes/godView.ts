@@ -11,6 +11,7 @@ import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
 import { writeAuditLog } from '../middleware/auditLogger';
 import prisma from '../lib/prisma';
 import { ModuleType } from '@prisma/client';
+import { clinicianResolvedWhere } from '../services/gapResolutionActor';
 
 // Map frontend camelCase module names to Prisma enum + patient boolean field
 const MODULE_MAP: Record<string, { enum: ModuleType; patientField: string }> = {
@@ -322,7 +323,9 @@ async function getModuleComparison() {
 async function getSystemQualityMetrics() {
   const [totalGaps, closedGaps, safetyGaps] = await Promise.all([
     prisma.therapyGap.count(),
-    prisma.therapyGap.count({ where: { resolvedAt: { not: null } } }),
+    // AUDIT-222 retirement blast-radius: gapClosureRate presents closures as CLINICAL achievement, so
+    // system-retired rows (engine-retired rules, nobody's clinical work) must not inflate it.
+    prisma.therapyGap.count({ where: clinicianResolvedWhere({ resolvedAt: { not: null } }) }),
     prisma.therapyGap.count({ where: { gapType: 'SAFETY_ALERT', resolvedAt: null } }),
   ]);
   const closureRate = totalGaps > 0 ? closedGaps / totalGaps : 1;
@@ -338,7 +341,9 @@ async function getSystemQualityMetrics() {
 async function getSystemFinancialSummary() {
   const [openGaps, closedGaps] = await Promise.all([
     prisma.therapyGap.count({ where: { resolvedAt: null } }),
-    prisma.therapyGap.count({ where: { resolvedAt: { not: null } } }),
+    // AUDIT-222 retirement blast-radius: closedGaps multiplies into `captured` opportunity below, so a
+    // system retirement would FABRICATE captured revenue for work nobody did (the AUDIT-187 class).
+    prisma.therapyGap.count({ where: clinicianResolvedWhere({ resolvedAt: { not: null } }) }),
   ]);
   const totalOpportunity = openGaps * REVENUE_PER_GAP_ESTIMATE;
   const captured = closedGaps * REVENUE_PER_GAP_ESTIMATE;
@@ -409,7 +414,11 @@ async function getDetailedModuleHealth(moduleName: string) {
   const [openGaps, newGapsThisWeek, closedThisWeek, patientCount] = await Promise.all([
     prisma.therapyGap.count({ where: { module: mapping.enum, resolvedAt: null } }),
     prisma.therapyGap.count({ where: { module: mapping.enum, identifiedAt: { gte: weekAgo } } }),
-    prisma.therapyGap.count({ where: { module: mapping.enum, resolvedAt: { gte: weekAgo } } }),
+    // AUDIT-222 retirement blast-radius: closedThisWeek drives the module-health closureRate (and its
+    // healthy/warning/critical verdict), so system retirements must not register as a week of closures.
+    prisma.therapyGap.count({
+      where: clinicianResolvedWhere({ module: mapping.enum, resolvedAt: { gte: weekAgo } }),
+    }),
     prisma.patient.count({ where: buildModulePatientWhere(mapping) }),
   ]);
   const closureRate = (newGapsThisWeek + closedThisWeek) > 0 ? closedThisWeek / (newGapsThisWeek + closedThisWeek) : 1;

@@ -315,3 +315,74 @@ deterministic targeting, dry-run default, completeness invariant, audit row, ide
 buildSha self-gate, a fresh Aurora snapshot, and an operator execute-GO. Retirement is an UPDATE, never a
 delete: the total row count must not change. Invariants for the gated execute: retired == 4,129 exactly, the
 two statuses only, tenant isolation, total unchanged, and the 61,122 attributed rows untouched.
+
+---
+
+## 9. AMENDMENT 2026-07-29: how retirement is EXPRESSED, and the resolution-taxonomy debt it hands to PR-B
+
+**Operator ruling (2026-07-29): option (ii) - no migration.** Retirement is expressed with EXISTING columns:
+
+| Column | Value |
+|---|---|
+| `resolvedAt` | the retirement timestamp |
+| `resolvedBy` | `system:audit-222-retirement` |
+| `currentStatus` | ORIGINAL TEXT PRESERVED, with a bounded machine-recognizable suffix APPENDED: `<original> [RETIRED <date>: rule consolidated per AUDIT-195/196; superseded by "LDL not at goal on statin - intensify lipid therapy"]` |
+
+The append (never a replace) is supersede-not-overwrite applied to a clinical text column. Note the contrast
+with the CLINICIAN path (`routes/gaps.ts`), which OVERWRITES `currentStatus` with the bare action verb
+(`INITIATED` / `CONTRAINDICATED`) - retirement deliberately does not, because the original recommendation text
+is the only record of what the row used to assert.
+
+### The `system:` prefix is RESERVED (documented convention)
+
+`resolvedBy` is the actor discriminator, and the `system:` prefix is reserved for non-human writers. Existing
+system writers already conform (`system:proc-backfill`, `system:ruleid-backfill`, `system:baa-guard`). A real
+user id must never begin with it. `backend/src/services/gapResolutionActor.ts` is the single home for the
+prefix, the retirement actor, the suffix marker, and the `clinicianResolvedWhere` filter.
+
+### Why this is a CONVENTION-enforced distinction, and what that costs
+
+Nothing in the schema prevents a future writer from setting `resolvedAt` without honouring the prefix, and
+nothing forces a new metric to apply the filter. The distinction therefore holds by discipline, not by
+construction. That is acceptable ONLY because the debt has a designed home:
+
+**DIRECTIVE TO PR-B (resolution taxonomy):** PR-B's resolve-semantics design MUST either (a) ADOPT this
+convention explicitly - documenting `system:`-prefixed `resolvedBy` as the canonical machine-readable
+resolution-actor class and adding it to the resolve pass it authors - or (b) MIGRATE it to a schema-enforced
+form (for example a `resolutionClass` enum, or dedicated `retiredAt` / `retiredReason` columns) and backfill
+the rows this retirement wrote. What PR-B must NOT do is invent a third, parallel way to express a non-clinical
+resolution: that would leave three conventions and no source of truth. The schema-enforced distinction is
+DEFERRED to its designed home, not skipped.
+
+### Blast-radius remediation shipped WITH the retirement (not deferred)
+
+Retirement sets `resolvedAt` on 4,129 rows, and every `resolvedAt`-based throughput metric would have read
+that as clinical achievement. Because this change CAUSES the distortion, its correction ships in the same PR
+(this is blast-radius remediation, not section 17.3 bundling). A section 20 sweep of every `resolvedAt`
+throughput metric found FOUR, all now filtered through `clinicianResolvedWhere`:
+
+| Site | Metric | Why it mattered |
+|---|---|---|
+| `godView.ts` getSystemQualityMetrics | `gapClosureRate` / `totalGapsClosed` | presents closures as clinical quality |
+| `godView.ts` getSystemFinancialSummary | `captured` = closedGaps x REVENUE_PER_GAP_ESTIMATE | would FABRICATE captured revenue - the AUDIT-187 class |
+| `godView.ts` getDetailedModuleHealth | `closedThisWeek` -> closureRate -> healthy/warning/critical verdict | would flip a module's health verdict |
+| `clinicalAlertService.ts` sendWeeklySummary | `closedGaps` -> closureRate % in the leader EMAIL | would report phantom closures to hospital leaders |
+
+The windowed pair (`resolvedAt: { gte: weekAgo }`) was the pair named in the ruling; the sweep additionally
+found the two lifetime `resolvedAt: { not: null }` counts, and they are the WORSE of the four - one drives a
+revenue figure. Both were fixed on the same causation rationale. No other `resolvedAt` throughput metric
+exists in `backend/src`.
+
+NULL handling is deliberate and is the subtle part: a bare `resolvedBy: { not: { startsWith: 'system:' } }`
+compiles to `NOT (resolvedBy LIKE 'system:%')`, which is NULL - and so FALSE - for rows whose `resolvedBy` is
+NULL. Legacy clinician closures and the data-request purge path DO leave it NULL, so the naive form would have
+silently DROPPED real closures while fixing the phantom ones. `clinicianResolvedWhere` keeps them via an
+explicit `OR`, and throws rather than clobber a base clause that already carries a top-level `OR`.
+
+### Cohort-shift measurement at the GO gate
+
+Both retired statuses are CORONARY_INTERVENTION, and `modules.ts` / `godView.ts` define module cohort
+membership as "has an OPEN gap in that module". A patient whose ONLY open CAD gap is a retirement target
+therefore LEAVES the CAD cohort. The runner measures this read-only in BOTH modes and logs
+`patientsWhoseOnlyOpenCadGapsAreRetiring`, so the cohort shift is a measured number at the execute-GO gate
+rather than a discovered surprise afterwards.
