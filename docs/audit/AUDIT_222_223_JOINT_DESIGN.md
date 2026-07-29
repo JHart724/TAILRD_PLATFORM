@@ -271,3 +271,47 @@ AUDIT-184 and AUDIT-197 (retired rules whose stored rows remain open) / AUDIT-19
 consolidation that produced the 4,129 orphans) / AUDIT-218 (the backfill-runner pattern G1 reuses) /
 AUDIT-221 (the runtime buildSha self-gate both mutations must carry) / DRIFT-55 (the prediction-predicate
 discipline G2 must satisfy).
+
+---
+
+## 8. AMENDMENT 2026-07-29: orphan retirement moved AHEAD of G2
+
+**Supersede-not-overwrite: the sequencing text in sections 4, 5 and 6 above stands as originally written. This
+section records an operator-ruled change to the ORDER of execution, not to the design.**
+
+### What changed
+
+A bounded **orphan-retirement mutation** now runs BEFORE G2 (the first post-fix re-detection). Its scope is
+exactly the **4,129** `ruleId IS NULL` rows of tenant `demo-synthea-threaded`, which carry exactly the two
+AUDIT-195/196 lipid-consolidation statuses (`Consider ezetimibe add-on for LDL not at goal on statin` 2,179 +
+`Consider PCSK9 inhibitor for LDL not at goal on maximally tolerated statin` 1,950). Retirement and G2 then
+execute in the SAME gated session, to keep the window between them as short as possible.
+
+**Full PR-B is UNCHANGED and remains post-G2**: general resolve semantics, the 419 stored-attributed-but-no-
+longer-detected candidates, and the shadow-row policy all stay in PR-B exactly as section 5 specifies. This
+amendment carves out a bounded subset, it does not pull PR-B forward.
+
+### Why (operator rationale, recorded verbatim in substance)
+
+The G2 prediction (read-only, measured over all 25,571 patients on `:402`) forecast **2,616 creates**, of which
+**1,569 (60%)** are the consolidated `LDL not at goal on statin - intensify lipid therapy` status. Mechanism:
+those patients' stored lipid rows carry the RETIRED predecessor statuses, attribution left them NULL and
+therefore inert, so the consolidated rule matches no row and creates a fresh one - leaving a NULL-ruleId
+legacy row AND a new correctly-identified row for the same clinical concern.
+
+Two orderings were weighed:
+- Execute G2 first: a **duplicate window** of ~1,569 duplicate-concern pairs lasting until PR-B ships.
+- Retire orphans first: an **absence window** for those concerns lasting only the minutes between the two
+  runs in one session.
+
+Ruled: retire first. The duplicate window lasts until PR-B; the absence window lasts minutes. Decisively, the
+orphan rows carry **engine-retired recommendations** - they are misleading to a clinician TODAY, independent of
+G2 - so retiring them is correct on its own merits and not merely a G2 convenience.
+
+### Constraints carried into the retirement runner
+
+Same gates as every mutation in this arc: AUDIT-218/225 runner shape (dedicated, structurally isolated,
+deterministic targeting, dry-run default, completeness invariant, audit row, idempotent), AUDIT-221 runtime
+buildSha self-gate, a fresh Aurora snapshot, and an operator execute-GO. Retirement is an UPDATE, never a
+delete: the total row count must not change. Invariants for the gated execute: retired == 4,129 exactly, the
+two statuses only, tenant isolation, total unchanged, and the 61,122 attributed rows untouched.
