@@ -70,7 +70,10 @@ export function attributeStatus(currentStatus: string | null): Attribution {
 }
 
 export interface BackfillCounts {
+  /** Every tenant row examined - NOT just the NULL ones (AUDIT-225). */
   scanned: number;
+  /** Rows that already carried a ruleId and were skipped in memory. */
+  alreadyAttributed: number;
   exact: number;
   pattern: number;
   orphan: number;
@@ -80,13 +83,33 @@ export interface BackfillCounts {
 /** Non-progress tripwire (AUDIT-115/016 class, refined per AUDIT-220): a real no-op is not a stall. */
 export function assertBackfillProgress(c: BackfillCounts, execute: boolean): void {
   if (c.scanned === 0) {
-    plog('[ruleid-backfill] nothing to do: no rows with ruleId IS NULL (already backfilled).');
+    plog('[ruleid-backfill] nothing to do: tenant has no therapy_gaps rows.');
     return;
   }
   const attributable = c.exact + c.pattern;
   if (execute && attributable > 0 && c.updated === 0) {
     throw new Error(
       `[ruleid-backfill] ABORT: execute updated 0 rows despite ${attributable} attributable (write anomaly).`,
+    );
+  }
+}
+
+/**
+ * AUDIT-225 full-scan invariant. The first G1 execute paginated over `where: { ruleId: null }` while SETTING
+ * ruleId, so each updated row LEFT the filtered set and Prisma could no longer position the cursor on it -
+ * 125 rows were skipped at batch boundaries and the run still reported success (119 attributable rows left
+ * NULL). A dry-run could never catch this: it does not mutate, so its pagination set is stable.
+ *
+ * The paginator is now mutation-safe by construction (it pages over ALL tenant rows and skips attributed
+ * ones in memory). This assertion is the belt: if the number of rows examined ever falls short of the row
+ * count taken before the walk, ABORT LOUDLY instead of completing short.
+ */
+export function assertFullScan(scanned: number, expectedTotal: number, execute: boolean): void {
+  if (!execute) return;
+  if (scanned < expectedTotal) {
+    throw new Error(
+      `[ruleid-backfill] ABORT: scanned ${scanned} of ${expectedTotal} tenant rows - the paginator skipped ` +
+        `${expectedTotal - scanned}. Refusing to report success on a short scan (AUDIT-225).`,
     );
   }
 }
@@ -98,15 +121,25 @@ async function main(): Promise<void> {
     mode: EXECUTE ? 'EXECUTE' : 'DRY-RUN',
   });
 
-  const counts: BackfillCounts = { scanned: 0, exact: 0, pattern: 0, orphan: 0, updated: 0 };
+  const counts: BackfillCounts = {
+    scanned: 0, alreadyAttributed: 0, exact: 0, pattern: 0, orphan: 0, updated: 0,
+  };
   const orphanStatuses = new Map<string, number>();
   let cursor: string | undefined;
 
-  // Cursor-paginate the NULL-ruleId rows. Tenant-scoped (never a cross-tenant write).
+  // Row count taken BEFORE the walk, for the AUDIT-225 full-scan invariant below.
+  const expectedTotal = await prisma.therapyGap.count({ where: { hospitalId: TARGET_TENANT } });
+  plog('[ruleid-backfill] tenant rows to walk', { expectedTotal });
+
+  // AUDIT-225: paginate over ALL tenant rows. The predicate is `hospitalId` alone - a column this runner
+  // never writes - so the pagination set is IMMUNE to our own updates. The previous shape filtered on
+  // `ruleId: null`, the very column being written, so each updated row left the set and the cursor could no
+  // longer position on it: rows were silently skipped at batch boundaries. Already-attributed rows are now
+  // skipped in memory instead of by the query. Tenant-scoped (never a cross-tenant write).
   for (;;) {
     const rows = await prisma.therapyGap.findMany({
-      where: { hospitalId: TARGET_TENANT, ruleId: null },
-      select: { id: true, currentStatus: true },
+      where: { hospitalId: TARGET_TENANT },
+      select: { id: true, currentStatus: true, ruleId: true },
       take: BATCH,
       ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
       orderBy: { id: 'asc' },
@@ -117,6 +150,11 @@ async function main(): Promise<void> {
     const byRuleId = new Map<string, string[]>();
     for (const r of rows) {
       counts.scanned++;
+      if (r.ruleId) {
+        // Already carries a frozen id (a prior pass, or this run is idempotent-re-running). Never re-point.
+        counts.alreadyAttributed++;
+        continue;
+      }
       const a = attributeStatus(r.currentStatus);
       if (a.kind === 'orphan') {
         counts.orphan++;
@@ -145,6 +183,9 @@ async function main(): Promise<void> {
     if (rows.length < BATCH) break;
   }
 
+  // AUDIT-225: never report success on a short scan. Runs BEFORE the audit row so a skipped-rows run
+  // aborts loudly instead of durably recording a completion it did not achieve.
+  assertFullScan(counts.scanned, expectedTotal, EXECUTE);
   assertBackfillProgress(counts, EXECUTE);
 
   if (EXECUTE) {
@@ -158,9 +199,10 @@ async function main(): Promise<void> {
         resourceType: 'TherapyGap',
         resourceId: null,
         description:
-          `AUDIT-222 ruleId backfill: attributed ${counts.updated} of ${counts.scanned} rows ` +
-          `(exact ${counts.exact}, pattern ${counts.pattern}, orphan-left-NULL ${counts.orphan}) for ${TARGET_TENANT}`,
-        newValues: { ...counts, buildSha: resolveBuildSha() } as any,
+          `AUDIT-222 ruleId backfill: attributed ${counts.updated} of ${counts.scanned} tenant rows walked ` +
+          `(exact ${counts.exact}, pattern ${counts.pattern}, orphan-left-NULL ${counts.orphan}, ` +
+          `already-attributed ${counts.alreadyAttributed}) for ${TARGET_TENANT}`,
+        newValues: { ...counts, expectedTotal, buildSha: resolveBuildSha() } as any,
       } as any,
     });
   }
@@ -168,6 +210,8 @@ async function main(): Promise<void> {
   plog('[ruleid-backfill] DONE', {
     mode: EXECUTE ? 'EXECUTE' : 'DRY-RUN',
     ...counts,
+    expectedTotal,
+    candidates: counts.exact + counts.pattern + counts.orphan,
     orphanDistinctStatuses: orphanStatuses.size,
     orphanTop: [...orphanStatuses.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10),
   });
