@@ -38,8 +38,12 @@ export async function runGapDetection(
     gapFlagsResolved: 0,
   };
 
-  const existingKey = (patientId: string, gapType: string, module: string) =>
-    `${patientId}::${gapType}::${module}`;
+  // AUDIT-222: ruleId is the match key. The former `patientId::gapType::module` key was COARSER than a
+  // rule (357 of 368 rules share a gapType+module bucket), so siblings clobbered each other's
+  // currentStatus, only one row per patient-bucket was ever reachable by the refresh path (47.7% of
+  // production rows were shadowed), and genuinely-firing siblings were never created.
+  // See docs/audit/AUDIT_222_223_JOINT_DESIGN.md.
+  const existingKey = (patientId: string, ruleId: string) => `${patientId}::${ruleId}`;
   let existingMap = new Map<string, string>();
 
   const totalPatients = await prisma.patient.count({ where: { hospitalId } });
@@ -70,11 +74,17 @@ export async function runGapDetection(
     const batchPatientIds = patients.map(p => p.id);
     const batchExistingGaps = await prisma.therapyGap.findMany({
       where: { hospitalId, patientId: { in: batchPatientIds } },
-      select: { id: true, patientId: true, gapType: true, module: true },
+      select: { id: true, patientId: true, gapType: true, module: true, ruleId: true },
     });
-    existingMap = new Map(
-      batchExistingGaps.map(g => [existingKey(g.patientId, g.gapType, g.module), g.id])
-    );
+    // NULL-ruleId rows (pre-backfill rows + the AUDIT-195/196 consolidation orphans) are INERT: they never
+    // match a detected gap, so no row is silently re-pointed at an unrelated rule (PR-B dispositions them).
+    // First-writer-wins keeps the mapping deterministic if duplicate ruleId rows exist from the pre-fix era.
+    existingMap = new Map<string, string>();
+    for (const g of batchExistingGaps as any[]) {
+      if (!g.ruleId) continue;
+      const k = existingKey(g.patientId, g.ruleId);
+      if (!existingMap.has(k)) existingMap.set(k, g.id);
+    }
 
     const allToCreate: any[] = [];
     const allToUpdate: { id: string; status: string }[] = [];
@@ -92,11 +102,14 @@ export async function runGapDetection(
 
         if (detectedGaps.length === 0) continue;
 
+        const claimed = new Set<string>();
         for (const gap of detectedGaps) {
-          const key = existingKey(patient.id, gap.type, gap.module);
-          const existId = existingMap.get(key);
+          const key = existingKey(patient.id, gap.ruleId);
+          // A rule fires at most once per patient; guard against double-claiming one stored row.
+          const existId = claimed.has(key) ? undefined : existingMap.get(key);
 
           if (existId) {
+            claimed.add(key);
             allToUpdate.push({ id: existId, status: gap.status });
           } else {
             allToCreate.push({
@@ -104,6 +117,7 @@ export async function runGapDetection(
               hospitalId,
               gapType: gap.type,
               module: gap.module,
+              ruleId: gap.ruleId,
               medication: gap.medication || null,
               currentStatus: gap.status,
               targetStatus: gap.target,
