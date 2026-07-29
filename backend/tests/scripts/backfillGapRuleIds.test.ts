@@ -12,6 +12,7 @@
 import {
   attributeStatus,
   assertBackfillProgress,
+  assertFullScan,
   resolveBuildSha,
   DEFAULT_TENANT,
   BackfillCounts,
@@ -81,9 +82,99 @@ describe('AUDIT-222 attribution: orphan bucket (PR-A leaves ruleId NULL)', () =>
   });
 });
 
+/**
+ * AUDIT-225 regression: the paginator must not mutate its own filter set.
+ *
+ * The first G1 execute paged over `where: { hospitalId, ruleId: null }` while SETTING ruleId. Each updated
+ * row left the filtered set, so Prisma could no longer position the cursor on it and rows were skipped at
+ * every batch boundary: 125 of 65,251 rows never scanned, 119 of them attributable and left NULL, and the
+ * run still exited 0 reporting success. A dry-run cannot catch this - it does not mutate, so its pagination
+ * set is stable and it scanned all 65,251.
+ *
+ * These tests simulate both paginator shapes against a store whose rows get mutated mid-walk.
+ */
+describe('AUDIT-225 paginator mutation-safety', () => {
+  interface Row { id: string; ruleId: string | null }
+
+  const makeStore = (n: number): Row[] =>
+    Array.from({ length: n }, (_, i) => ({ id: `id-${String(i).padStart(4, '0')}`, ruleId: null }));
+
+  /**
+   * OLD shape: the page query filters on the very column the loop writes.
+   *
+   * Models Prisma's cursor semantics faithfully: `cursor: { id }` positions ON that row WITHIN the
+   * filtered result set, and `skip: 1` then steps past it. Once the loop has written ruleId, the cursor
+   * row no longer satisfies `ruleId: null`, so it is absent from the set - the engine positions at the
+   * next row instead and `skip: 1` consumes that GENUINE row. One row is lost per batch boundary, which
+   * is exactly the production signature (131 batches of 500 over 65,251 rows -> 125 rows skipped).
+   */
+  const walkFiltered = (store: Row[], batch: number): number => {
+    let scanned = 0;
+    let cursor: string | undefined;
+    for (;;) {
+      const eligible = store.filter((r) => r.ruleId === null).sort((a, b) => a.id.localeCompare(b.id));
+      let start = 0;
+      if (cursor !== undefined) {
+        const at = eligible.findIndex((r) => r.id === cursor);
+        // cursor present -> correct step past it; cursor GONE -> skip:1 eats the next real row
+        start = at >= 0 ? at + 1 : eligible.findIndex((r) => r.id > cursor!) + 1;
+      }
+      const page = start < 0 ? [] : eligible.slice(start, start + batch);
+      if (page.length === 0) break;
+      cursor = page[page.length - 1].id;
+      for (const r of page) { scanned++; r.ruleId = 'assigned'; }   // the mutation that shrinks the set
+      if (page.length < batch) break;
+    }
+    return scanned;
+  };
+
+  /** NEW shape: page over ALL tenant rows; skip already-attributed in memory. */
+  const walkAll = (store: Row[], batch: number): number => {
+    let scanned = 0;
+    let cursor: string | undefined;
+    for (;;) {
+      const all = [...store].sort((a, b) => a.id.localeCompare(b.id));
+      const start = cursor ? all.findIndex((r) => r.id > cursor!) : 0;
+      const page = start < 0 ? [] : all.slice(start, start + batch);
+      if (page.length === 0) break;
+      cursor = page[page.length - 1].id;
+      for (const r of page) { scanned++; if (r.ruleId === null) r.ruleId = 'assigned'; }
+      if (page.length < batch) break;
+    }
+    return scanned;
+  };
+
+  it('OLD shape SKIPS rows when the loop mutates the filter predicate (the shipped defect)', () => {
+    const store = makeStore(1000);
+    const scanned = walkFiltered(store, 100);
+    expect(scanned).toBeLessThan(1000);                                  // rows were skipped
+    expect(store.filter((r) => r.ruleId === null).length).toBeGreaterThan(0); // stragglers left behind
+  });
+
+  it('NEW shape scans EVERY row because the predicate is immune to its own writes', () => {
+    const store = makeStore(1000);
+    expect(walkAll(store, 100)).toBe(1000);
+    expect(store.filter((r) => r.ruleId === null)).toHaveLength(0);
+  });
+
+  it('NEW shape is idempotent: a second walk scans all rows and attributes nothing new', () => {
+    const store = makeStore(1000);
+    walkAll(store, 100);
+    const before = store.map((r) => r.ruleId);
+    expect(walkAll(store, 100)).toBe(1000);
+    expect(store.map((r) => r.ruleId)).toEqual(before);
+  });
+
+  it('the full-scan invariant aborts on a short scan, and only in execute mode', () => {
+    expect(() => assertFullScan(65126, 65251, true)).toThrow(/scanned 65126 of 65251 .* skipped 125/);
+    expect(() => assertFullScan(65251, 65251, true)).not.toThrow();
+    expect(() => assertFullScan(65126, 65251, false)).not.toThrow(); // dry-run never asserts
+  });
+});
+
 describe('AUDIT-222 backfill guards', () => {
   const counts = (o: Partial<BackfillCounts> = {}): BackfillCounts => ({
-    scanned: 0, exact: 0, pattern: 0, orphan: 0, updated: 0, ...o,
+    scanned: 0, alreadyAttributed: 0, exact: 0, pattern: 0, orphan: 0, updated: 0, ...o,
   });
 
   it('an all-orphan pass is NOT a failure (nothing was attributable)', () => {
