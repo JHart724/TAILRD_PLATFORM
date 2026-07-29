@@ -100,27 +100,43 @@ The binding artifact is the canonical pair already produced by the audit pipelin
 `registryId`). A push site binds to a registry id when it falls inside the tightest containing evaluator block
 whose (module, blockName) carries a crosswalk `ruleBodyCite.registryId`.
 
-**A binding counts as CONFIDENT only when that block contains exactly ONE `gaps.push`.** A block holding two
-or more pushes cannot say WHICH push is the registry rule, so it is not a confident per-push binding and falls
-through to a generated slug. Measured at commit `e025ce4`: 373 evaluator blocks across the 6 module files,
-263 block-to-registryId bindings, and **zero blocks bound to more than one registryId** (no ambiguity on the
-registry side).
+**A binding counts as CONFIDENT only when that block contains exactly ONE `gaps.push` (source-measured), and
+only when exactly ONE block claims the tightest containing range.** A block holding two or more pushes cannot
+say WHICH push is the registry rule. Separately, an AMBIGUITY GUARD is required: rules retired to SPEC_ONLY
+leave comment-only stubs whose canonical ranges COLLAPSE onto the next live rule, so several block names can
+claim one identical range (for example `HF-37-FU` / `HF-38` / `HF-73` all span `[5336,5351]`, where only
+HF-73 is live). Picking any one of a tied set would attach a stored clinical row to a rule that is not the
+one that fired it, so ties fall through to a generated slug. Measured at commit `e025ce4`: 373 evaluator
+blocks across the 6 module files, 263 block-to-registryId bindings, and zero blocks bound to more than one
+registryId (no ambiguity on the registry side; the ambiguity is on the code-range side).
 
-#### Measured assignment yield (368 push sites)
+Note also that the artifact's own `gapsPushIds` length is NOT a reliable push count: for a rule whose status
+is a ternary or template it can read 0 (the extractor captures literal statuses only). Push counts are
+therefore measured from source, which is authoritative.
+
+#### Measured assignment yield (368 push sites, as shipped in PR-A)
 
 | Provenance | Sites | Share | Note |
 |---|---|---|---|
-| **Registry-adopted** (block is 1:1 with a push) | **259** | 70.4% | 259 DISTINCT registry ids, zero id collisions; all 259 verified present in `RUNTIME_GAP_REGISTRY` (401 entries) |
-| Generated slug - block has no crosswalk binding | 103 | 28.0% | `slug:` prefix |
-| Generated slug - registry-bound block holds >1 push | 4 | 1.1% | `:5650` + `:5676` (`gap-ep-006-dabigatran-renal-safety`, 2 pushes), `:7959` (`gap-sh-022-tricuspid-assessment`, 3 pushes), `:10659` (`gap-sh-082-postclosure-antithrombotic`, 2 pushes) |
-| Generated slug - push in no extracted block | 2 | 0.5% | `:8306`, `:10068` |
-| **Total generated slug** | **109** | **29.6%** | |
+| **Registry-adopted** (exactly one block, 1:1 with a push, carrying a crosswalk registryId) | **260** | 70.7% | 260 DISTINCT registry ids, zero id collisions; all verified present in `RUNTIME_GAP_REGISTRY` (401 entries) |
+| Generated slug - containing block has no crosswalk binding | 99 | 26.9% | `slug:` prefix |
+| Generated slug - AMBIGUOUS range (retired-stub collapse) | 5 | 1.4% | `HF-37-FU`/`HF-38`/`HF-73`, `VD-7`/`VD-8`, `HF-91`/`HF-92`, `VD-16`/`VD-17`, `HF-149`/`HF-LVAD-INR` |
+| Generated slug - registry-bound block holds >1 push | 2 | 0.5% | `gap-ep-006-dabigatran-renal-safety` (2 pushes) |
+| Generated slug - push in no extracted block | 2 | 0.5% | |
+| **Total generated slug** | **108** | **29.3%** | |
+
+Ten push sites emit a dynamic status and so have no literal to kebab-case. Eight of them resolved to a
+registry id; the remaining two, plus the ambiguous HF-73 site, carry hand-resolved frozen slugs
+(`slug:hf-hyponatremia-monitoring`, `slug:ep-rate-control-afib`,
+`slug:sh-ascending-aorta-intervention-threshold`). The per-site record is
+`docs/audit/AUDIT_222_RULEID_ASSIGNMENT.md`, machine-checked every CI run by `audit222RuleIdFreeze.test.ts`.
 
 #### The unconverged population (follow-up, named here)
 
-**109 push sites (29.6%) carry a generated `slug:` id rather than a registry id.** This is the UNCONVERGED
+**108 push sites (29.3%) carry a generated `slug:` id rather than a registry id.** This is the UNCONVERGED
 population. The intended path is convergence: as registry bindings are hand-confirmed (a block split so it is
-1:1 with a push, or a missing crosswalk `ruleBodyCite` supplied), a `slug:` id converts to its registry id.
+1:1 with a push, a collapsed retired-stub range disambiguated, or a missing crosswalk `ruleBodyCite`
+supplied), a `slug:` id converts to its registry id.
 
 **Every such conversion is a DATA MIGRATION on `therapy_gaps.ruleId`, not a code-only edit** - stored rows
 carry the old id and must be re-pointed. This is the ONLY sanctioned path by which an assigned id may change.

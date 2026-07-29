@@ -56,23 +56,36 @@ export async function runGapDetectionForPatient(
 
     const detectedGaps = evaluateGapRules(dxCodes, labValues, medCodes, age, gender, race, meds, procedureCodes);
 
-    // Load existing gaps for this patient
+    // Load existing gaps for this patient.
+    // AUDIT-222: ruleId is the match key. The former `gapType::module` key was COARSER than a rule (357 of
+    // 368 rules share a bucket), so siblings clobbered each other's currentStatus, only one row per bucket
+    // was ever reachable (47.7% of production rows were shadowed), and genuinely-firing siblings were never
+    // created. See docs/audit/AUDIT_222_223_JOINT_DESIGN.md.
     const existingGaps = await prisma.therapyGap.findMany({
       where: { patientId, hospitalId },
-      select: { id: true, gapType: true, module: true },
+      select: { id: true, gapType: true, module: true, ruleId: true },
     });
 
-    const existingKey = (gapType: string, module: string) => `${gapType}::${module}`;
-    const existingMap = new Map(existingGaps.map((g: any) => [existingKey(g.gapType, g.module), g.id]));
+    // Rows with a NULL ruleId (pre-backfill rows, and the AUDIT-195/196 consolidation orphans) are INERT:
+    // they never match a detected gap, so no row is silently re-pointed at an unrelated rule. Their
+    // disposition is PR-B (retire-with-reason). First-writer-wins keeps the mapping deterministic if
+    // duplicate ruleId rows exist from the pre-fix era.
+    const existingMap = new Map<string, string>();
+    for (const g of existingGaps as any[]) {
+      if (!g.ruleId) continue;
+      if (!existingMap.has(g.ruleId)) existingMap.set(g.ruleId, g.id);
+    }
 
     const toCreate: any[] = [];
     const toUpdate: { id: string; status: string }[] = [];
+    const claimed = new Set<string>();
 
     for (const gap of detectedGaps) {
-      const key = existingKey(gap.type, gap.module);
-      const existId = existingMap.get(key);
+      // A rule fires at most once per patient; guard against double-claiming one stored row.
+      const existId = claimed.has(gap.ruleId) ? undefined : existingMap.get(gap.ruleId);
 
       if (existId) {
+        claimed.add(gap.ruleId);
         toUpdate.push({ id: existId, status: gap.status });
       } else {
         toCreate.push({
@@ -80,6 +93,7 @@ export async function runGapDetectionForPatient(
           hospitalId,
           gapType: gap.type,
           module: gap.module,
+          ruleId: gap.ruleId,
           medication: gap.medication || null,
           currentStatus: gap.status,
           targetStatus: gap.target,

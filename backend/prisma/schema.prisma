@@ -1292,6 +1292,13 @@ model TherapyGap {
   // Gap details
   gapType       TherapyGapType
   module        ModuleType
+  // AUDIT-222: stable per-RULE identity. gapType+module is coarser than a rule (357 of 368 rules share a
+  // bucket), so it cannot key stored-vs-detected matching without clobbering siblings. Values are FROZEN at
+  // assignment: a RUNTIME_GAP_REGISTRY id where a confident canonical binding exists, else a generated
+  // 'slug:'-prefixed id. Nullable ONLY for pre-existing rows until the AUDIT-222 backfill runs; the 4,129
+  // AUDIT-195/196 consolidation orphans stay NULL until PR-B assigns retire-with-reason semantics. A NULL
+  // ruleId never matches a detected gap. See docs/audit/AUDIT_222_223_JOINT_DESIGN.md.
+  ruleId        String?
   medication    String? // Drug name if medication gap
   device        String? // Device type if device gap
   currentStatus String
@@ -1311,6 +1318,7 @@ model TherapyGap {
   @@index([module, gapType])
   @@index([hospitalId, module, resolvedAt])
   @@index([hospitalId, patientId])
+  @@index([hospitalId, ruleId]) // AUDIT-222: rule-scoped lookups (backfill attribution, PR-B resolve pass)
   @@map("therapy_gaps")
 }
 

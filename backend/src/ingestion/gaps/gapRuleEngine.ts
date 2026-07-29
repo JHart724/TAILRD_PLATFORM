@@ -179,6 +179,18 @@ function highIntensityStatinStatus(meds: MedicationDose[]): HighIntensityStatinS
  * The clinician always makes the final decision.
  */
 interface DetectedGap {
+  /**
+   * AUDIT-222: stable per-RULE identity, REQUIRED at every gaps.push site (tsc enforces coverage).
+   * gapType+module is coarser than a rule - 357 of 368 rules share a bucket - so it cannot key the
+   * stored-vs-detected match without clobbering siblings, shadowing rows, and suppressing genuine gaps.
+   *
+   * Value is FROZEN at assignment: a RUNTIME_GAP_REGISTRY id where the canonical binding artifact
+   * (canonical/*.code.json evaluatorBlocks + *.crosswalk.json ruleBodyCite) binds this push site 1:1 to a
+   * registry rule, else a generated 'slug:'-prefixed id. An id may change ONLY via a documented data
+   * migration on therapy_gaps.ruleId - never by re-derivation from status text.
+   * See docs/audit/AUDIT_222_223_JOINT_DESIGN.md section 3.
+   */
+  ruleId: string;
   type: TherapyGapType;
   module: ModuleType;
   status: string;
@@ -4861,6 +4873,7 @@ export function evaluateGapRules(
     if (signals >= 3) {
             if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
+          ruleId: 'slug:attr-cm-screening-recommended-for-review',
           type: TherapyGapType.MONITORING_OVERDUE,
           module: ModuleType.HEART_FAILURE,
           status: 'ATTR-CM screening recommended for review',
@@ -4894,6 +4907,7 @@ export function evaluateGapRules(
     const functionalID = labValues['ferritin'] >= 100 && labValues['ferritin'] < 300 && tsatLow;
     if ((ferritinLow || functionalID) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
       gaps.push({
+        ruleId: 'slug:iron-deficiency-untreated-in-hf-with-lvef-45',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.HEART_FAILURE,
         status: 'Iron deficiency untreated in HF with LVEF ≤45%',
@@ -4932,6 +4946,7 @@ export function evaluateGapRules(
     if (!medCodes.some(c => c === RXNORM_FINERENONE.FINERENONE)) {
             if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
+          ruleId: 'slug:finerenone-not-prescribed-ckd-t2dm',
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.HEART_FAILURE,
           status: 'Finerenone not prescribed (CKD + T2DM)',
@@ -4960,6 +4975,7 @@ export function evaluateGapRules(
     if (!onSGLT2i) {
             if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
+          ruleId: 'gap-hf-34-sglt2i',
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.HEART_FAILURE,
           status: 'SGLT2i not prescribed in HFrEF',
@@ -4990,6 +5006,7 @@ export function evaluateGapRules(
     if (!onBB) {
             if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
+          ruleId: 'gap-hf-35-beta-blocker',
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.HEART_FAILURE,
           status: 'Evidence-based beta-blocker not prescribed in HFrEF',
@@ -5024,6 +5041,7 @@ export function evaluateGapRules(
     if (!onMRA) {
             if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
+          ruleId: 'gap-hf-36-mra',
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.HEART_FAILURE,
           status: 'MRA not prescribed in HFrEF with LVEF<=40%',
@@ -5060,6 +5078,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-7-glp1ra',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'GLP-1 RA not prescribed in HFpEF with obesity',
@@ -5084,6 +5103,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-12-hcm-screening',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.HEART_FAILURE,
       status: 'HCM evaluation recommended for review',
@@ -5113,6 +5133,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-17-ivabradine',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Ivabradine not prescribed in HFrEF with elevated HR on max beta-blocker',
@@ -5139,6 +5160,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-18-vericiguat',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Vericiguat not prescribed in worsening HF',
@@ -5165,6 +5187,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-19-hydralazine-isdn',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Hydralazine-ISDN not prescribed in self-identified Black patient with HFrEF',
@@ -5185,6 +5208,7 @@ export function evaluateGapRules(
   // Guideline: 2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure
   if (hasHF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-hf-20-cardiac-rehab',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.HEART_FAILURE,
       status: 'Cardiac rehabilitation referral not documented for HF',
@@ -5213,6 +5237,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-21-hfpef-screening',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Undiagnosed HFpEF screening recommended for review',
@@ -5238,6 +5263,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-26-osa-screening',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Obstructive sleep apnea screening not documented in HF with obesity',
@@ -5266,6 +5292,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-29-remote-monitoring',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Remote patient monitoring not documented in high-risk HF',
@@ -5298,6 +5325,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-30-arni-underdosing',
       type: TherapyGapType.MEDICATION_UNDERDOSED,
       module: ModuleType.HEART_FAILURE,
       status: 'Sacubitril/valsartan dose optimization review recommended',
@@ -5335,6 +5363,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:hf-hyponatremia-monitoring',
       type: TherapyGapType.SAFETY_ALERT,
       module: ModuleType.HEART_FAILURE,
       status: `Hyponatremia detected: sodium ${labValues['sodium']} mEq/L`,
@@ -5363,6 +5392,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:nt-probnp-bnp-monitoring-not-documented-in-hf',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'NT-proBNP/BNP monitoring not documented in HF',
@@ -5387,6 +5417,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-75-cardiac-mri',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Cardiac MRI not documented for non-ischemic cardiomyopathy',
@@ -5411,6 +5442,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-76-palliative-care',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.HEART_FAILURE,
       status: 'Palliative care consult not documented in advanced HF',
@@ -5435,6 +5467,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-77-diuretic-resistance',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Diuretic resistance assessment recommended in HF with persistent congestion',
@@ -5463,6 +5496,7 @@ export function evaluateGapRules(
     const onSGLT2iHFpEF = medCodes.some(c => SGLT2I_CODES_HFPEF.includes(c));
     if (!onSGLT2iHFpEF) {
       gaps.push({
+        ruleId: 'gap-hf-79-sglt2i-hfpef',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.HEART_FAILURE,
         status: 'SGLT2i not prescribed in HFmrEF/HFpEF',
@@ -5489,6 +5523,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-80-cardio-oncology',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Cardio-oncology evaluation not documented in HF with cancer',
@@ -5515,6 +5550,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:cardiac-sarcoidosis-screening-recommended-for-review',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Cardiac sarcoidosis screening recommended for review',
@@ -5544,6 +5580,7 @@ export function evaluateGapRules(
       const severity = labValues['qtc_interval'] > 500 ? 'CRITICAL' : 'HIGH';
             if (!torsadesOwnsIt && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
+          ruleId: 'gap-39-qtc-safety',
           type: TherapyGapType.MEDICATION_CONTRAINDICATED,
           module: ModuleType.ELECTROPHYSIOLOGY,
           status: `QTc ${severity}: ${labValues['qtc_interval']}ms (threshold ${qtcThreshold}ms)`,
@@ -5599,6 +5636,7 @@ export function evaluateGapRules(
         // (xenogenic/bioprosthetic) is EXCLUDED - bioprosthetic AF may use DOACs. ICD-10-CM verified per section 16.
         const hasMechValveEP001 = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.4'));
         gaps.push({
+          ruleId: 'gap-ep-oac-afib',
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.ELECTROPHYSIOLOGY,
           status: 'Oral anticoagulant not prescribed in AFib',
@@ -5648,6 +5686,7 @@ export function evaluateGapRules(
   if (medCodes.includes('1037042') && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     if (labValues['egfr'] !== undefined && labValues['egfr'] < 30) {
       gaps.push({
+        ruleId: 'slug:safety-dabigatran-contraindicated-in-severe-renal-impairment-egfr-30',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'SAFETY: Dabigatran contraindicated in severe renal impairment (eGFR<30)',
@@ -5674,6 +5713,7 @@ export function evaluateGapRules(
       // Missing data: fire structured DATA gap, do NOT silent-default to "no impairment".
       // Mirrors EP-RC LVEF-data-required pattern from PR #229 / EP-XX-7 mitigation.
       gaps.push({
+        ruleId: 'slug:egfr-measurement-required-to-evaluate-dabigatran-safety-in-renal-impai',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'eGFR measurement required to evaluate dabigatran safety in renal impairment',
@@ -5719,6 +5759,7 @@ export function evaluateGapRules(
     const rivaAvoidLowCrCl = egfrRiva !== undefined && egfrRiva < 15;
     if (rivaOverForRenal || rivaAvoidLowCrCl) {
       gaps.push({
+        ruleId: 'gap-ep-003-rivaroxaban-renal-dose',
         type: TherapyGapType.MEDICATION_CONTRAINDICATED,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'DOAC dose not adjusted for renal function (rivaroxaban)',
@@ -5752,6 +5793,7 @@ export function evaluateGapRules(
     const apixDose4 = meds.find(m => m.rxNormCode === '1364430')?.doseValue;
     if (apixDose4 !== undefined && apixDose4 !== null && apixDose4 >= 5) {
       gaps.push({
+        ruleId: 'gap-ep-004-apixaban-underdose-criteria',
         type: TherapyGapType.MEDICATION_CONTRAINDICATED,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'Apixaban dose reduction criteria met but on full dose',
@@ -5787,6 +5829,7 @@ export function evaluateGapRules(
     const apixDose5 = meds.find(m => m.rxNormCode === '1364430')?.doseValue;
     if (apixDose5 !== undefined && apixDose5 !== null && apixDose5 <= 2.5) {
       gaps.push({
+        ruleId: 'gap-ep-005-apixaban-inappropriate-underdose',
         type: TherapyGapType.MEDICATION_UNDERDOSED,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'Apixaban inappropriately reduced without criteria',
@@ -5824,6 +5867,7 @@ export function evaluateGapRules(
   const onDOAC_EP008 = medCodes.includes('1364430') || medCodes.includes('1114195') || medCodes.includes('1599538') || medCodes.includes('1037042');
   if (hasModSevereMS_EP008 && onDOAC_EP008 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-008-doac-mitral-stenosis',
       type: TherapyGapType.MEDICATION_CONTRAINDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'DOAC contraindicated in moderate-severe mitral stenosis',
@@ -5854,6 +5898,7 @@ export function evaluateGapRules(
   if (medCodes.includes('1599538') && labValues['egfr'] !== undefined && labValues['egfr'] > 95
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-009-edoxaban-high-crcl',
       type: TherapyGapType.MEDICATION_CONTRAINDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Edoxaban reduced efficacy at high CrCl',
@@ -5896,6 +5941,7 @@ export function evaluateGapRules(
     const priorMajorBleed_EP012 = dxCodes.some(c => c.startsWith('D68.3') || c.startsWith('K92.2') || c.startsWith('I60') || c.startsWith('I61') || c.startsWith('I62') || c === 'R31.0' || c.startsWith('N02'));
     if (cha012 >= 3 && priorMajorBleed_EP012) {
       gaps.push({
+        ruleId: 'gap-ep-012-laac-high-risk-bleed',
         type: TherapyGapType.DEVICE_ELIGIBLE,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'LAAC evaluation for high stroke risk with prior major bleed',
@@ -5938,6 +5984,7 @@ export function evaluateGapRules(
   if (hasAFnonFlutter_EP && labValues['lvef'] !== undefined && labValues['lvef'] <= 35
       && !procedureCodes.includes(EP_ABLATION_CPT.AF_PVI) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-014-af-ablation-hfref',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'AF ablation not referred in HFrEF (CASTLE-AF)',
@@ -5979,6 +6026,7 @@ export function evaluateGapRules(
     const onOAC071 = OAC_CODES_CV.some(c => medCodes.includes(c));
     if (qualifies071 && !onOAC071) {
       gaps.push({
+        ruleId: 'gap-ep-071-post-ablation-oac',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'Anticoagulation not continued after AF ablation',
@@ -6013,6 +6061,7 @@ export function evaluateGapRules(
   if (procedureCodes.includes(EP_ABLATION_CPT.AF_PVI) && hasAFnonFlutter_EP
       && AAD_CODES_CV.some(c => medCodes.includes(c)) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-072-redo-af-ablation',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Redo AF ablation evaluation after recurrence',
@@ -6042,6 +6091,7 @@ export function evaluateGapRules(
   if (dxCodes.some(c => c.startsWith('I48.3')) && !procedureCodes.includes(EP_ABLATION_CPT.SVT)
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-074-flutter-cti-ablation',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'CTI ablation not offered for typical atrial flutter',
@@ -6073,6 +6123,7 @@ export function evaluateGapRules(
   if (dxCodes.some(c => c.startsWith('I47.1')) && AAD_CODES_CV.some(c => medCodes.includes(c))
       && !procedureCodes.includes(EP_ABLATION_CPT.SVT) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-076-svt-ablation',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'SVT ablation not offered for recurrent SVT on antiarrhythmic',
@@ -6119,6 +6170,7 @@ export function evaluateGapRules(
   if (hasVT_EP && hasCAD && AAD_CODES_CV.some(c => medCodes.includes(c)) && !hasVTablation_EP
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-020-ischemic-vt-ablation',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'VT catheter ablation not offered for ischemic VT on antiarrhythmic',
@@ -6147,6 +6199,7 @@ export function evaluateGapRules(
   // Trigger: VT (I47.2) + non-ischemic CM (I42.0/.8/.9) + NOT ischemic (distinguishes from EP-020) + no VT ablation.
   if (hasVT_EP && hasNICM_EP && !hasCAD && !hasVTablation_EP && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-021-nicm-vt-substrate',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'VT substrate evaluation not pursued in non-ischemic cardiomyopathy',
@@ -6178,6 +6231,7 @@ export function evaluateGapRules(
   if (hasVT_EP && hasCAD && hasICD_EP && onAmiodarone_EP && !hasVTablation_EP
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-022-vt-ablation-vanish',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'VT ablation not considered before amiodarone escalation (VANISH)',
@@ -6213,6 +6267,7 @@ export function evaluateGapRules(
   if (dxCodes.some(c => c.startsWith('I44.2') || c.startsWith('I49.5'))
       && !hasAnyCIED_EP && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-029-pacemaker-class1',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Pacemaker not implanted for Class I bradycardia indication',
@@ -6241,6 +6296,7 @@ export function evaluateGapRules(
   if (hasAnyCIED_EP && dxCodes.some(c => c.startsWith('T82.7')) && !hasExtraction_EP
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-034-cied-infection-extraction',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Full CIED system extraction not performed for device infection',
@@ -6275,6 +6331,7 @@ export function evaluateGapRules(
       && !(labValues['qrs_duration'] !== undefined && labValues['qrs_duration'] >= 150)
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-092-sicd-candidate',
       type: TherapyGapType.DEVICE_ELIGIBLE,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'S-ICD not considered for young primary-prevention ICD candidate without pacing need',
@@ -6317,6 +6374,7 @@ export function evaluateGapRules(
       && !dxCodes.some(c => c.startsWith('I44.2')) && !hasPacemaker_EP
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-030-brady-avn-blocker-reduce',
       type: TherapyGapType.MEDICATION_CONTRAINDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Bradycardia on AV-nodal blocker: reduce drug before pacemaker decision',
@@ -6347,6 +6405,7 @@ export function evaluateGapRules(
   if (hasAF && labValues['heart_rate'] !== undefined && labValues['heart_rate'] < 40 && onAVNBlocker_EP
       && !hasPacemaker_EP && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-033-af-slow-rate-pacing',
       type: TherapyGapType.MEDICATION_CONTRAINDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Chronic AF with HR<40 on rate control: adjust medication vs pacing',
@@ -6379,6 +6438,7 @@ export function evaluateGapRules(
       && ([...RAAS_CODES_CV, ...BB_CODES_CV, ...RATE_CONTROL_CODES_CV, ...codes(RXNORM_LOOP_DIURETICS), ...codes(RXNORM_THIAZIDES), ...codes(RXNORM_ALPHA_BLOCKERS)].some(c => medCodes.includes(c)))
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-097-orthostatic-hypotension-med-review',
       type: TherapyGapType.MEDICATION_CONTRAINDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Orthostatic hypotension on BP-lowering therapy: medication review',
@@ -6413,6 +6473,7 @@ export function evaluateGapRules(
       || medCodes.includes('1191'); // aspirin (acetylsalicylic acid ingredient)
     if (!onAntithrombotic_EP067) {
       gaps.push({
+        ruleId: 'gap-ep-067-post-laac-antithrombotic',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'Post-LAAC patient not on any antithrombotic therapy',
@@ -6467,6 +6528,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-ep-079-wpw-af-avn-blocker',
       type: TherapyGapType.MEDICATION_CONTRAINDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'CRITICAL: AV nodal blocker contraindicated in pre-excited AF (WPW + AF) — risk of ventricular fibrillation',
@@ -6510,6 +6572,7 @@ export function evaluateGapRules(
     );
     if (hasOACContraindication) {
       gaps.push({
+        ruleId: 'gap-ep-laac',
         type: TherapyGapType.DEVICE_ELIGIBLE,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'Consider LAAC device evaluation for AFib with OAC contraindication',
@@ -6544,6 +6607,7 @@ export function evaluateGapRules(
   if (hasAF && !hasHF && age < 80 && AAD_CODES_CV.some(c => medCodes.includes(c))
       && !procedureCodes.includes(EP_ABLATION_CPT.AF_PVI) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-ablation',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider AFib catheter ablation referral (symptomatic AF on antiarrhythmic)',
@@ -6578,6 +6642,7 @@ export function evaluateGapRules(
     const hasICD = dxCodes.some(c => c.startsWith('Z95.810') || c.startsWith('Z95.0'));
     if (!hasICD) {
       gaps.push({
+        ruleId: 'slug:consider-icd-evaluation-for-primary-prevention-in-hfref',
         type: TherapyGapType.DEVICE_ELIGIBLE,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'Consider ICD evaluation for primary prevention in HFrEF',
@@ -6613,6 +6678,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-ep-device-crt',
       type: TherapyGapType.DEVICE_ELIGIBLE,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider CRT evaluation for LVEF <=35% with wide QRS',
@@ -6645,6 +6711,7 @@ export function evaluateGapRules(
     const hasLFT = labValues['alt'] !== undefined || labValues['ast'] !== undefined;
     if (!hasTSH || !hasLFT) {
       gaps.push({
+        ruleId: 'gap-ep-amiodarone-monitor',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'Amiodarone toxicity monitoring recommended for review',
@@ -6680,6 +6747,7 @@ export function evaluateGapRules(
     const hasCreatinine = labValues['creatinine'] !== undefined;
     if (!hasQTc || !hasCreatinine) {
       gaps.push({
+        ruleId: 'gap-ep-dofetilide-rems',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'Dofetilide REMS monitoring recommended for review',
@@ -6715,6 +6783,7 @@ export function evaluateGapRules(
     const hasECG = labValues['qtc_interval'] !== undefined || labValues['qrs_duration'] !== undefined;
     if (!hasECG) {
       gaps.push({
+        ruleId: 'gap-ep-syncope',
         type: TherapyGapType.SCREENING_DUE,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'Consider syncope workup evaluation',
@@ -6746,6 +6815,7 @@ export function evaluateGapRules(
   const hasCIED = dxCodes.some(c => c.startsWith('Z95.0') || c.startsWith('Z95.810'));
   if (hasCIED && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'slug:consider-remote-monitoring-enrollment-for-cardiac-implantable-device',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider remote monitoring enrollment for cardiac implantable device',
@@ -6776,6 +6846,7 @@ export function evaluateGapRules(
     if (medCodes.includes('3407')) { // digoxin ingredient (AUDIT-118: formulations roll up via expandToIngredients)
             if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
+          ruleId: 'slug:digoxin-toxicity-risk',
           type: TherapyGapType.MEDICATION_CONTRAINDICATED,
           module: ModuleType.HEART_FAILURE,
           status: 'Digoxin toxicity risk',
@@ -6807,6 +6878,7 @@ export function evaluateGapRules(
   if (hasDaptIndication && !onP2Y12) {
         if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
+        ruleId: 'slug:p2y12-inhibitor-not-active-post-stent-cad',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'P2Y12 inhibitor not active post-stent/CAD',
@@ -6846,6 +6918,7 @@ export function evaluateGapRules(
     if (statinStatus !== 'on_high_intensity' && statinStatus !== 'agent_dose_unknown' && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
       const doseUnknown = statinStatus === 'agent_dose_unknown'; // now always false (dose-unknown gated out above); retained for body shape
       gaps.push({
+          ruleId: 'gap-cad-statin',
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.CORONARY_INTERVENTION,
           status: doseUnknown
@@ -6885,6 +6958,7 @@ export function evaluateGapRules(
     const onRAASmi = medCodes.some(c => RAAS_CODES_MI.includes(c));
     if (!onRAASmi) {
       gaps.push({
+        ruleId: 'gap-cad-acei',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'ACEi/ARB not prescribed post-MI',
@@ -6919,6 +6993,7 @@ export function evaluateGapRules(
     const onBBmi = medCodes.some(c => BB_CODES_MI.includes(c));
     if (!onBBmi) {
       gaps.push({
+        ruleId: 'gap-cad-bb-post-mi',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Beta-blocker not prescribed post-MI with reduced LVEF',
@@ -6953,6 +7028,7 @@ export function evaluateGapRules(
     const isSmoker = dxCodes.some(c => c.startsWith('F17') || c.startsWith('Z72.0'));
     if (isSmoker) {
       gaps.push({
+        ruleId: 'gap-cad-smoking',
         type: TherapyGapType.REFERRAL_NEEDED,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Smoking cessation support recommended for review in CAD patient',
@@ -6987,6 +7063,7 @@ export function evaluateGapRules(
       const hasLpa = labValues['lpa'] !== undefined; // AUDIT-184 slug-name fix: the threaded slug is 'lpa', not 'lipoprotein_a' (was an always-over-fire hollow read)
       if (!hasLpa) {
         gaps.push({
+          ruleId: 'gap-cad-lpa',
           type: TherapyGapType.SCREENING_DUE,
           module: ModuleType.CORONARY_INTERVENTION,
           status: 'Consider Lipoprotein(a) screening in premature ASCVD',
@@ -7049,6 +7126,7 @@ export function evaluateGapRules(
       (!onEzetimibe || !onPCSK9)
     ) {
       gaps.push({
+        ruleId: 'gap-cad-lipid-intensification',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'LDL not at goal on statin - intensify lipid therapy',
@@ -7088,6 +7166,7 @@ export function evaluateGapRules(
     const hasA1c = labValues['hba1c'] !== undefined;
     if (!hasA1c) {
       gaps.push({
+        ruleId: 'slug:hba1c-monitoring-recommended-for-review-in-cad-patient-with-diabetes',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'HbA1c monitoring recommended for review in CAD patient with diabetes',
@@ -7121,6 +7200,7 @@ export function evaluateGapRules(
     const hasBP = labValues['systolic_bp'] !== undefined || labValues['diastolic_bp'] !== undefined;
     if (!hasBP) {
       gaps.push({
+        ruleId: 'slug:blood-pressure-monitoring-recommended-for-review-in-cad-patient',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Blood pressure monitoring recommended for review in CAD patient',
@@ -7159,6 +7239,7 @@ export function evaluateGapRules(
     if (lastEcho === undefined) {
             if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
+          ruleId: 'gap-sh-1-as-surveillance',
           type: TherapyGapType.IMAGING_OVERDUE,
           module: ModuleType.STRUCTURAL_HEART,
           status: 'Echo surveillance overdue for aortic stenosis',
@@ -7200,6 +7281,7 @@ export function evaluateGapRules(
     if (!onWarfarin) {
             if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
+          ruleId: 'slug:warfarin-not-active-with-mechanical-valve',
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.VALVULAR_DISEASE,
           status: 'Warfarin not active with mechanical valve',
@@ -7251,6 +7333,7 @@ export function evaluateGapRules(
     if (padStatinStatus !== 'on_high_intensity' && padStatinStatus !== 'agent_dose_unknown' && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
       const doseUnknown = padStatinStatus === 'agent_dose_unknown'; // now always false (dose-unknown gated out above); retained for body shape
       gaps.push({
+          ruleId: 'gap-pv-1-pad-statin',
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.PERIPHERAL_VASCULAR,
           status: doseUnknown
@@ -7289,6 +7372,7 @@ export function evaluateGapRules(
     if (!hasABI) {
             if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
+          ruleId: 'gap-pv-2-abi-screening',
           type: TherapyGapType.SCREENING_DUE,
           module: ModuleType.PERIPHERAL_VASCULAR,
           status: 'ABI screening not performed',
@@ -7321,6 +7405,7 @@ export function evaluateGapRules(
   const hasLowAbnormalABI = (abiLeft_PV3 !== undefined && abiLeft_PV3 <= 0.9) || (abiRight_PV3 !== undefined && abiRight_PV3 <= 0.9);
   if (hasLowAbnormalABI && !hasPAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-pv-003-abnormal-abi',
       type: TherapyGapType.DOCUMENTATION_GAP,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Abnormal ABI (<=0.90) without a coded PAD diagnosis: undiagnosed peripheral artery disease',
@@ -7357,6 +7442,7 @@ export function evaluateGapRules(
     if (!onRAAS) {
             if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
+          ruleId: 'slug:acei-arb-arni-not-prescribed-in-hfref',
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.HEART_FAILURE,
           status: 'ACEi/ARB/ARNi not prescribed in HFrEF',
@@ -7408,6 +7494,7 @@ export function evaluateGapRules(
       // the SAFETY scenario is "patient is currently exposed to non-DHP CCB while having HFrEF."
       if (hfrefStatus === 'hfref' && onNonDhpCcb && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
         gaps.push({
+          ruleId: 'gap-ep-017-hfref-non-dhp-ccb',
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.ELECTROPHYSIOLOGY,
           status: 'SAFETY: Non-DHP CCB (diltiazem/verapamil) is contraindicated in HFrEF',
@@ -7438,6 +7525,7 @@ export function evaluateGapRules(
       // which would preserve the EP-XX-7 harm vector.
       if (hfrefStatus === 'hf_unknown_lvef' && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
         gaps.push({
+          ruleId: 'slug:lvef-measurement-required-to-safely-guide-af-rate-control-therapy-in-h',
           type: TherapyGapType.SCREENING_DUE,
           module: ModuleType.ELECTROPHYSIOLOGY,
           status: 'LVEF measurement required to safely guide AF rate-control therapy in HF patient',
@@ -7466,6 +7554,7 @@ export function evaluateGapRules(
     if (!onAnyRateControl && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
       const isHfref = hfrefStatus === 'hfref';
       gaps.push({
+        ruleId: 'slug:ep-rate-control-afib',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: isHfref
@@ -7516,6 +7605,7 @@ export function evaluateGapRules(
   // Guideline: 2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization, Class 1, LOE A
   if (hasCABG_rehab && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-cad-rehab-cabg',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.CORONARY_INTERVENTION,
       status: 'Post-CABG cardiac rehabilitation referral not documented',
@@ -7539,6 +7629,7 @@ export function evaluateGapRules(
   // Guideline: 2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization, Class 1, LOE A
   if (hasMI_rehab && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-cad-rehab-mi',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.CORONARY_INTERVENTION,
       status: 'Post-MI cardiac rehabilitation referral not documented',
@@ -7586,6 +7677,7 @@ export function evaluateGapRules(
   if (hasAorticStenosis && concordantSevereAS && symptomaticAS && !hasAnyProstheticValve_SH
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-2-tavr-eval',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'AVR not referred for severe symptomatic aortic stenosis',
@@ -7619,6 +7711,7 @@ export function evaluateGapRules(
   if (hasAorticStenosis && concordantSevereAS && labValues['lvef'] !== undefined && labValues['lvef'] < 55
       && !symptomaticAS && !hasAnyProstheticValve_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-006-asymptomatic-as',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'AVR not referred for asymptomatic severe AS with LV dysfunction (Class IIa)',
@@ -7653,6 +7746,7 @@ export function evaluateGapRules(
       && labValues['aortic_valve_mean_gradient'] !== undefined && labValues['aortic_valve_mean_gradient'] < 40
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-003-lflg-classical',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Low-flow low-gradient AS: dobutamine stress echo not performed',
@@ -7686,6 +7780,7 @@ export function evaluateGapRules(
       && labValues['aortic_valve_mean_gradient'] !== undefined && labValues['aortic_valve_mean_gradient'] < 40
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-004-lflg-paradoxical',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Paradoxical low-flow low-gradient AS: stroke-volume/flow assessment needed',
@@ -7719,6 +7814,7 @@ export function evaluateGapRules(
       && labValues['aortic_valve_area'] > 1.0 && labValues['aortic_valve_area'] <= 1.5
       && !hasAnyProstheticValve_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-050-moderate-as-grading',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Moderate AS: severity-grading surveillance / integrated clarification',
@@ -7757,6 +7853,7 @@ export function evaluateGapRules(
   if (hasBioprostheticValve && labValues['lvef'] === undefined) {
         if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
+        ruleId: 'slug:echo-surveillance-overdue-for-bioprosthetic-valve',
         type: TherapyGapType.IMAGING_OVERDUE,
         module: ModuleType.VALVULAR_DISEASE,
         status: 'Echo surveillance overdue for bioprosthetic valve',
@@ -7811,6 +7908,7 @@ export function evaluateGapRules(
           || (labValues['lvesd'] !== undefined && labValues['lvesd'] >= 40))
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-3-mitral-intervention',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Surgical referral not documented for severe primary mitral regurgitation',
@@ -7843,6 +7941,7 @@ export function evaluateGapRules(
   if (hasMitralRegurg && severeMR && !secondaryMRContext && dxCodes.some(c => c.startsWith('I48'))
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'slug:surgery-not-considered-for-severe-primary-mr-with-new-atrial-fibrillat',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Surgery not considered for severe primary MR with new atrial fibrillation (Class IIa)',
@@ -7872,6 +7971,7 @@ export function evaluateGapRules(
       && labValues['pasp'] !== undefined && labValues['pasp'] > 50
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-017-primary-mr-pasp',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Surgery not considered for severe primary MR with pulmonary hypertension (Class IIa)',
@@ -7925,6 +8025,7 @@ export function evaluateGapRules(
           || (labValues['fac'] !== undefined && labValues['fac'] < 35))
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-024-tr-rv-dysfunction',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Severe TR with RV systolic dysfunction (TAPSE<17 or FAC<35): intervention-timing evaluation gap',
@@ -7957,6 +8058,7 @@ export function evaluateGapRules(
   // referral gap.
   if (hasTRdx && severeTR && trCongestionSymptoms && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-022-tricuspid-assessment',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Severe symptomatic TR: transcatheter tricuspid (T-TEER/TTVR) evaluation gap',
@@ -7987,6 +8089,7 @@ export function evaluateGapRules(
     // non-lead severe-TR population for TTVR-vs-TEER device selection, not a confirmed T-TEER-ineligible call.
     if (!hasCIEDLead_TR) {
       gaps.push({
+        ruleId: 'gap-sh-069-evoque-ttvr',
         type: TherapyGapType.PROCEDURE_INDICATED,
         module: ModuleType.STRUCTURAL_HEART,
         status: 'Severe TR (no CIED lead): Evoque TTVR (TRISCEND) candidacy for device selection',
@@ -8017,6 +8120,7 @@ export function evaluateGapRules(
     // Path-B: coaptation-gap morphology is NOT threaded (echo-morphology); lead presence IS (Z95.0/Z95.810).
     if (hasCIEDLead_TR) {
       gaps.push({
+        ruleId: 'gap-sh-023-tr-device-lead',
         type: TherapyGapType.PROCEDURE_INDICATED,
         module: ModuleType.STRUCTURAL_HEART,
         status: 'Severe TR with CIED lead: device selection requires lead-status + coaptation-gap assessment',
@@ -8053,6 +8157,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:structural-heart-imaging-follow-up-recommended-for-review',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Structural heart imaging follow-up recommended for review',
@@ -8085,6 +8190,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-sh-6-post-tavr-followup',
       type: TherapyGapType.FOLLOWUP_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Post-TAVR follow-up recommended for review',
@@ -8119,6 +8225,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:endocarditis-prophylaxis-review-recommended',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Endocarditis prophylaxis review recommended',
@@ -8148,6 +8255,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:left-atrial-appendage-assessment-recommended-for-review',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Left atrial appendage assessment recommended for review',
@@ -8190,6 +8298,7 @@ export function evaluateGapRules(
     const hasRecentINR = labValues['inr'] !== undefined;
     if (!hasRecentINR) {
       gaps.push({
+        ruleId: 'slug:inr-monitoring-overdue-for-mechanical-valve-on-warfarin',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.VALVULAR_DISEASE,
         status: 'INR monitoring overdue for mechanical valve on warfarin',
@@ -8222,6 +8331,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-vd-4-mitral-stenosis',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Echo surveillance overdue for mitral stenosis',
@@ -8269,6 +8379,7 @@ export function evaluateGapRules(
       && labValues['lvef'] !== undefined && labValues['lvef'] <= 55
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-vhd-103-severe-ar-surgical',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Severe asymptomatic AR with LV dysfunction: surgical evaluation gap',
@@ -8304,6 +8415,7 @@ export function evaluateGapRules(
       && labValues['lvesd'] !== undefined && labValues['lvesd'] > 50
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'slug:severe-asymptomatic-ar-with-preserved-ef-and-lv-dilation-lvesd-50-mm-s',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Severe asymptomatic AR with preserved EF and LV dilation (LVESD >50 mm): surgical evaluation gap',
@@ -8335,6 +8447,7 @@ export function evaluateGapRules(
   // confirmable from the dx alone (I35.1 does not encode grade); this surfaces the AR population due for surveillance.
   if (hasAorticRegurg && !anyAREchoValue && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-vhd-102-ar-surveillance',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Aortic regurgitation without surveillance echo on file',
@@ -8367,6 +8480,7 @@ export function evaluateGapRules(
   const hasMixedAortic = dxCodes.some(c => c.startsWith('I35.2'));
   if ((multiValveCount >= 2 || hasMixedAortic) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-vhd-104-mixed-valve-staging',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Mixed / multi-valve disease without integrated severity staging',
@@ -8396,6 +8510,7 @@ export function evaluateGapRules(
   const hasMRQuant = labValues['mitral_eroa'] !== undefined || labValues['mitral_vena_contracta'] !== undefined;
   if (hasMR_VHD && hasModerateMRColor && !hasMRQuant && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-vhd-105-mr-quant-triangulation',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Moderate MR by color Doppler without quantitative (EROA/vena-contracta) triangulation',
@@ -8439,6 +8554,7 @@ export function evaluateGapRules(
   // thrombosis with an elevated gradient).
   if (hasMechValve_VHD2 && elevatedProstheticGradient_VHD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-vhd-068-mech-pvt-gradient',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Mechanical prosthetic valve with elevated gradient: thrombosis (PVT) workup gap',
@@ -8465,6 +8581,7 @@ export function evaluateGapRules(
   // Guideline: 2020 ACC/AHA VHD Guideline (SVD with hemodynamic significance -> ViV-TAVR vs redo surgery, Class 2a).
   if (hasBioValve_VHD2 && elevatedProstheticGradient_VHD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-vhd-011-bio-svd-gradient',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Bioprosthetic valve with elevated gradient: structural deterioration (SVD) evaluation gap',
@@ -8505,6 +8622,7 @@ export function evaluateGapRules(
       && labValues['inr'] !== undefined && labValues['inr'] < 2.0
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-vhd-001-subtherapeutic-inr',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Mechanical valve with sub-therapeutic INR: warfarin management gap',
@@ -8537,6 +8655,7 @@ export function evaluateGapRules(
   if (hasMechValve_VHD3 && onWarfarin_VHD3 && hasAtheroscleroticDz_VHD && !onAspirin_VHD6
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-vhd-006-mech-asa-adjunct',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Mechanical valve with atherosclerotic disease without low-dose ASA adjunct',
@@ -8578,6 +8697,7 @@ export function evaluateGapRules(
   // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 early/urgent surgery for IE with valve dysfunction causing HF).
   if (hasIE_VHD && dxCodes.some(c => c.startsWith('I50')) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-vhd-057-ie-hf-surgery',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Infective endocarditis with heart failure: urgent surgery indication gap',
@@ -8606,6 +8726,7 @@ export function evaluateGapRules(
   const onAnticoag_VHD = ['11289', '1364430', '1114195', '1037042', '1599538'].some(c => medCodes.includes(c));
   if (hasIE_VHD && hasEmbolic_VHD && onAnticoag_VHD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-vhd-059-ie-embolic-surgery',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Infective endocarditis with embolic event on therapy: surgery consideration gap',
@@ -8640,6 +8761,7 @@ export function evaluateGapRules(
       && labValues['vegetation_size'] !== undefined && labValues['vegetation_size'] > 10
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-vhd-060-ie-large-vegetation',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Infective endocarditis with large mobile vegetation (>10 mm): early-surgery consideration gap',
@@ -8671,6 +8793,7 @@ export function evaluateGapRules(
   if (hasPriorIE_VHD && hasDental_VHD && !onProphylaxisAbx_VHD
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE) && !hasContraindication(dxCodes, EXCLUSION_ALLERGY_DOCUMENTED)) {
     gaps.push({
+      ruleId: 'gap-vhd-064-prior-ie-dental-prophylaxis',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Prior infective endocarditis: dental antibiotic prophylaxis gap',
@@ -8699,6 +8822,7 @@ export function evaluateGapRules(
   // Guideline: 2020 AHA RHD / WHF (Class 1 secondary prophylaxis - benzathine penicillin G every 3-4 weeks).
   if (hasRheumatic_VHD && !onBenzathinePCN_VHD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-vhd-079-rheumatic-prophylaxis',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Rheumatic heart disease without benzathine penicillin secondary prophylaxis',
@@ -8730,6 +8854,7 @@ export function evaluateGapRules(
   if (hasRheumatic_VHD && hasAF_VHD4 && !onWarfarin_VHD4 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const onDOAC_VHD4 = ['1364430', '1114195', '1037042', '1599538'].some(c => medCodes.includes(c));
     gaps.push({
+      ruleId: 'gap-vhd-083-rheumatic-af-warfarin',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Rheumatic heart disease + atrial fibrillation not on warfarin (DOAC contraindicated)',
@@ -8776,6 +8901,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-vhd-098-mech-valve-preconception',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Mechanical valve in a reproductive-age patient: pre-conception anticoagulation counseling gap',
@@ -8807,6 +8933,7 @@ export function evaluateGapRules(
   if (hasMechanicalValve && isPregnant_VHD5 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const onWarfarin_VHD5 = medCodes.includes('11289');
     gaps.push({
+      ruleId: 'gap-vhd-099-mech-valve-pregnancy-anticoag',
       type: TherapyGapType.SAFETY_ALERT,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Mechanical valve in pregnancy: anticoagulation strategy SAFETY review (teratogenicity vs valve-thrombosis tradeoff)',
@@ -8845,6 +8972,7 @@ export function evaluateGapRules(
       && (labValues['anti_xa'] < 0.8 || labValues['anti_xa'] > 1.2)
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-vhd-100-mech-valve-pregnancy-antixa',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Mechanical valve in pregnancy on LMWH: anti-Xa out of therapeutic range (0.8-1.2 U/mL) dose adjustment gap',
@@ -8875,6 +9003,7 @@ export function evaluateGapRules(
   const onDopamineAgonist_VHD5 = medCodes.includes('47579') || medCodes.includes('8047');
   if (onDopamineAgonist_VHD5 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-vhd-091-dopamine-agonist-valve-surveillance',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Ergot-derived dopamine agonist therapy: drug-induced valve disease surveillance echo gap',
@@ -8902,6 +9031,7 @@ export function evaluateGapRules(
   const onErgotAlkaloid_VHD5 = medCodes.includes('4025') || medCodes.includes('6911');
   if (onErgotAlkaloid_VHD5 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-vhd-092-ergot-alkaloid-valve-surveillance',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Chronic ergot-alkaloid therapy: drug-induced valve disease surveillance echo gap',
@@ -8932,6 +9062,7 @@ export function evaluateGapRules(
     const onDOAC = medCodes.some(c => DOAC_CODES.includes(c));
     if (onDOAC) {
       gaps.push({
+        ruleId: 'gap-vd-6-doac-mechanical-valve',
         type: TherapyGapType.SAFETY_ALERT,
         module: ModuleType.VALVULAR_DISEASE,
         status: 'DOAC detected in mechanical valve patient -- contraindicated',
@@ -8968,6 +9099,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:rheumatic-heart-disease-screening-recommended-for-review',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Rheumatic heart disease screening recommended for review',
@@ -8996,6 +9128,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:endocarditis-education-documentation-recommended-for-review',
       type: TherapyGapType.DOCUMENTATION_GAP,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Endocarditis education documentation recommended for review',
@@ -9026,6 +9159,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_PREGNANCY)
   ) {
     gaps.push({
+      ruleId: 'slug:pregnancy-risk-assessment-recommended-for-review-in-valve-disease',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Pregnancy risk assessment recommended for review in valve disease',
@@ -9056,6 +9190,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:bioprosthetic-valve-degeneration-monitoring-recommended-for-review',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Bioprosthetic valve degeneration monitoring recommended for review',
@@ -9096,6 +9231,7 @@ export function evaluateGapRules(
     const onOAC = medCodes.some(c => OAC_CODES.includes(c));
     if (!onOAC) {
       gaps.push({
+        ruleId: 'gap-vd-12-af-valve-anticoag',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.VALVULAR_DISEASE,
         status: 'Oral anticoagulation missing in AF with valve disease',
@@ -9136,6 +9272,7 @@ export function evaluateGapRules(
     const onAntiplatelet = medCodes.some(c => ANTIPLATELET_CODES.includes(c));
     if (!onAntiplatelet) {
       gaps.push({
+        ruleId: 'gap-pv-3-antiplatelet',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'Antiplatelet therapy missing in PAD',
@@ -9168,6 +9305,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-pv-4-smoking-cessation',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Smoking cessation referral recommended for review in PAD',
@@ -9198,6 +9336,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-pv-5-exercise-therapy',
       type: TherapyGapType.REHABILITATION_ELIGIBLE,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Supervised exercise therapy recommended for review in PAD with claudication',
@@ -9232,6 +9371,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-pv-6-diabetes-control',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'HbA1c above target (>=7.0%) in PAD with diabetes: glycemic optimization gap',
@@ -9267,6 +9407,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:wound-care-assessment-referral-recommended-for-review-in-pad',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Wound care assessment referral recommended for review in PAD',
@@ -9297,6 +9438,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:duplex-ultrasound-follow-up-recommended-for-review-post-intervention',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Duplex ultrasound follow-up recommended for review post-intervention',
@@ -9328,6 +9470,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-pv-9-aaa-screening',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Abdominal aortic aneurysm screening recommended for review',
@@ -9366,6 +9509,7 @@ export function evaluateGapRules(
     const onMRA83 = medCodes.some(c => MRA_CODES_HF83.includes(c));
     if (!onMRA83 && labValues['potassium'] !== undefined && labValues['potassium'] < 5.0) {
       gaps.push({
+        ruleId: 'slug:loop-diuretic-without-mra-in-hfref',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.HEART_FAILURE,
         status: 'Loop diuretic without MRA in HFrEF',
@@ -9398,6 +9542,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-84-transplant-eval',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.HEART_FAILURE,
       status: 'Cardiac transplant evaluation referral recommended for review',
@@ -9428,6 +9573,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:lvad-referral-recommended-for-review-in-refractory-advanced-hf',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.HEART_FAILURE,
       status: 'LVAD referral recommended for review in refractory advanced HF',
@@ -9458,6 +9604,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-86-crt-d-upgrade',
       type: TherapyGapType.DEVICE_UPGRADE_DUE,
       module: ModuleType.HEART_FAILURE,
       status: 'CRT-D upgrade evaluation recommended for review',
@@ -9490,6 +9637,7 @@ export function evaluateGapRules(
     (hasPPCMcode || (gender === 'FEMALE' && hasRecentPregnancy && labValues['lvef'] !== undefined && labValues['lvef'] < 45))
   ) {
     gaps.push({
+      ruleId: 'gap-hf-87-peripartum',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Peripartum cardiomyopathy screening recommended for review',
@@ -9518,6 +9666,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:acute-myocarditis-follow-up-recommended-for-review',
       type: TherapyGapType.FOLLOWUP_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Acute myocarditis follow-up recommended for review',
@@ -9549,6 +9698,7 @@ export function evaluateGapRules(
     const hasKnownFabry = dxCodes.some(c => c.startsWith('E75.2'));
     if (!hasKnownFabry) {
       gaps.push({
+        ruleId: 'gap-hf-89-fabry',
         type: TherapyGapType.SCREENING_DUE,
         module: ModuleType.HEART_FAILURE,
         status: 'Fabry disease screening recommended for review in unexplained LVH',
@@ -9582,6 +9732,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-90-amyloid-biomarker',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Amyloid biomarker follow-up overdue (no recent BNP/NT-proBNP)',
@@ -9619,6 +9770,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:volume-status-monitoring-recommended-for-review-in-hf-with-elevated-bn',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Volume status monitoring recommended for review in HF with elevated BNP',
@@ -9667,6 +9819,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-sh-10-mitraclip',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: onGDMT_SH10
@@ -9712,6 +9865,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-sh-016-primary-mr-af',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Transcatheter mitral valve replacement candidacy recommended for review',
@@ -9753,6 +9907,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-sh-13-paravalvular-leak',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Paravalvular leak assessment recommended for review post-valve replacement',
@@ -9781,6 +9936,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:adult-congenital-heart-disease-specialist-referral-recommended-for-rev',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Adult congenital heart disease specialist referral recommended for review',
@@ -9810,6 +9966,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-sh-15-alcohol-septal',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Alcohol septal ablation candidacy recommended for review in symptomatic HCM',
@@ -9837,6 +9994,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:watchman-device-follow-up-recommended-for-review',
       type: TherapyGapType.FOLLOWUP_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'WATCHMAN device follow-up recommended for review',
@@ -9869,6 +10027,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:3d-echocardiography-recommended-for-review-for-structural-intervention',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: '3D echocardiography recommended for review for structural intervention planning',
@@ -9907,6 +10066,7 @@ export function evaluateGapRules(
     const onASA13 = medCodes.some(c => ANTIPLATELET_VD13.includes(c));
     if (!onOAC13 && !onASA13) {
       gaps.push({
+        ruleId: 'slug:anticoagulation-antiplatelet-not-documented-in-early-post-bioprostheti',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.VALVULAR_DISEASE,
         status: 'Anticoagulation/antiplatelet not documented in early post-bioprosthetic valve period',
@@ -9946,6 +10106,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_ALLERGY_DOCUMENTED)
   ) {
     gaps.push({
+      ruleId: 'gap-vd-14-dental-prophylaxis',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Dental prophylaxis antibiotic recommended for review in prosthetic valve patient',
@@ -9976,6 +10137,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:aortic-root-dilation-monitoring-recommended-for-review',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Aortic root dilation monitoring recommended for review',
@@ -10030,6 +10192,7 @@ export function evaluateGapRules(
     (ascAorta_SH !== undefined && ascAorta_SH >= 4.0);
   if (hasMarfan_SH && hasMarfanAorticDilation_SH && !(onBB_SH || onARB_SH) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-052-marfan-bb-arb',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Marfan with aortic dilation not on beta-blocker or ARB (aortic-growth prophylaxis)',
@@ -10066,6 +10229,7 @@ export function evaluateGapRules(
   else if (hasBicuspidAV_SH) { ascThreshold_SH = 5.5; ascSubgroup_SH = 'bicuspid aortopathy (>=5.5 cm; >=5.0 with risk features)'; }
   if (ascAorta_SH !== undefined && ascAorta_SH >= ascThreshold_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'slug:sh-ascending-aorta-intervention-threshold',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: `Ascending aorta at the ${ascSubgroup_SH} intervention threshold: surgical evaluation gap`,
@@ -10092,6 +10256,7 @@ export function evaluateGapRules(
   // Guideline: 2022 ACC/AHA/AATS/STS Aortic Disease Guideline (Class 1 anti-impulse BB + BP control + statin).
   if (hasTypeBDissection_SH && !hasMalperfusion_SH && !(onBB_SH && onStatin_SH) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-074-typeb-omt',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Uncomplicated type-B aortic dissection not on optimal medical therapy (impulse control)',
@@ -10119,6 +10284,7 @@ export function evaluateGapRules(
   // Guideline: 2022 ACC/AHA/AATS/STS Aortic Disease Guideline (Class 1 TEVAR for complicated type-B).
   if (hasTypeBDissection_SH && hasMalperfusion_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-075-typeb-tevar',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Complicated type-B aortic dissection (malperfusion): urgent TEVAR evaluation gap',
@@ -10148,6 +10314,7 @@ export function evaluateGapRules(
   const noEchoData_SH = labValues['lvef'] === undefined && ascAorta_SH === undefined;
   if (hasTurner_SH && noEchoData_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-054-turner-surveillance',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Turner syndrome without cardiac surveillance on file (echo + aortic imaging)',
@@ -10176,6 +10343,7 @@ export function evaluateGapRules(
   // surveillance.
   if (hasVascularEDS_SH && !onCeliprolol_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-055-veds-celiprolol',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Vascular Ehlers-Danlos not on celiprolol / comprehensive vascular surveillance',
@@ -10226,6 +10394,7 @@ export function evaluateGapRules(
   // factors) are mostly not codable - this surfaces the candidate population for a RoPE-scored closure discussion.
   if (hasPFO_SH && hasStroke_SH && age < 60 && !hasAF_SH5 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-026-pfo-cryptogenic-closure',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'PFO + cryptogenic stroke (age<60): closure evaluation gap',
@@ -10256,6 +10425,7 @@ export function evaluateGapRules(
   // shunt magnitude (Qp:Qs) + RV dilation are not threaded; elevated PASP (threaded) is the significance proxy.
   if (hasASD_SH && labValues['pasp'] !== undefined && labValues['pasp'] >= 40 && !hasEisenmenger_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-asd-closure',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Hemodynamically significant ASD: closure evaluation gap',
@@ -10292,6 +10462,7 @@ export function evaluateGapRules(
   const hasIEUncontrolled_SH = dxCodes.some(c => c.startsWith('A41') || c.startsWith('R65.2'));
   if (hasIE_SH && (hasIEEmbolic_SH || hasIEUncontrolled_SH) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-029-ie-early-surgery',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Infective endocarditis with an embolic / uncontrolled-infection surgery indication: surgery evaluation gap',
@@ -10321,6 +10492,7 @@ export function evaluateGapRules(
   // (I26.0x) + cardiogenic shock (R57.0).
   if (hasMassivePE_SH && hasShock_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-091-massive-pe-reperfusion',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Massive (high-risk) PE with instability: reperfusion evaluation gap',
@@ -10347,6 +10519,7 @@ export function evaluateGapRules(
   // Guideline: 2018 AHA/ACC ACHD; 2022 ESC/ERS PH (PAH-specific therapy improves outcomes in Eisenmenger).
   if (hasEisenmenger_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-101-eisenmenger-pah',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Eisenmenger physiology without PAH-specific therapy evaluation',
@@ -10372,6 +10545,7 @@ export function evaluateGapRules(
   // Guideline: 2018 AHA/ACC ACHD (PVR for RV dilation/dysfunction in repaired TOF).
   if (hasTOF_SH && age >= 18 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-11-tmvr',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Adult Tetralogy of Fallot: pulmonary valve replacement evaluation gap',
@@ -10398,6 +10572,7 @@ export function evaluateGapRules(
   // Guideline: 2018 AHA/ACC ACHD (atrial + accessory-pathway arrhythmia risk in Ebstein).
   if (hasEbstein_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-099-ebstein-arrhythmia',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Ebstein anomaly without arrhythmia surveillance on file',
@@ -10423,6 +10598,7 @@ export function evaluateGapRules(
   // Guideline: surgical resection is standard for atrial myxoma given embolic + obstruction risk.
   if (hasCardiacMyxoma_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-103-atrial-myxoma',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Benign cardiac neoplasm (atrial myxoma): surgical referral gap',
@@ -10461,6 +10637,7 @@ export function evaluateGapRules(
   // indication; OAC if AF). SUBGROUP-AWARE: AF -> OAC; no other indication -> single antiplatelet.
   if (hasPriorAVR_SH && onAspirin_SH6 && onP2Y12_SH6 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-059-postavr-antithrombotic',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Post-AVR on dual antiplatelet: antithrombotic regimen reassessment gap',
@@ -10492,6 +10669,7 @@ export function evaluateGapRules(
   const hasNewLBBB_SH = dxCodes.some(c => c.startsWith('I44.7'));
   if (hasPriorAVR_SH && hasNewLBBB_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-057-postavr-lbbb',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Post-AVR new LBBB without ambulatory rhythm monitoring',
@@ -10520,6 +10698,7 @@ export function evaluateGapRules(
   const hasHighGradeAVB_SH = dxCodes.some(c => c.startsWith('I44.1') || c.startsWith('I44.2'));
   if (hasPriorAVR_SH && hasHighGradeAVB_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-060-postavr-pacing',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Post-AVR high-grade AV block: permanent pacing decision gap',
@@ -10560,6 +10739,7 @@ export function evaluateGapRules(
   const hasPersistentDyspnea_SH = dxCodes.some(c => c.startsWith('R06'));
   if (hasPEHistory_SH && hasPersistentDyspnea_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-092-cteph-surveillance',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Post-PE persistent dyspnea: CTEPH surveillance workup gap',
@@ -10588,6 +10768,7 @@ export function evaluateGapRules(
   const hasCoarctation_SH = dxCodes.some(c => c.startsWith('Q25.1'));
   if (hasCoarctation_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-095-coarctation-surveillance',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Coarctation of the aorta without serial imaging surveillance',
@@ -10615,6 +10796,7 @@ export function evaluateGapRules(
   const hasSystemicRV_SH = dxCodes.some(c => c.startsWith('Q20.5') || c.startsWith('Q20.3'));
   if (hasSystemicRV_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-097-systemic-rv',
       type: TherapyGapType.FOLLOWUP_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Systemic right ventricle (ccTGA / TGA) without dedicated ACHD-center surveillance',
@@ -10657,6 +10839,7 @@ export function evaluateGapRules(
   if (procedureCodes.includes('93580') || procedureCodes.includes('93581')) {
     if (!onAnyAntithrombotic_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
       gaps.push({
+        ruleId: 'gap-sh-082-postclosure-antithrombotic',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.STRUCTURAL_HEART,
         status: 'Post-septal-closure device without an antithrombotic regimen',
@@ -10686,6 +10869,7 @@ export function evaluateGapRules(
     // Guideline: post-closure follow-up echo detects residual shunt and device-related complications.
     if (echoOverdueProxy_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
       gaps.push({
+        ruleId: 'gap-sh-083-postclosure-surveillance',
         type: TherapyGapType.IMAGING_OVERDUE,
         module: ModuleType.STRUCTURAL_HEART,
         status: 'Post-septal-closure without surveillance echo (residual-shunt assessment)',
@@ -10713,6 +10897,7 @@ export function evaluateGapRules(
   // Guideline: 2020 ACC/AHA VHD; annual echo surveillance after transcatheter mitral repair (TEER).
   if (hasMitralTEER_SH && echoOverdueProxy_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-065-postteer-echo',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Post-mitral-TEER without annual surveillance echo',
@@ -10743,6 +10928,7 @@ export function evaluateGapRules(
     (labValues['valve_severity'] !== undefined && labValues['valve_severity'] >= 4);
   if (hasMitralTEER_SH && recurrentSignificantMR_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-sh-066-recurrent-mr-teer',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Recurrent significant MR after mitral TEER: heart-team reassessment gap',
@@ -10786,6 +10972,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:hemolysis-monitoring-recommended-for-review-in-prosthetic-valve-with-a',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Hemolysis monitoring recommended for review in prosthetic valve with anemia',
@@ -10817,6 +11004,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:exercise-testing-recommended-for-review-in-asymptomatic-severe-valve-d',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Exercise testing recommended for review in asymptomatic severe valve disease',
@@ -10851,6 +11039,7 @@ export function evaluateGapRules(
     // Cilostazol is contraindicated in HF
     if (!hasHF) {
       gaps.push({
+        ruleId: 'gap-pv-10-cilostazol',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'Cilostazol not prescribed for claudication in PAD',
@@ -10885,6 +11074,7 @@ export function evaluateGapRules(
     const onRAAS_PV11 = medCodes.some(c => RAAS_CODES_PV11.includes(c));
     if (!onRAAS_PV11) {
       gaps.push({
+        ruleId: 'gap-pv-11-acei-pad',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'ACEi/ARB not prescribed in PAD with hypertension',
@@ -10927,6 +11117,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-pv-12-renal-artery',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Renal artery stenosis screening recommended for review in PAD with HTN and renal impairment',
@@ -10957,6 +11148,7 @@ export function evaluateGapRules(
       dxCodes.some(c => c.startsWith('I63') || c.startsWith('G45'));
     if (hasStrokeRisk) {
       gaps.push({
+        ruleId: 'gap-pv-13-carotid',
         type: TherapyGapType.SCREENING_DUE,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'Carotid screening recommended for review in PAD with stroke risk factors',
@@ -10985,6 +11177,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-pv-14-foot-exam',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Annual comprehensive foot exam recommended for review in PAD with diabetes',
@@ -11014,6 +11207,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-pv-15-compression',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Compression therapy assessment recommended for review in venous disease with edema',
@@ -11052,6 +11246,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-ep-csp',
       type: TherapyGapType.DEVICE_ELIGIBLE,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider conduction system pacing evaluation',
@@ -11087,6 +11282,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-ep-pfa',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider pulsed field ablation candidacy evaluation',
@@ -11115,6 +11311,7 @@ export function evaluateGapRules(
   const hasWPW = dxCodes.some(c => c.startsWith('I45.6'));
   if (hasWPW && age < 40 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-wpw',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider EP study for WPW syndrome risk stratification',
@@ -11153,6 +11350,7 @@ export function evaluateGapRules(
     if (severeHF || hasPermanentAF) {
       const arm = severeHF ? 'advanced heart failure (NYHA III/IV proxy)' : 'permanent atrial fibrillation';
       gaps.push({
+        ruleId: 'gap-ep-dronedarone',
         type: TherapyGapType.MEDICATION_CONTRAINDICATED,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: `Dronedarone contraindicated in ${arm}`,
@@ -11187,6 +11385,7 @@ export function evaluateGapRules(
     const onOACFlutter = medCodes.some(c => OAC_CODES_FLUTTER.includes(c));
     if (!onOACFlutter) {
       gaps.push({
+        ruleId: 'slug:oral-anticoagulant-not-prescribed-in-atrial-flutter',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'Oral anticoagulant not prescribed in atrial flutter',
@@ -11223,6 +11422,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-ivabradine-for-inappropriate-sinus-tachycardia',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider ivabradine for inappropriate sinus tachycardia',
@@ -11257,6 +11457,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-pvc-induced-cardiomyopathy-evaluation',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider PVC-induced cardiomyopathy evaluation',
@@ -11293,6 +11494,7 @@ export function evaluateGapRules(
     const onBBforLQTS = medCodes.some(c => BB_CODES_LQTS.includes(c));
     if (!onBBforLQTS) {
       gaps.push({
+        ruleId: 'gap-ep-lqts-bb',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'Beta-blocker not prescribed in Long QT syndrome',
@@ -11334,6 +11536,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-ep-subclinical-af',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider subclinical AF screening via device interrogation',
@@ -11363,6 +11566,7 @@ export function evaluateGapRules(
   const hasICDnew = dxCodes.some(c => c.startsWith('Z95.810'));
   if (hasICDnew && hasHF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'slug:consider-icd-programming-optimization-review',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider ICD programming optimization review',
@@ -11390,6 +11594,7 @@ export function evaluateGapRules(
   // ICD (Z95.810) + age proxy (age >= 70 as surrogate for older device/leads)
   if (hasICDnew && age >= 70 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-lead-integrity',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider lead integrity assessment for aging ICD system',
@@ -11423,6 +11628,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-antiarrhythmic-drug-review-post-ablation',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider antiarrhythmic drug review post-ablation',
@@ -11452,6 +11658,7 @@ export function evaluateGapRules(
   const hasCardiacArrest = dxCodes.some(c => c.startsWith('I46'));
   if (hasCardiacArrest && !hasICDnew && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'slug:consider-secondary-prevention-icd-evaluation-for-cardiac-arrest-surviv',
       type: TherapyGapType.DEVICE_ELIGIBLE,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider secondary prevention ICD evaluation for cardiac arrest survivor',
@@ -11483,6 +11690,7 @@ export function evaluateGapRules(
   });
   if (hasACHD && age > 18 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'slug:consider-arrhythmia-screening-in-adult-congenital-heart-disease',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider arrhythmia screening in adult congenital heart disease',
@@ -11518,6 +11726,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:torsades-de-pointes-risk-prolonged-qtc-with-qt-prolonging-medication-s',
       type: TherapyGapType.SAFETY_ALERT,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Torsades de pointes risk: prolonged QTc with QT-prolonging medication(s)',
@@ -11578,6 +11787,7 @@ export function evaluateGapRules(
     const hasCRP = labValues['crp'] !== undefined && labValues['crp'] > 2;
     if (hasCRP && !medCodes.includes('2683')) {
       gaps.push({
+        ruleId: 'gap-cad-colchicine',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider low-dose colchicine for residual inflammatory risk in CAD',
@@ -11616,6 +11826,7 @@ export function evaluateGapRules(
       !medCodes.includes('1304974') // AUDIT-102: icosapent ethyl (was 1546275 = iodide ion)
     ) {
       gaps.push({
+        ruleId: 'gap-cad-omega3',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider icosapent ethyl for elevated triglycerides in CAD',
@@ -11656,6 +11867,7 @@ export function evaluateGapRules(
     const onCCBran = medCodes.some(c => CCB_CODES_RAN.includes(c));
     if (hasAngina && onBBran && onCCBran && !medCodes.includes('35829')) { // AUDIT-104: ranolazine (was 355019 = UNKNOWN)
       gaps.push({
+        ruleId: 'gap-cad-ranolazine',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider ranolazine for refractory angina on maximal anti-anginal therapy',
@@ -11698,6 +11910,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-cad-revascularization',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.CORONARY_INTERVENTION,
       status: 'Consider revascularization assessment for multivessel CAD with reduced LVEF',
@@ -11729,6 +11942,7 @@ export function evaluateGapRules(
     const onOACforCADAF = medCodes.some(c => OAC_CODES_CAD_AF.includes(c));
     if (!onOACforCADAF) {
       gaps.push({
+        ruleId: 'gap-cad-anticoag-af',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider oral anticoagulation in CAD patient with atrial fibrillation',
@@ -11763,6 +11977,7 @@ export function evaluateGapRules(
     const onGLP1 = medCodes.some(c => GLP1_CODES.includes(c));
     if (!onGLP1) {
       gaps.push({
+        ruleId: 'slug:consider-glp-1-ra-for-cardiovascular-risk-reduction-in-cad-diabetes',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider GLP-1 RA for cardiovascular risk reduction in CAD + diabetes',
@@ -11797,6 +12012,7 @@ export function evaluateGapRules(
     const onSGLT2iCAD = medCodes.some(c => SGLT2I_CODES_CAD.includes(c));
     if (!onSGLT2iCAD) {
       gaps.push({
+        ruleId: 'gap-cad-sglt2-dm',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider SGLT2i for cardiovascular risk reduction in CAD + diabetes',
@@ -11834,6 +12050,7 @@ export function evaluateGapRules(
       !medCodes.includes('2282403') // AUDIT-104: bempedoic acid (was 2390411 = NotCurrent)
     ) {
       gaps.push({
+        ruleId: 'gap-cad-bempedoic',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider bempedoic acid for statin-intolerant CAD patient with elevated LDL',
@@ -11871,6 +12088,7 @@ export function evaluateGapRules(
   const severeLDL_CAD13 = labValues['ldl'] !== undefined && labValues['ldl'] >= 190;
   if (severeLDL_CAD13 && !hasFHdx_CAD13 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'slug:severe-ldl-elevation-190-familial-hypercholesterolemia-evaluation-and',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.CORONARY_INTERVENTION,
       status: 'Severe LDL elevation (>=190): familial hypercholesterolemia evaluation and cascade screening gap',
@@ -11904,6 +12122,7 @@ export function evaluateGapRules(
   const onStatinApoB = medCodes.some(c => STATIN_CODES_APOB.includes(c));
   if (hasCAD && onStatinApoB && labValues['apob'] !== undefined && labValues['apob'] >= 90 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-cad-009-apob',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.CORONARY_INTERVENTION,
       status: 'Elevated apolipoprotein B (>=90 mg/dL) on statin: residual atherogenic risk gap',
@@ -11935,6 +12154,7 @@ export function evaluateGapRules(
   const hasRadiationHx_CAD = dxCodes.some(c => c.startsWith('Z92.3'));
   if (hasRadiationHx_CAD && hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-cad-083-radiation-cad',
       type: TherapyGapType.FOLLOWUP_OVERDUE,
       module: ModuleType.CORONARY_INTERVENTION,
       status: 'Radiation-induced coronary disease: aggressive risk-factor modification + surveillance gap',
@@ -11965,6 +12185,7 @@ export function evaluateGapRules(
   const hasVasculitis_CAD = dxCodes.some(c => c.startsWith('M30') || c.startsWith('M31'));
   if (hasVasculitis_CAD && hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-cad-084-vasculitis-cad',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.CORONARY_INTERVENTION,
       status: 'Vasculitis-associated coronary disease: vasculitis-specific coordinated management gap',
@@ -11996,6 +12217,7 @@ export function evaluateGapRules(
   const hasAnginaOrCAD_stim = hasCAD || dxCodes.some(c => c.startsWith('I20'));
   if (hasStimulantUse_CAD && hasAnginaOrCAD_stim && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-cad-085-stimulant-cad',
       type: TherapyGapType.SAFETY_ALERT,
       module: ModuleType.CORONARY_INTERVENTION,
       status: 'Stimulant-associated coronary disease: substance cessation + beta-blocker-caution SAFETY review',
@@ -12024,6 +12246,7 @@ export function evaluateGapRules(
   const hasMI_ICD = hasRecentMI || dxCodes.some(c => c.startsWith('I25.2'));
   if (hasMI_ICD && labValues['lvef'] !== undefined && labValues['lvef'] <= 35 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-cad-022-post-mi-icd',
       type: TherapyGapType.DEVICE_ELIGIBLE,
       module: ModuleType.CORONARY_INTERVENTION,
       status: 'Post-MI with LVEF <=35%: primary-prevention ICD evaluation gap',
@@ -12056,6 +12279,7 @@ export function evaluateGapRules(
   const hasCerebrovascular_026 = dxCodes.some(c => c.startsWith('I63') || c.startsWith('I65') || c.startsWith('Z86.73'));
   if (hasCAD && hasPAD_026 && hasCerebrovascular_026 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-cad-026-polyvascular',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.CORONARY_INTERVENTION,
       status: 'Polyvascular disease (3 territories): comprehensive intensified secondary-prevention gap',
@@ -12087,6 +12311,7 @@ export function evaluateGapRules(
     const bmiOver30CAD = labValues['bmi'] !== undefined && labValues['bmi'] > 30;
     if (hasObesityCAD || bmiOver30CAD) {
       gaps.push({
+        ruleId: 'slug:consider-structured-weight-management-program-for-cad-patient-with-obe',
         type: TherapyGapType.REFERRAL_NEEDED,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider structured weight management program for CAD patient with obesity',
@@ -12136,6 +12361,7 @@ export function evaluateGapRules(
     const onPrasugrelACS = medCodes.includes('613391');
     if (!onTicagrelorACS && !onPrasugrelACS) {
       gaps.push({
+        ruleId: 'gap-cad-ticagrelor-acs',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider a potent P2Y12 inhibitor (ticagrelor or prasugrel) for ACS',
@@ -12167,6 +12393,7 @@ export function evaluateGapRules(
     const onNitro = medCodes.includes('4917'); // AUDIT-104: nitroglycerin (was 7832 = 4-aminohippuric acid)
     if (!onNitro) {
       gaps.push({
+        ruleId: 'slug:consider-prn-nitroglycerin-for-angina-symptom-relief',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider PRN nitroglycerin for angina symptom relief',
@@ -12196,6 +12423,7 @@ export function evaluateGapRules(
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     if (labValues['lvef'] === undefined) {
       gaps.push({
+        ruleId: 'slug:consider-echocardiography-for-lvef-assessment-in-cad',
         type: TherapyGapType.IMAGING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider echocardiography for LVEF assessment in CAD',
@@ -12230,6 +12458,7 @@ export function evaluateGapRules(
     const onACEiARBrenal = medCodes.some(c => ACEI_ARB_CODES_RENAL.includes(c));
     if (onACEiARBrenal && labValues['egfr'] === undefined) {
       gaps.push({
+        ruleId: 'gap-cad-renal-monitor',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider renal function monitoring for CAD patient on ACEi/ARB',
@@ -12263,6 +12492,7 @@ export function evaluateGapRules(
     const onP2Y12dapt = medCodes.some(c => P2Y12_CODES_DAPT.includes(c));
     if (onAspirinDAPT && onP2Y12dapt) {
       gaps.push({
+        ruleId: 'gap-cad-dapt-duration',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider DAPT duration review: assess continued need beyond 12 months',
@@ -12302,6 +12532,7 @@ export function evaluateGapRules(
     const onPPIdapt = medCodes.some(c => PPI_CODES_DAPT.includes(c));
     if (onDAPTppi && hasGIriskPPI && !onPPIdapt) {
       gaps.push({
+        ruleId: 'slug:consider-ppi-for-gi-protection-in-cad-patient-on-dapt-with-gi-risk-fac',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider PPI for GI protection in CAD patient on DAPT with GI risk factors',
@@ -12336,6 +12567,7 @@ export function evaluateGapRules(
     const onMRApostMI = medCodes.some(c => MRA_CODES_POSTMI.includes(c));
     if (lvefPostMI !== undefined && lvefPostMI <= 40 && !onMRApostMI) {
       gaps.push({
+        ruleId: 'slug:consider-mra-for-post-mi-patient-with-lvef-40-and-hf',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider MRA for post-MI patient with LVEF<=40% and HF',
@@ -12373,6 +12605,7 @@ export function evaluateGapRules(
     const onDiureticElec = medCodes.some(c => DIURETIC_CODES_ELEC.includes(c));
     if (onDiureticElec && labValues['potassium'] === undefined) {
       gaps.push({
+        ruleId: 'slug:consider-potassium-monitoring-for-post-mi-patient-on-diuretic',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider potassium monitoring for post-MI patient on diuretic',
@@ -12402,6 +12635,7 @@ export function evaluateGapRules(
   if (hasRecentMI && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     if (labValues['hemoglobin'] === undefined) {
       gaps.push({
+        ruleId: 'slug:consider-hemoglobin-assessment-for-post-mi-patient',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider hemoglobin assessment for post-MI patient',
@@ -12430,6 +12664,7 @@ export function evaluateGapRules(
   if (hasCAD && hasAF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     if (labValues['tsh'] === undefined) {
       gaps.push({
+        ruleId: 'slug:consider-thyroid-function-testing-in-cad-patient-with-atrial-fibrillat',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider thyroid function testing in CAD patient with atrial fibrillation',
@@ -12481,6 +12716,7 @@ export function evaluateGapRules(
     const hasCACscore = labValues['cac_score'] !== undefined;
     if (!hasCACscore) {
       gaps.push({
+        ruleId: 'gap-cad-calcium-score',
         type: TherapyGapType.SCREENING_DUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider coronary artery calcium scoring for intermediate-risk patient',
@@ -12528,6 +12764,7 @@ export function evaluateGapRules(
     const hasCCTAct = labValues['ccta'] !== undefined;
     if (!hasCCTAct) {
       gaps.push({
+        ruleId: 'gap-cad-cardiac-ct',
         type: TherapyGapType.IMAGING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider CCTA for evaluation of stable chest pain',
@@ -12570,6 +12807,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-cad-016-prasugrel-stroke-safety',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.CORONARY_INTERVENTION,
       status: 'SAFETY: Prasugrel contraindicated in patient with prior stroke/TIA',
@@ -12602,6 +12840,7 @@ export function evaluateGapRules(
     const hasStrokeHxPras = dxCodes.some(c => c.startsWith('I63') || c.startsWith('G45'));
     if (!onPrasugrelACS && !onTicagrelorPras && !hasStrokeHxPras && age < 75) {
       gaps.push({
+        ruleId: 'gap-cad-prasugrel',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider prasugrel for ACS with PCI per TRITON-TIMI 38 evidence',
@@ -12635,6 +12874,7 @@ export function evaluateGapRules(
     const hasPreProcBridge = dxCodes.some(c => c.startsWith('Z01.81') || c.startsWith('Z01.89'));
     if (hasPreProcBridge) {
       gaps.push({
+        ruleId: 'slug:consider-anticoagulation-bridging-assessment-for-cad-af-patient-with-u',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider anticoagulation bridging assessment for CAD+AF patient with upcoming procedure',
@@ -12682,6 +12922,7 @@ export function evaluateGapRules(
     const onAspirinCAP = medCodes.some(c => ASPIRIN_CODES_CAP.includes(c));
     if (!onAspirinCAP) {
       gaps.push({
+        ruleId: 'slug:consider-aspirin-therapy-assessment-for-established-cad',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider aspirin therapy assessment for established CAD',
@@ -12713,6 +12954,7 @@ export function evaluateGapRules(
     const onBBscad = medCodes.some(c => BB_CODES_SCAD.includes(c));
     if (!onBBscad) {
       gaps.push({
+        ruleId: 'gap-cad-beta-blocker',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider beta-blocker assessment for stable CAD',
@@ -12745,6 +12987,7 @@ export function evaluateGapRules(
     const onRAASscad = medCodes.some(c => RAAS_CODES_SCAD.includes(c));
     if (hasHTN && !onRAASscad) {
       gaps.push({
+        ruleId: 'slug:consider-acei-arb-for-stable-cad-with-hypertension',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider ACEi/ARB for stable CAD with hypertension',
@@ -12781,6 +13024,7 @@ export function evaluateGapRules(
     const hasPriorCTA = dxCodes.some(c => c.startsWith('Z87.39')); // personal history of cardiac procedure proxy
     if (hasPriorCTA && labValues['coronary_cta_months'] === undefined) {
       gaps.push({
+        ruleId: 'slug:consider-coronary-cta-follow-up-imaging-interval-review',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider coronary CTA follow-up imaging interval review',
@@ -12812,6 +13056,7 @@ export function evaluateGapRules(
     const noRecentStress = labValues['stress_test_months'] === undefined;
     if (hasIntermediateRisk && noRecentStress) {
       gaps.push({
+        ruleId: 'slug:consider-nuclear-stress-test-for-intermediate-risk-cad-patient',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider nuclear stress test for intermediate-risk CAD patient',
@@ -12843,6 +13088,7 @@ export function evaluateGapRules(
     const hasAnginaCath = dxCodes.some(c => c.startsWith('I20'));
     if (hasHighRiskCAD && hasAnginaCath) {
       gaps.push({
+        ruleId: 'gap-cad-catheterization',
         type: TherapyGapType.REFERRAL_NEEDED,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider cardiac catheterization review for high-risk CAD features',
@@ -12874,6 +13120,7 @@ export function evaluateGapRules(
     const hasPriorPCI = dxCodes.some(c => c.startsWith('Z95.5')); // presence of coronary stent
     if (hasMultivessel && hasPriorPCI) {
       gaps.push({
+        ruleId: 'gap-cad-complete-revasc',
         type: TherapyGapType.REFERRAL_NEEDED,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider complete revascularization assessment for multivessel CAD',
@@ -12921,6 +13168,7 @@ export function evaluateGapRules(
     const hasMINOCA = dxCodes.some(c => c.startsWith('I24'));
     if (hasMI && hasMINOCA) {
       gaps.push({
+        ruleId: 'gap-cad-minoca',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider MINOCA comprehensive workup for MI with non-obstructive coronaries',
@@ -12952,6 +13200,7 @@ export function evaluateGapRules(
     const noAtherosclerosis = !dxCodes.some(c => c.startsWith('I25.1'));
     if (hasMIscad && isYoungFemale && noAtherosclerosis) {
       gaps.push({
+        ruleId: 'gap-cad-scad',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider SCAD evaluation for young female MI without atherosclerotic CAD',
@@ -12982,6 +13231,7 @@ export function evaluateGapRules(
     const hasTakotsubo = dxCodes.some(c => c.startsWith('I51.81'));
     if (hasTakotsubo) {
       gaps.push({
+        ruleId: 'slug:consider-takotsubo-syndrome-follow-up-and-recovery-monitoring',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider Takotsubo syndrome follow-up and recovery monitoring',
@@ -13016,6 +13266,7 @@ export function evaluateGapRules(
     const onCCBvasosp = medCodes.some(c => CCB_CODES_VASOSP.includes(c));
     if (hasVasospasm && !onCCBvasosp) {
       gaps.push({
+        ruleId: 'gap-cad-vasospastic',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider calcium channel blocker for vasospastic angina',
@@ -13048,6 +13299,7 @@ export function evaluateGapRules(
     const noObstructiveCAD = !dxCodes.some(c => c.startsWith('I25.1'));
     if (hasAnginaMVD && (hasNormalCoronaries || noObstructiveCAD) && age > 40) {
       gaps.push({
+        ruleId: 'gap-cad-microvascular',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider microvascular disease assessment for angina with non-obstructive coronaries',
@@ -13078,6 +13330,7 @@ export function evaluateGapRules(
     const hasTransplant = dxCodes.some(c => c.startsWith('Z94.1')); // heart transplant status
     if (hasTransplant && hasCAD) {
       gaps.push({
+        ruleId: 'gap-cad-cardiac-transplant-cad',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider cardiac allograft vasculopathy (CAV) surveillance in heart transplant recipient',
@@ -13108,6 +13361,7 @@ export function evaluateGapRules(
     const onStatinLPF = medCodes.some(c => STATIN_CODES_LPF.includes(c));
     if (onStatinLPF && labValues['ldl'] === undefined && labValues['total_cholesterol'] === undefined) {
       gaps.push({
+        ruleId: 'gap-cad-lipid-panel-fu',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider lipid panel follow-up for CAD patient on statin therapy',
@@ -13138,6 +13392,7 @@ export function evaluateGapRules(
     const noDiabetesGS = !dxCodes.some(c => c.startsWith('E11') || c.startsWith('E10'));
     if (noDiabetesGS && labValues['hba1c'] === undefined && labValues['fasting_glucose'] === undefined) {
       gaps.push({
+        ruleId: 'slug:consider-glucose-screening-for-cad-patient-without-known-diabetes',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider glucose screening for CAD patient without known diabetes',
@@ -13168,6 +13423,7 @@ export function evaluateGapRules(
     const hasDM_A1c = dxCodes.some(c => c.startsWith('E11'));
     if (hasDM_A1c && labValues['hba1c'] !== undefined && labValues['hba1c'] > 7.0) {
       gaps.push({
+        ruleId: 'slug:consider-a1c-target-review-for-cad-patient-with-diabetes-and-elevated',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider A1c target review for CAD patient with diabetes and elevated A1c',
@@ -13199,6 +13455,7 @@ export function evaluateGapRules(
     const hasPriorMI = dxCodes.some(c => c.startsWith('I25.2')); // old MI
     if (onDualAntiplatelet && hasPriorMI) {
       gaps.push({
+        ruleId: 'slug:consider-antiplatelet-duration-review-for-long-term-dapt-post-mi',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider antiplatelet duration review for long-term DAPT post MI',
@@ -13230,6 +13487,7 @@ export function evaluateGapRules(
     const hasEDvisit = dxCodes.some(c => c.startsWith('Z76.89') || c.startsWith('R07')); // ED presentation proxy
     if (hasChestPain && hasEDvisit && labValues['troponin'] === undefined) {
       gaps.push({
+        ruleId: 'gap-cad-chest-pain-protocol',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider chest pain protocol adherence review with troponin assessment',
@@ -13264,6 +13522,7 @@ export function evaluateGapRules(
     const bundleDeficit = (!onStatinSP ? 1 : 0) + (!onAspirinSP ? 1 : 0) + (!onBBsp ? 1 : 0);
     if (bundleDeficit >= 2) {
       gaps.push({
+        ruleId: 'gap-cad-secondary-prevention',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider comprehensive secondary prevention bundle review for CAD',
@@ -13299,6 +13558,7 @@ export function evaluateGapRules(
     const hasAcuteMI = dxCodes.some(c => c.startsWith('I21'));
     if (hasAcuteMI && age < 45) {
       gaps.push({
+        ruleId: 'slug:consider-extended-workup-for-young-mi-age-45-including-thrombophilia-a',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider extended workup for young MI (age <45) including thrombophilia and substance screening',
@@ -13328,6 +13588,7 @@ export function evaluateGapRules(
     const hasCompletedRehab = dxCodes.some(c => c.startsWith('Z50.0')); // rehab status
     if (hasCompletedRehab && labValues['exercise_prescription'] === undefined) {
       gaps.push({
+        ruleId: 'slug:consider-maintenance-exercise-prescription-for-cad-patient-post-cardia',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider maintenance exercise prescription for CAD patient post cardiac rehabilitation',
@@ -13359,6 +13620,7 @@ export function evaluateGapRules(
     const noSleepApnea = !dxCodes.some(c => c.startsWith('G47.3'));
     if (hasObesity && noSleepApnea) {
       gaps.push({
+        ruleId: 'slug:consider-sleep-apnea-screening-for-cad-patient-with-obesity',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.CORONARY_INTERVENTION,
         status: 'Consider sleep apnea screening for CAD patient with obesity',
@@ -13398,6 +13660,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-ep-early-rhythm',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider early rhythm control strategy evaluation for atrial fibrillation',
@@ -13431,6 +13694,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-ep-vt-ablation',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider VT ablation referral for recurrent ventricular tachycardia with ICD shocks',
@@ -13466,6 +13730,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-ep-svt-ablation',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider catheter ablation referral for recurrent supraventricular tachycardia',
@@ -13502,6 +13767,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-ep-brugada',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider Brugada syndrome screening in young patient with unexplained syncope',
@@ -13535,6 +13801,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-arvc-evaluation-in-young-patient-with-cardiomyopathy-and-vent',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider ARVC evaluation in young patient with cardiomyopathy and ventricular tachycardia',
@@ -13569,6 +13836,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-cardiac-sarcoidosis-arrhythmia-evaluation',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider cardiac sarcoidosis arrhythmia evaluation',
@@ -13601,6 +13869,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-ep-pacemaker-upgrade',
       type: TherapyGapType.DEVICE_ELIGIBLE,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider pacemaker upgrade to CRT evaluation',
@@ -13641,6 +13910,7 @@ export function evaluateGapRules(
     );
     if (!onAnticoagStroke) {
       gaps.push({
+        ruleId: 'slug:consider-formal-cha2ds2-vasc-score-documentation-for-af-stroke-risk-st',
         type: TherapyGapType.DOCUMENTATION_GAP,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'Consider formal CHA2DS2-VASc score documentation for AF stroke risk stratification',
@@ -13672,6 +13942,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-cardioversion-timing-assessment-for-atrial-fibrillation',
       type: TherapyGapType.DOCUMENTATION_GAP,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider cardioversion timing assessment for atrial fibrillation',
@@ -13708,6 +13979,7 @@ export function evaluateGapRules(
     );
     if (!onAnticoagTEE) {
       gaps.push({
+        ruleId: 'slug:consider-tee-before-cardioversion-in-af-without-adequate-anticoagulati',
         type: TherapyGapType.PROCEDURE_INDICATED,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'Consider TEE before cardioversion in AF without adequate anticoagulation',
@@ -13739,6 +14011,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-ep-cied-mri',
       type: TherapyGapType.DOCUMENTATION_GAP,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider MRI-conditional status documentation for cardiac implantable device',
@@ -13770,6 +14043,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-generator-replacement-planning-review-for-aging-cied-patient',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider generator replacement planning review for aging CIED patient',
@@ -13805,6 +14079,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-ep-inappropriate-shocks',
       type: TherapyGapType.SAFETY_ALERT,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider ICD programming review for inappropriate shock prevention in AF patient',
@@ -13836,6 +14111,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-exercise-stress-testing-for-arrhythmia-characterization',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider exercise stress testing for arrhythmia characterization',
@@ -13868,6 +14144,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-catheter-ablation-timing-optimization-for-af-on-antiarrhythmi',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Consider catheter ablation timing optimization for AF on antiarrhythmic therapy',
@@ -13903,6 +14180,7 @@ export function evaluateGapRules(
     const onAADpip = medCodes.some(c => AAD_CODES_PIP.includes(c));
     if (hasParoxysmalAF && noStructuralHD && !onAADpip) {
       gaps.push({
+        ruleId: 'slug:consider-pill-in-pocket-strategy-for-paroxysmal-af-without-structural',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'Consider pill-in-pocket strategy for paroxysmal AF without structural heart disease',
@@ -13933,6 +14211,7 @@ export function evaluateGapRules(
   if (hasAF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     if (labValues['la_diameter'] === undefined && labValues['la_volume_index'] === undefined) {
       gaps.push({
+        ruleId: 'slug:consider-left-atrial-size-documentation-for-af-management-planning',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'Consider left atrial size documentation for AF management planning',
@@ -13963,6 +14242,7 @@ export function evaluateGapRules(
     const onOACreassess = medCodes.some(c => OAC_CODES_REASSESS.includes(c));
     if (onOACreassess && labValues['cha2ds2_vasc_date'] === undefined) {
       gaps.push({
+        ruleId: 'slug:consider-annual-cha2ds2-vasc-score-reassessment-for-af-patient-on-anti',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: 'Consider annual CHA2DS2-VASc score reassessment for AF patient on anticoagulation',
@@ -14011,6 +14291,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-arni-switch',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Consider ACEi/ARB to ARNi switch evaluation for HFrEF',
@@ -14052,6 +14333,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-thiamine-supplementation-for-hf-patient-on-loop-diuretics-wit',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Consider thiamine supplementation for HF patient on loop diuretics with malnutrition',
@@ -14090,6 +14372,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-potassium-monitor',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Consider potassium monitoring for HF patient on mineralocorticoid receptor antagonist',
@@ -14123,6 +14406,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-advance-care-planning-discussion-for-advanced-heart-failure',
       type: TherapyGapType.DOCUMENTATION_GAP,
       module: ModuleType.HEART_FAILURE,
       status: 'Consider advance care planning discussion for advanced heart failure',
@@ -14156,6 +14440,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-lvnc',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Consider LV non-compaction evaluation in young patient with unexplained cardiomyopathy',
@@ -14188,6 +14473,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-hemodynamic-assessment-review-for-hf-with-elevated-bnp',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Consider hemodynamic assessment review for HF with elevated BNP',
@@ -14224,6 +14510,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-diuretic-dose-optimization-for-persistent-congestion-in-hf',
       type: TherapyGapType.MEDICATION_UNDERDOSED,
       module: ModuleType.HEART_FAILURE,
       status: 'Consider diuretic dose optimization for persistent congestion in HF',
@@ -14256,6 +14543,7 @@ export function evaluateGapRules(
     const sexLabel = isMaleAnemia ? 'male' : (gender?.toUpperCase() === 'FEMALE' || gender?.toUpperCase() === 'F') ? 'female' : 'unknown (using female threshold)';
     if (labValues['hemoglobin'] < anemiaThreshold) {
     gaps.push({
+      ruleId: 'gap-hf-anemia-hf',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: `Consider anemia workup for HF patient with hemoglobin <${anemiaThreshold} g/dL`,
@@ -14288,6 +14576,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-iv-iron-therapy-monitoring-with-follow-up-ferritin-and-tsat',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Consider IV iron therapy monitoring with follow-up ferritin and TSAT',
@@ -14330,6 +14619,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-017-finerenone-mref',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Consider finerenone in HFmrEF/HFpEF (FINEARTS-HF)',
@@ -14355,6 +14645,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-077-amyloid-af-oac',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Anticoagulation gap in cardiac amyloidosis with atrial fibrillation',
@@ -14384,6 +14675,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-081-dm-hba1c',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Diabetes above glycemic target in heart failure',
@@ -14411,6 +14703,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-008-mra-contra',
       type: TherapyGapType.MEDICATION_CONTRAINDICATED,
       module: ModuleType.HEART_FAILURE,
       status: 'SAFETY: MRA contraindicated by hyperkalemia or severe renal impairment',
@@ -14436,6 +14729,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-033-iron-def-iv',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Absolute iron deficiency untreated in heart failure',
@@ -14463,6 +14757,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-143-pericarditis-colch',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Colchicine not prescribed in pericarditis',
@@ -14487,6 +14782,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-054-attr-dmt',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'ATTR cardiac amyloidosis without disease-modifying therapy',
@@ -14512,6 +14808,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-002-bb-non-ebm',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Non-evidence-based beta-blocker in HFrEF',
@@ -14573,6 +14870,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-003-bb-target-dose',
       type: TherapyGapType.MEDICATION_UNDERDOSED,
       module: ModuleType.HEART_FAILURE,
       status: 'HFrEF beta-blocker below target dose with uptitration headroom',
@@ -14601,6 +14899,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-011-sglt2i-egfr-floor',
       type: TherapyGapType.DOCUMENTATION_GAP,
       module: ModuleType.HEART_FAILURE,
       status: 'SGLT2i initiation deferred below eGFR floor',
@@ -14633,6 +14932,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-015-digoxin-high-elderly',
       type: TherapyGapType.MEDICATION_CONTRAINDICATED,
       module: ModuleType.HEART_FAILURE,
       status: 'SAFETY: high-dose digoxin in elderly patient with renal impairment',
@@ -14665,6 +14965,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-024-icd-primary-ischemic',
       type: TherapyGapType.DEVICE_ELIGIBLE,
       module: ModuleType.HEART_FAILURE,
       status: 'Primary-prevention ICD eligibility (ischemic cardiomyopathy)',
@@ -14696,6 +14997,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-025-icd-primary-nicm',
       type: TherapyGapType.DEVICE_ELIGIBLE,
       module: ModuleType.HEART_FAILURE,
       status: 'Primary-prevention ICD eligibility (non-ischemic cardiomyopathy)',
@@ -14721,6 +15023,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-026-icd-secondary',
       type: TherapyGapType.DEVICE_ELIGIBLE,
       module: ModuleType.HEART_FAILURE,
       status: 'Secondary-prevention ICD eligibility (prior VT/VF/cardiac arrest)',
@@ -14746,6 +15049,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-031-lead-extraction',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.HEART_FAILURE,
       status: 'CIED infection/complication - lead extraction evaluation',
@@ -14774,6 +15078,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-126-ccm-candidate',
       type: TherapyGapType.DEVICE_ELIGIBLE,
       module: ModuleType.HEART_FAILURE,
       status: 'Cardiac contractility modulation (CCM/Optimizer) candidacy',
@@ -14800,6 +15105,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-127-wcd-bridge',
       type: TherapyGapType.DEVICE_ELIGIBLE,
       module: ModuleType.HEART_FAILURE,
       status: 'WCD bridge consideration in early post-MI LV dysfunction',
@@ -14830,6 +15136,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-061-fabry-ert',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Fabry disease without disease-modifying therapy',
@@ -14859,6 +15166,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-062-sarcoid-avblock',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Unexplained high-grade AV block under 60 - cardiac sarcoidosis workup',
@@ -14885,6 +15193,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-063-sarcoid-immunosupp',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Cardiac sarcoidosis without immunosuppressive therapy',
@@ -14914,6 +15223,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-065-tachy-cm',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Possible tachycardia-mediated cardiomyopathy without rate/rhythm control',
@@ -14940,6 +15250,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-072-takotsubo-echo',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Takotsubo syndrome without recovery echocardiogram',
@@ -14971,6 +15282,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-073-radiation-surv',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Prior thoracic radiation with cardiac disease - surveillance echo overdue',
@@ -14999,6 +15311,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-032-iron-screen',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Iron studies overdue in anemic heart failure',
@@ -15025,6 +15338,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-034-iron-functional',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Functional iron deficiency untreated in heart failure',
@@ -15053,6 +15367,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-074-arvc-icd',
       type: TherapyGapType.DEVICE_ELIGIBLE,
       module: ModuleType.HEART_FAILURE,
       status: 'ARVC with ventricular tachycardia - ICD evaluation',
@@ -15091,6 +15406,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-036-gdmt-incomplete',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: `HFrEF GDMT substantially incomplete (${hfPillarCount} of 4 pillars)`,
@@ -15118,6 +15434,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-076-stage-b',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Stage B (asymptomatic LV dysfunction) without GDMT initiation',
@@ -15143,6 +15460,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-078-af-rate',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'HF + chronic AF with uncontrolled ventricular rate',
@@ -15171,6 +15489,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-080-thyroid',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Heart failure with untreated thyroid dysfunction',
@@ -15196,6 +15515,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-082-metformin-renal',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'SAFETY: metformin at reduced eGFR in HF + CKD - renal-dose review',
@@ -15223,6 +15543,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-086-preg-teratogen',
       type: TherapyGapType.MEDICATION_CONTRAINDICATED,
       module: ModuleType.HEART_FAILURE,
       status: 'SAFETY: teratogenic HF medication in pregnancy',
@@ -15252,6 +15573,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-047-inotrope-dependence',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.HEART_FAILURE,
       status: 'Inotrope dependence - advanced heart failure referral',
@@ -15278,6 +15600,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-132-tolvaptan-hyponatremia',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Severe hyponatremia in heart failure - management evaluation',
@@ -15307,6 +15630,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-133-cs-mcs-escalation',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.HEART_FAILURE,
       status: 'Inotrope-refractory cardiogenic shock without mechanical circulatory support',
@@ -15332,6 +15656,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-139-crs4-screen',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Advanced CKD without heart-failure screening (cardiorenal type 4)',
@@ -15359,6 +15684,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-144-pericarditis-il1',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Steroid-dependent recurrent pericarditis without IL-1 inhibitor',
@@ -15388,6 +15714,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-027-cardiomems',
       type: TherapyGapType.DEVICE_ELIGIBLE,
       module: ModuleType.HEART_FAILURE,
       status: 'CardioMEMS PA-pressure monitor candidacy (NYHA III + elevated natriuretic peptide)',
@@ -15419,6 +15746,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:safety-post-lvad-inr-outside-therapeutic-range',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'SAFETY: post-LVAD INR outside therapeutic range',
@@ -15446,6 +15774,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-148-lvad-gib',
       type: TherapyGapType.MEDICATION_MISSING,
       module: ModuleType.HEART_FAILURE,
       status: 'Post-LVAD GI bleeding without anti-angiodysplasia therapy',
@@ -15472,6 +15801,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-151-transplant-cav',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
       status: 'Post-heart-transplant CAV surveillance overdue',
@@ -15498,6 +15828,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-hf-152-transplant-biopsy',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.HEART_FAILURE,
       status: 'Post-heart-transplant rejection-surveillance biopsy not documented',
@@ -15526,6 +15857,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-sh-bicuspid-surveillance',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Consider echocardiographic surveillance for bicuspid aortic valve',
@@ -15556,6 +15888,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-ross-procedure-candidacy-evaluation-for-young-patient-with-se',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Consider Ross procedure candidacy evaluation for young patient with severe AS',
@@ -15594,6 +15927,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-sh-valve-in-valve',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Consider valve-in-valve TAVR evaluation for symptomatic bioprosthetic valve dysfunction',
@@ -15632,6 +15966,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-vsd-closure-evaluation-for-ventricular-septal-defect',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Consider VSD closure evaluation for ventricular septal defect',
@@ -15664,6 +15999,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-sh-coarctation',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Consider coarctation surveillance and hypertension management',
@@ -15697,6 +16033,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-sh-fontan-surveillance',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Consider comprehensive Fontan surveillance evaluation',
@@ -15731,6 +16068,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-carcinoid-valve-disease-screening-and-surveillance',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Consider carcinoid valve disease screening and surveillance',
@@ -15769,6 +16107,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-pannus-vs-thrombosis-evaluation-for-prosthetic-valve-with-new',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Consider pannus vs thrombosis evaluation for prosthetic valve with new symptoms',
@@ -15802,6 +16141,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'gap-vd-radiation-valve',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Consider radiation-associated valve disease evaluation',
@@ -15834,6 +16174,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-infective-endocarditis-evaluation-for-prosthetic-valve-patien',
       type: TherapyGapType.SAFETY_ALERT,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Consider infective endocarditis evaluation for prosthetic valve patient with fever',
@@ -15866,6 +16207,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-aortic-surveillance-for-bicuspid-valve-associated-aortopathy',
       type: TherapyGapType.IMAGING_OVERDUE,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Consider aortic surveillance for bicuspid valve-associated aortopathy',
@@ -15896,6 +16238,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-anticoagulation-reversal-emergency-plan-documentation-for-mec',
       type: TherapyGapType.DOCUMENTATION_GAP,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Consider anticoagulation reversal emergency plan documentation for mechanical valve',
@@ -15928,6 +16271,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-transcatheter-mitral-valve-intervention-evaluation-for-high-r',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Consider transcatheter mitral valve intervention evaluation for high-risk MR patient',
@@ -15961,6 +16305,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-right-heart-catheterization-for-valve-disease-with-pulmonary',
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Consider right heart catheterization for valve disease with pulmonary hypertension',
@@ -15998,6 +16343,7 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
+      ruleId: 'slug:consider-multidisciplinary-valve-clinic-referral-for-symptomatic-valve',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Consider multidisciplinary valve clinic referral for symptomatic valve disease',
@@ -16045,6 +16391,7 @@ export function evaluateGapRules(
     );
     if (hasAnyValveDx && labValues['echo_months'] !== undefined && labValues['echo_months'] >= 12) {
       gaps.push({
+        ruleId: 'slug:surveillance-echocardiography-overdue-in-valvular-heart-disease',
         type: TherapyGapType.IMAGING_OVERDUE,
         module: ModuleType.VALVULAR_DISEASE,
         status: 'Surveillance echocardiography overdue in valvular heart disease',
@@ -16099,6 +16446,7 @@ export function evaluateGapRules(
     );
     if (hasTR && hasLeftHeartDx) {
       gaps.push({
+        ruleId: 'gap-vd-tricuspid-secondary',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.VALVULAR_DISEASE,
         status: 'Consider secondary tricuspid regurgitation assessment in left heart disease',
@@ -16134,6 +16482,7 @@ export function evaluateGapRules(
     const onAspirinBio = medCodes.includes(ASPIRIN_CODE_BIO);
     if (hasBioprosthetic && !onAspirinBio) {
       gaps.push({
+        ruleId: 'gap-vd-antiplatelet-bioprosthetic',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.VALVULAR_DISEASE,
         status: 'Consider low-dose aspirin for bioprosthetic valve >3 months post-implant',
@@ -16169,6 +16518,7 @@ export function evaluateGapRules(
     const onRivaroxabanPV = medCodes.includes('1114195');
     if (onAspirinPVriv && !onRivaroxabanPV) {
       gaps.push({
+        ruleId: 'gap-pv-rivaroxaban',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'Consider low-dose rivaroxaban + aspirin per COMPASS trial for PAD',
@@ -16202,6 +16552,7 @@ export function evaluateGapRules(
     const onAspirinPVclop = medCodes.includes('1191');
     if (hasAspirinIntolerancePV && !onAspirinPVclop && !onClopidogrelPV) {
       gaps.push({
+        ruleId: 'slug:consider-clopidogrel-as-alternative-antiplatelet-for-pad-with-aspirin',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'Consider clopidogrel as alternative antiplatelet for PAD with aspirin intolerance',
@@ -16234,6 +16585,7 @@ export function evaluateGapRules(
     const hasRestPainBypass = dxCodes.some(c => c.startsWith('I70.21'));
     if (hasCLIbypass || hasRestPainBypass) {
       gaps.push({
+        ruleId: 'gap-pv-bypass-eval',
         type: TherapyGapType.REFERRAL_NEEDED,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'Consider surgical bypass evaluation for chronic limb-threatening ischemia',
@@ -16263,6 +16615,7 @@ export function evaluateGapRules(
     const hasClaudicationEndo = dxCodes.some(c => c.startsWith('I73.9'));
     if (hasClaudicationEndo) {
       gaps.push({
+        ruleId: 'slug:consider-endovascular-intervention-evaluation-for-lifestyle-limiting-c',
         type: TherapyGapType.REFERRAL_NEEDED,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'Consider endovascular intervention evaluation for lifestyle-limiting claudication',
@@ -16292,6 +16645,7 @@ export function evaluateGapRules(
   const hasSkinUlcerPV = dxCodes.some(c => c.startsWith('L97'));
   if (hasVenousInsuffPV && hasSkinUlcerPV && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'slug:consider-comprehensive-venous-ulcer-management-protocol',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Consider comprehensive venous ulcer management protocol',
@@ -16321,6 +16675,7 @@ export function evaluateGapRules(
     const hasDVTdxScreen = dxCodes.some(c => c.startsWith('I82'));
     if (!hasDVTdxScreen) {
       gaps.push({
+        ruleId: 'gap-pv-dvt-screen',
         type: TherapyGapType.SCREENING_DUE,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'Consider DVT screening for unilateral edema',
@@ -16349,6 +16704,7 @@ export function evaluateGapRules(
   const hasDVTpts = dxCodes.some(c => c.startsWith('I82'));
   if (hasDVTpts && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-pv-pts-prevention',
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Consider compression therapy for post-thrombotic syndrome prevention after DVT',
@@ -16376,6 +16732,7 @@ export function evaluateGapRules(
     const hasMesentericSxPV = dxCodes.some(c => c.startsWith('K55'));
     if (hasMesentericSxPV) {
       gaps.push({
+        ruleId: 'gap-pv-mesenteric',
         type: TherapyGapType.SCREENING_DUE,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'Consider mesenteric ischemia evaluation in PAD patient with intestinal vascular symptoms',
@@ -16404,6 +16761,7 @@ export function evaluateGapRules(
   const hasUpperExtVascPV = dxCodes.some(c => c.startsWith('I74.2') || c.startsWith('I82.6'));
   if (hasUpperExtVascPV && age < 50 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-pv-thoracic-outlet',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Consider thoracic outlet syndrome evaluation for young patient with upper extremity vascular symptoms',
@@ -16437,6 +16795,7 @@ export function evaluateGapRules(
   );
   if (hasVaricoseVeinsPV && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-pv-varicose',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Consider venous insufficiency evaluation and management for symptomatic varicose veins',
@@ -16463,6 +16822,7 @@ export function evaluateGapRules(
   const hasLymphedemaPV = dxCodes.some(c => c.startsWith('I89'));
   if (hasLymphedemaPV && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-pv-lymphedema',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Consider comprehensive decongestive therapy referral for lymphedema',
@@ -16494,6 +16854,7 @@ export function evaluateGapRules(
     const onCCBraynaud = medCodes.some(c => CCB_CODES_RAYNAUD.includes(c));
     if (!onCCBraynaud) {
       gaps.push({
+        ruleId: 'gap-pv-raynaud',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'Consider calcium channel blocker for Raynaud phenomenon',
@@ -16525,6 +16886,7 @@ export function evaluateGapRules(
     const hasVascRehabPV = dxCodes.some(c => c.startsWith('Z50.0'));
     if (hasPostProcRehab && !hasVascRehabPV) {
       gaps.push({
+        ruleId: 'slug:consider-supervised-exercise-rehabilitation-post-vascular-intervention',
         type: TherapyGapType.REFERRAL_NEEDED,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'Consider supervised exercise rehabilitation post vascular intervention',
@@ -16556,6 +16918,7 @@ export function evaluateGapRules(
     const hasClaudicationPent = dxCodes.some(c => c.startsWith('I73.9'));
     if (hasClaudicationPent && !onPentoxifyllinePV) {
       gaps.push({
+        ruleId: 'slug:consider-pentoxifylline-for-claudication-in-pad-patient-with-hf-cilost',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'Consider pentoxifylline for claudication in PAD patient with HF (cilostazol contraindicated)',
@@ -16588,6 +16951,7 @@ export function evaluateGapRules(
     const onNaftidrofurylPV = medCodes.includes('1310463');
     if (hasSevereClaudNaft && !onNaftidrofurylPV) {
       gaps.push({
+        ruleId: 'slug:consider-naftidrofuryl-for-severe-claudication-per-esc-esvs-guideline',
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'Consider naftidrofuryl for severe claudication per ESC/ESVS Guideline',
@@ -16623,6 +16987,7 @@ export function evaluateGapRules(
     const hasTissueLoss = dxCodes.some(c => c.startsWith('L97') || c.startsWith('L98.4'));
     if (hasCLI || (hasPAD && hasTissueLoss)) {
       gaps.push({
+        ruleId: 'slug:consider-urgent-vascular-evaluation-for-critical-limb-ischemia-with-ti',
         type: TherapyGapType.REFERRAL_NEEDED,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'Consider urgent vascular evaluation for critical limb ischemia with tissue loss',
@@ -16658,6 +17023,7 @@ export function evaluateGapRules(
       graftDuplexMonths_PV98 === undefined || graftDuplexMonths_PV98 > 12;
     if (hasVascularGraft && hasPAD && graftSurveillanceOverdue) {
       gaps.push({
+        ruleId: 'gap-pv-graft-surveillance',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'Consider interval duplex surveillance for peripheral bypass graft',
@@ -16693,6 +17059,7 @@ export function evaluateGapRules(
     const onOACvte = medCodes.some(c => OAC_CODES_VTE.includes(c));
     if (hasVTE && onOACvte) {
       gaps.push({
+        ruleId: 'gap-pv-anticoag-vte',
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.PERIPHERAL_VASCULAR,
         status: 'Consider VTE anticoagulation duration review and continued need assessment',
@@ -16731,6 +17098,7 @@ export function evaluateGapRules(
   const hasNonCompressibleABI = (abiLeft_PV4 !== undefined && abiLeft_PV4 > 1.40) || (abiRight_PV4 !== undefined && abiRight_PV4 > 1.40);
   if (hasNonCompressibleABI && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-pv-004-noncompressible-abi',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Non-compressible ABI (>1.40): toe-brachial index recommended for perfusion assessment',
@@ -16762,6 +17130,7 @@ export function evaluateGapRules(
   const isYoungFemaleHTN_PV34 = hasHTN_PV11 && age < 35 && (gender?.toUpperCase() === 'FEMALE' || gender?.toUpperCase() === 'F');
   if (isYoungFemaleHTN_PV34 && !hasFMD_PV34 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-pv-034-fmd-screening',
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Consider fibromuscular dysplasia screening in young woman with early-onset hypertension',
@@ -16796,6 +17165,7 @@ export function evaluateGapRules(
   const onImmunosuppression_PV38 = medCodes.some(c => codes(RXNORM_CORTICOSTEROIDS).includes(c) || codes(RXNORM_STEROID_SPARING).includes(c));
   if (hasTakayasu_PV38 && !onImmunosuppression_PV38 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-pv-038-takayasu-immunosuppression',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Takayasu arteritis without immunosuppressive therapy: disease-control gap',
@@ -16828,6 +17198,7 @@ export function evaluateGapRules(
   const onSteroid_PV40 = medCodes.some(c => codes(RXNORM_CORTICOSTEROIDS).includes(c));
   if (hasGCA_PV40 && !onSteroid_PV40 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-pv-040-gca-steroid',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Giant cell arteritis without glucocorticoid therapy: vision-threatening treatment gap',
@@ -16859,6 +17230,7 @@ export function evaluateGapRules(
   const hasBuerger_PV41 = dxCodes.some(c => c.startsWith('I73.1'));
   if (hasBuerger_PV41 && hasSmoking && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-pv-041-buerger-cessation',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Buerger disease with continued tobacco use: complete cessation is disease-modifying',
@@ -16893,6 +17265,7 @@ export function evaluateGapRules(
   const hasRecentCerebralEvent_PV58 = dxCodes.some(c => c.startsWith('I63') || c.startsWith('G45'));
   if (hasCarotidStenosis_PV58 && hasRecentCerebralEvent_PV58 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-pv-058-symptomatic-carotid-revasc',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Symptomatic carotid stenosis: urgent revascularization evaluation recommended for review',
@@ -16929,6 +17302,7 @@ export function evaluateGapRules(
   const onStatin_PV62 = medCodes.some(c => STATIN_CODES_CV.includes(c));
   if (hasIntracranialStenosis_PV62 && hasRecentCerebralEvent_PV62 && (!onAntiplatelet_PV62 || !onStatin_PV62) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-pv-062-intracranial-stenosis-medical',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Symptomatic intracranial stenosis without aggressive medical therapy (antiplatelet + statin)',
@@ -16966,6 +17340,7 @@ export function evaluateGapRules(
   const onImmunosuppression_PV42 = medCodes.some(c => codes(RXNORM_CORTICOSTEROIDS).includes(c) || codes(RXNORM_STEROID_SPARING).includes(c) || c === '2683');
   if (hasBehcet_PV42 && hasVascularThrombosis_PV42 && !onImmunosuppression_PV42 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-pv-042-behcet-vascular',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Behcet vascular thrombosis without immunosuppression: inflammatory thrombosis needs disease control',
@@ -16995,6 +17370,7 @@ export function evaluateGapRules(
   const onRiociguat_PV81 = medCodes.includes('1439816');
   if (hasCTEPH_PV81 && !onRiociguat_PV81 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-pv-081-cteph-riociguat',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'CTEPH without riociguat: PH-specific therapy gap (operability review)',
@@ -17027,6 +17403,7 @@ export function evaluateGapRules(
   const onPDE5i_PAH = medCodes.some(c => PDE5I_CODES_PAH.includes(c));
   if (hasPAH_T0 && !(onERA_PAH && onPDE5i_PAH) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-pv-084-pah-combination',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'Group-1 PAH without ERA + PDE5i combination therapy',
@@ -17055,6 +17432,7 @@ export function evaluateGapRules(
   const onSotatercept_PV85 = medCodes.includes('2678930');
   if (hasPAH_T0 && onERA_PAH && onPDE5i_PAH && !onSotatercept_PV85 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-pv-085-pah-sotatercept',
       type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.PERIPHERAL_VASCULAR,
       status: 'PAH on background combination therapy without sotatercept add-on (STELLAR)',
@@ -17082,6 +17460,7 @@ export function evaluateGapRules(
   const onRivaroxaban_EP10 = medCodes.includes('1114195');
   if (onRivaroxaban_EP10 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-010-rivaroxaban-food',
       type: TherapyGapType.DOCUMENTATION_GAP,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'Rivaroxaban: confirm take-with-food counseling for the >=15 mg dose',
@@ -17110,6 +17489,7 @@ export function evaluateGapRules(
   const hasStructuralHD_EP49 = dxCodes.some(c => c.startsWith('I25') || c.startsWith('I21') || c.startsWith('I22') || c.startsWith('I42') || c.startsWith('I50'));
   if (onClassIC_EP49 && hasStructuralHD_EP49 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-ep-049-class-ic-structural',
       type: TherapyGapType.SAFETY_ALERT,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'SAFETY: class IC antiarrhythmic (flecainide/propafenone) contraindicated in structural heart disease',

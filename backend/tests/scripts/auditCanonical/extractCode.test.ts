@@ -210,7 +210,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(15760); // 15739 -> 15760 by AUDIT-199-B (2026-07-09): the dose-parse suppression flag block + 3 keep-suppressed guard comments added net +21 lines above this content-anchor. (Prior 15732 -> 15739 AUDIT-199; 15745 -> 15732 AUDIT-197; 15740 -> 15745 AUDIT-195; 15697 -> 15740 AUDIT-194-B1; 15822 -> 15697 AUDIT-194 Part A; 16227 -> 15822 AUDIT-184 CAD-EXT.) Content-anchor.
+    expect(pannus!.commentLine).toBe(16098); // 15760 -> 16098 by AUDIT-222 (2026-07-29): the ruleId identity field added one `ruleId:` line to each of the 368 gaps.push sites (+327 of them above this content-anchor) plus the 11-line DetectedGap.ruleId doc comment = +338. No rule logic changed. (Prior 15739 -> 15760 AUDIT-199-B; 15732 -> 15739 AUDIT-199; 15745 -> 15732 AUDIT-197; 15740 -> 15745 AUDIT-195; 15697 -> 15740 AUDIT-194-B1; 15822 -> 15697 AUDIT-194 Part A; 16227 -> 15822 AUDIT-184 CAD-EXT.) Content-anchor.
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });
