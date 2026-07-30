@@ -11,6 +11,11 @@ import { logger } from '../utils/logger';
 import { evaluateGapRules } from './gaps/gapRuleEngine';
 import { buildPatientEvalContext } from './buildPatientEvalContext';
 import { Prisma } from '@prisma/client';
+import {
+  StoredOpenRow, ResolveReason, RESOLVE_ACTOR,
+  selectResolveTargets, classifyResolveReason, resolvedStatus, evaluateCompleteness,
+} from './gapResolvePass';
+import { resolveBuildSha } from '../scripts/buildSha';
 
 // AUDIT-148 Slice 1 (STEP 1): the per-patient context assembly + the staleness cutoffs / IMAGING_TYPES
 // moved to the shared buildPatientEvalContext (single source; this runner previously carried a duplicate
@@ -46,7 +51,15 @@ export async function runGapDetection(
   const existingKey = (patientId: string, ruleId: string) => `${patientId}::${ruleId}`;
   let existingMap = new Map<string, string>();
 
+  // AUDIT-223: resolve targets accumulate across batches; applied only after the completeness gate.
+  const allToResolve: Array<{ id: string; ruleId: string; currentStatus: string; reason: ResolveReason }> = [];
+
   const totalPatients = await prisma.patient.count({ where: { hospitalId } });
+
+  // AUDIT-224: durable per-run record. Created up-front so a crashed run still leaves evidence it started.
+  const runRecord = await prisma.gapDetectionRun.create({
+    data: { hospitalId, buildSha: resolveBuildSha(), outcome: 'RUNNING' },
+  });
   let cursor: string | undefined;
 
   logger.info('Starting batch gap detection', { hospitalId, totalPatients });
@@ -74,7 +87,8 @@ export async function runGapDetection(
     const batchPatientIds = patients.map(p => p.id);
     const batchExistingGaps = await prisma.therapyGap.findMany({
       where: { hospitalId, patientId: { in: batchPatientIds } },
-      select: { id: true, patientId: true, gapType: true, module: true, ruleId: true },
+      select: { id: true, patientId: true, gapType: true, module: true, ruleId: true,
+        currentStatus: true, identifiedAt: true, resolvedAt: true, resolvedBy: true },
     });
     // NULL-ruleId rows (pre-backfill rows + the AUDIT-195/196 consolidation orphans) are INERT: they never
     // match a detected gap, so no row is silently re-pointed at an unrelated rule (PR-B dispositions them).
@@ -82,6 +96,11 @@ export async function runGapDetection(
     existingMap = new Map<string, string>();
     for (const g of batchExistingGaps as any[]) {
       if (!g.ruleId) continue;
+      // AUDIT-223: only OPEN rows are match targets. A RESOLVED row keeps its ruleId, so matching it would
+      // rewrite a closed gap's text while leaving resolvedAt set - the row would assert a live recommendation
+      // while reading as closed. A re-firing rule must instead CREATE a new open row: a new clinical episode
+      // beside the resolved history. This is exactly why the uniqueness constraint is PARTIAL (open rows only).
+      if (g.resolvedAt) continue;
       const k = existingKey(g.patientId, g.ruleId);
       if (!existingMap.has(k)) existingMap.set(k, g.id);
     }
@@ -89,16 +108,46 @@ export async function runGapDetection(
     const allToCreate: any[] = [];
     const allToUpdate: { id: string; status: string }[] = [];
 
+    // AUDIT-223: rows this batch says should CLOSE. Collected across all batches and applied only after the
+    // completeness gate passes at the end of the walk - a truncated run must never mass-resolve.
+    const storedOpenByPatient = new Map<string, StoredOpenRow[]>();
+    for (const g of batchExistingGaps as any[]) {
+      if (g.resolvedAt) continue; // already closed; not a resolve candidate
+      const list = storedOpenByPatient.get(g.patientId) ?? [];
+      list.push({
+        id: g.id, ruleId: g.ruleId, currentStatus: g.currentStatus,
+        identifiedAt: g.identifiedAt, resolvedBy: g.resolvedBy,
+      });
+      storedOpenByPatient.set(g.patientId, list);
+    }
+
     for (const patient of patients) {
       result.patientsEvaluated++;
 
       // AUDIT-148 Slice 1 (STEP 1): shared context assembly (behavior-neutral; identical output to the
       // former inline logic, incl the AUDIT-194-B3 echo_months derivation and the staleness cutoffs).
+      const nowMs = Date.now();
       const { dxCodes, labValues, medCodes, meds, age, gender, race, procedureCodes } =
-        buildPatientEvalContext(patient, Date.now());
+        buildPatientEvalContext(patient, nowMs);
 
       try {
         const detectedGaps = evaluateGapRules(dxCodes, labValues, medCodes, age, gender, race, meds, procedureCodes);
+
+        // AUDIT-223 resolve pass. Runs BEFORE the early-return below, because a patient for whom NOTHING
+        // fires any more is exactly the patient whose stored gaps most need closing.
+        const detectedRuleIds = new Set(detectedGaps.map((g: any) => g.ruleId));
+        for (const t of selectResolveTargets(storedOpenByPatient.get(patient.id) ?? [], detectedRuleIds)) {
+          // Two-clock discriminator: re-evaluate the SAME patient rows at the row's identifiedAt. Any
+          // difference is therefore purely the clock's doing (staleness windows, age), which separates
+          // "aged out of a window" from "the patient's data changed".
+          const thenCtx = buildPatientEvalContext(patient, new Date(t.identifiedAt).getTime());
+          const thenGaps = evaluateGapRules(
+            thenCtx.dxCodes, thenCtx.labValues, thenCtx.medCodes, thenCtx.age,
+            thenCtx.gender, thenCtx.race, thenCtx.meds, thenCtx.procedureCodes,
+          );
+          const firedThen = thenGaps.some((g: any) => g.ruleId === t.ruleId);
+          allToResolve.push({ ...t, reason: classifyResolveReason(firedThen) });
+        }
 
         if (detectedGaps.length === 0) continue;
 
@@ -161,9 +210,52 @@ export async function runGapDetection(
     });
   }
 
+  // AUDIT-223 completeness gate (AUDIT-193 class). Creates and updates already landed; only RESOLVING is
+  // withheld when the walk covered materially fewer patients than the tenant holds, because resolving on a
+  // truncated run would mass-close live clinical gaps.
+  const completeness = evaluateCompleteness(result.patientsEvaluated, totalPatients);
+  let outcome = 'COMPLETED';
+  if (!completeness.ok) {
+    outcome = 'ABORTED_INCOMPLETE';
+    logger.error('Gap resolve pass WITHHELD (completeness gate)', {
+      hospitalId, evaluated: result.patientsEvaluated, stored: totalPatients, message: completeness.message,
+    });
+  } else if (allToResolve.length > 0) {
+    const onDate = new Date().toISOString().slice(0, 10);
+    const now = new Date();
+    for (const r of allToResolve) {
+      const res = await prisma.therapyGap.updateMany({
+        where: { id: r.id, hospitalId, resolvedAt: null },
+        data: {
+          resolvedAt: now,
+          resolvedBy: RESOLVE_ACTOR,
+          currentStatus: resolvedStatus(r.currentStatus, r.reason, onDate),
+        },
+      });
+      result.gapFlagsResolved += res.count;
+    }
+  }
+
+  await prisma.gapDetectionRun.update({
+    where: { id: runRecord.id },
+    data: {
+      finishedAt: new Date(),
+      patientsEvaluated: result.patientsEvaluated,
+      gapsCreated: result.gapFlagsCreated,
+      gapsUpdated: result.gapFlagsUpdated,
+      gapsResolved: result.gapFlagsResolved,
+      completenessFraction: completeness.fraction,
+      outcome,
+      notes: completeness.ok ? null : (completeness.message ?? null),
+    },
+  });
+
   logger.info('Gap detection complete', {
     hospitalId,
     ...result,
+    completenessFraction: completeness.fraction,
+    outcome,
+    resolveCandidates: allToResolve.length,
   });
 
   return result;
