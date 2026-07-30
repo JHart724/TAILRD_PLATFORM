@@ -35,6 +35,11 @@ jest.mock('../../src/lib/prisma', () => ({
       createMany: jest.fn().mockResolvedValue({ count: 0 }),
       updateMany: jest.fn().mockResolvedValue({ count: 1 }),
     },
+    // AUDIT-224: the batch runner now opens and closes a durable run record.
+    gapDetectionRun: {
+      create: jest.fn().mockResolvedValue({ id: 'run-1' }),
+      update: jest.fn().mockResolvedValue({ id: 'run-1' }),
+    },
     $transaction: jest.fn().mockResolvedValue([]),
   },
 }));
@@ -108,6 +113,8 @@ beforeEach(() => {
   p.therapyGap.createMany.mockResolvedValue({ count: 0 });
   p.therapyGap.updateMany.mockResolvedValue({ count: 1 });
   p.$transaction.mockResolvedValue([]);
+  p.gapDetectionRun.create.mockResolvedValue({ id: 'run-1' });
+  p.gapDetectionRun.update.mockResolvedValue({ id: 'run-1' });
 });
 
 describe('AUDIT-222 proof 1: cross-rule clobbering', () => {
@@ -227,5 +234,52 @@ describe('AUDIT-222: the identity column is actually read back', () => {
 
     await runGapDetection(HOSPITAL);
     expect(p.therapyGap.findMany.mock.calls[0][0].select).toHaveProperty('ruleId', true);
+  });
+});
+
+describe('AUDIT-224: every batch run leaves a durable record', () => {
+  it('opens a run record with the build SHA and closes it with the tallies + completeness', async () => {
+    p.patient.findMany.mockResolvedValueOnce([fixturePatient()]).mockResolvedValue([]);
+    p.patient.count.mockResolvedValue(1);
+    p.therapyGap.findMany.mockResolvedValue([]);
+    evalMock.mockReturnValue([gap('gap-a', 'A-status')]);
+
+    await runGapDetection(HOSPITAL);
+
+    expect(p.gapDetectionRun.create).toHaveBeenCalledTimes(1);
+    const opened = p.gapDetectionRun.create.mock.calls[0][0].data;
+    expect(opened).toMatchObject({ hospitalId: HOSPITAL, outcome: 'RUNNING' });
+    expect(typeof opened.buildSha).toBe('string');
+
+    expect(p.gapDetectionRun.update).toHaveBeenCalledTimes(1);
+    const closed = p.gapDetectionRun.update.mock.calls[0][0].data;
+    expect(closed).toMatchObject({
+      patientsEvaluated: 1, gapsCreated: 1, gapsUpdated: 0, gapsResolved: 0,
+      completenessFraction: 1, outcome: 'COMPLETED',
+    });
+    expect(closed.finishedAt).toBeInstanceOf(Date);
+  });
+
+  it('records ABORTED_INCOMPLETE and resolves NOTHING when the walk is truncated', async () => {
+    // One patient walked, but the tenant holds 100 -> 1% completeness, far below the 90% gate.
+    p.patient.findMany.mockResolvedValueOnce([fixturePatient()]).mockResolvedValue([]);
+    p.patient.count.mockResolvedValue(100);
+    p.therapyGap.findMany.mockResolvedValue([
+      { id: 'row-stale', patientId: PATIENT, gapType: 'IMAGING_OVERDUE', module: 'VALVULAR_DISEASE',
+        ruleId: 'gap-gone', currentStatus: 'Old text', identifiedAt: new Date('2026-01-01'),
+        resolvedAt: null, resolvedBy: null },
+    ]);
+    evalMock.mockReturnValue([]); // nothing fires -> row-stale WOULD be a resolve target
+
+    const res = await runGapDetection(HOSPITAL);
+
+    expect(res.gapFlagsResolved).toBe(0);
+    const closed = p.gapDetectionRun.update.mock.calls[0][0].data;
+    expect(closed.outcome).toBe('ABORTED_INCOMPLETE');
+    expect(closed.notes).toMatch(/Resolve pass WITHHELD/);
+    // and crucially: no resolution write happened
+    const resolveWrites = p.therapyGap.updateMany.mock.calls
+      .filter((c: any[]) => c[0].data?.resolvedBy !== undefined);
+    expect(resolveWrites).toHaveLength(0);
   });
 });

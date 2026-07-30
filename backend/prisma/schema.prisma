@@ -64,6 +64,7 @@ model Hospital {
   // Clinical Decision Support relationships
   cqlResults                  CQLResult[]
   therapyGaps                 TherapyGap[]
+  gapDetectionRuns GapDetectionRun[] // AUDIT-224: per-run detection records
   phenotypes                  Phenotype[]
   crossReferrals              CrossReferral[]
   drugTitrations              DrugTitration[]
@@ -1319,6 +1320,13 @@ model TherapyGap {
   @@index([hospitalId, module, resolvedAt])
   @@index([hospitalId, patientId])
   @@index([hospitalId, ruleId]) // AUDIT-222: rule-scoped lookups (backfill attribution, PR-B resolve pass)
+  // AUDIT-223: at most one OPEN row per (patient, rule). The runner enforces this today (the match map is
+  // open-rows-only); a PARTIAL unique index will enforce it at the DB level in a FOLLOW-UP PR that merges
+  // only AFTER the shadow-dedupe execute clears the 185 duplicate open pairs and a verified-zero-duplicates
+  // check passes. Prisma's DSL cannot express a partial unique, so it will live in SQL. A TOTAL unique on
+  // (patientId, ruleId) would be WRONG: a resolved row keeps its ruleId, so a genuine new episode (therapy
+  // lapsed, value drifted back out of range) must be able to create a new open row beside the resolved one.
+  // The index migration is deliberately NOT in this PR - see DRIFT-58.
   @@map("therapy_gaps")
 }
 
@@ -2820,4 +2828,34 @@ model TrialReferral {
   @@unique([patientId, trialId, hospitalId])
   @@index([hospitalId, trialId, status])
   @@map("trial_referrals")
+}
+
+// AUDIT-224 (folded into AUDIT-223 PR-B): a durable record per gap-detection run. Resolve makes runs
+// consequential - a run that closes clinical rows must leave evidence of what it did, per Coverage-of-an-
+// Invariant. Before this, forensics depended on ad-hoc identifiedAt-window queries.
+model GapDetectionRun {
+  id String @id @default(cuid())
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  /// AUDIT-221 execution-vehicle self-attestation: which build actually ran.
+  buildSha String
+
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
+
+  patientsEvaluated Int @default(0)
+  gapsCreated       Int @default(0)
+  gapsUpdated       Int @default(0)
+  gapsResolved      Int @default(0)
+
+  /// evaluated / stored-patient-count at run start. Below COMPLETENESS_MIN_FRACTION the resolve pass aborts.
+  completenessFraction Float?
+  /// 'COMPLETED' | 'ABORTED_INCOMPLETE' | 'FAILED'
+  outcome String @default("COMPLETED")
+  notes   String?
+
+  @@index([hospitalId, startedAt])
+  @@map("gap_detection_runs")
 }

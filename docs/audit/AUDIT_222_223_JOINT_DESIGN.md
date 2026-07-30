@@ -386,3 +386,124 @@ membership as "has an OPEN gap in that module". A patient whose ONLY open CAD ga
 therefore LEAVES the CAD cohort. The runner measures this read-only in BOTH modes and logs
 `patientsWhoseOnlyOpenCadGapsAreRetiring`, so the cohort shift is a measured number at the execute-GO gate
 rather than a discovered surprise afterwards.
+
+---
+
+## 10. AMENDMENT 2026-07-30: PR-B rulings, the option-(iv) tripwire, and a constraint correction
+
+**Supersede-not-overwrite: sections 5 and 9 stand. This section records operator rulings and one design
+correction that the measured inventory forced.**
+
+### Ruling 1 - option (ii) STANDS, with a named tripwire
+
+The retirement work PRICED the convention-enforced approach: ONE helper (`clinicianResolvedWhere`) plus FOUR
+call sites covered the entire `resolvedAt` throughput surface. Option (iv) (a schema `resolutionClass` enum or
+dedicated columns) would additionally cost a migration, a backfill of the 4,129 retired rows, and a rewrite of
+those same four sites. Measured cost of (ii) came in far below what section 9 assumed, so (ii) stands.
+
+**TRIPWIRE (codified):** the `system:` prefix currently has TWO resolution actors -
+`system:audit-222-retirement` and PR-B's `system:audit-223-no-longer-detected` (plus
+`system:audit-222-shadow-dedupe` for the one-shot dedupe). **Any THIRD durable, recurring system-resolution
+actor triggers the schema conversation BEFORE that work ships.** Rationale: two actors are memorable and
+reviewable by discipline; three is where convention-by-discipline stops scaling and an unenforced prefix
+becomes a silent-divergence risk. The tripwire is the designed moment to revisit option (iv), not a vague
+"someday".
+
+### Ruling 2 - shadow residue: dedupe-and-resolve, THEN constrain
+
+Measured live 2026-07-30: **185 `(patientId, ruleId)` pairs hold more than one row = 185 extra unreachable
+rows** (down from 31,108 pre-fix, a 99.4% reduction, but NOT zero). Cause is backfill residue, not a
+re-emergence: attribution mapped by STATUS, and ternary rules emit two status strings, so a patient holding
+both branch-variants had two rows collapse onto one ruleId (`gap-cad-statin` 66 pairs, structural-heart
+imaging 32, `gap-cad-rehab-mi` 19, glucose screening 12).
+
+Order: **dedupe first (keep most recent per pair, resolve the rest under `system:audit-222-shadow-dedupe`),
+then the uniqueness constraint.** The constraint is the end state; the dedupe is its precondition. It lands
+only after a verified-zero-duplicates check.
+
+### CORRECTION to ruling 2: the constraint must be PARTIAL, not `@@unique([patientId, ruleId])`
+
+A plain unique on `(patientId, ruleId)` would be WRONG and would break a legitimate clinical case. Once PR-B
+resolves gaps, a resolved row RETAINS its `ruleId`. If that rule later fires again for the same patient - a
+genuine new episode (the therapy lapsed, the value drifted back out of range) - the runner must CREATE a new
+open row beside the resolved historical one. A total unique constraint would reject that write and the
+detection run would fail.
+
+The correct constraint expresses the real invariant: **at most one OPEN row per (patient, rule)**:
+
+```sql
+CREATE UNIQUE INDEX therapy_gaps_patient_rule_open_uniq
+  ON therapy_gaps ("patientId", "ruleId")
+  WHERE "resolvedAt" IS NULL AND "ruleId" IS NOT NULL;
+```
+
+Prisma's schema DSL cannot express a partial unique index, so this is a migration-level constraint carrying a
+comment in `schema.prisma` pointing at it. `ruleId IS NOT NULL` is included because Postgres treats NULLs as
+distinct anyway and the 4,129 retired rows legitimately share NULL.
+
+**Fail-safe on a still-duplicated table:** `CREATE UNIQUE INDEX` on a table that still has duplicate open
+pairs FAILS with `23505 unique_violation` and the migration ABORTS in its transaction, leaving the table
+untouched. That is the desired behaviour: the constraint cannot land until the dedupe has actually run. The
+migration is therefore written to be applied AFTER the dedupe execute, and its failure mode is a loud,
+non-destructive abort rather than silent data loss.
+
+### Ruling 3 - AUDIT-224 folds into PR-B
+
+Resolve makes runs consequential: a run that resolves clinical rows without leaving a durable record is the
+observability gap AUDIT-224 describes, now with teeth. Per Coverage-of-an-Invariant (section 22) the record
+ships WITH the semantics that need it. A `GapDetectionRun` row per run captures tenant, buildSha, start/finish,
+patientsEvaluated, creates/updates/resolves, and the completeness fraction.
+
+### Resolve reasons carry the two-clock discriminator (not collapsed)
+
+`buildPatientEvalContext(patient, nowMs)` is a pure function of the patient's rows and a clock. Evaluating the
+SAME patient rows at two clocks therefore isolates the clock's contribution exactly:
+
+- fired at the row's `identifiedAt` but NOT now -> **`clock`**: the passage of time alone closed it (a
+  staleness window moved past the observation).
+- fired at NEITHER clock -> **`state`**: the patient's data no longer supports the rule (therapy started,
+  value normalised) - it fired when created because the data was different then.
+
+Both are recorded verbatim in the resolution reason. Collapsing them into "no longer applicable" would destroy
+the distinction between "a clinician fixed this" and "this aged out of a window", which are different clinical
+facts and should not read the same in a closure metric.
+
+### FLAGGED ASYMMETRY (follow-up, explicitly OUTSIDE PR-B scope)
+
+The clinician action path (`routes/gaps.ts`) OVERWRITES `currentStatus` with the bare action verb
+(`REFERRED` / `INITIATED` / `DEFERRED` / `CONTRAINDICATED`), destroying the original recommendation text. The
+system paths (retirement, and PR-B's resolve) deliberately PRESERVE it under an appended marker. So the
+supersede-not-overwrite property holds for machine-written resolutions but NOT for human-written ones - the
+inverse of what one would expect, and a real gap in the clinical record: after a clinician defers a gap, no
+surface records what was deferred. Filed here as a named follow-up; NOT fixed in PR-B, because changing that
+write path touches the clinician-facing contract and deserves its own finding and review.
+
+### AMENDMENT 2026-07-30 (b): deviation approvals, and the ENFORCED sequence
+
+**Two PR-B deviations, operator-APPROVED 2026-07-30:**
+
+1. **The uniqueness constraint is PARTIAL, not total.** `WHERE resolvedAt IS NULL AND ruleId IS NOT NULL` is
+   the invariant the ruling intended: at most one OPEN row per (patient, rule). A resolved row retains its
+   `ruleId`, and must not block a genuine new episode.
+2. **The match map is OPEN-rows-only.** The same design point: a re-firing rule must never rewrite a closed
+   row (which would leave a live recommendation reading as closed); it creates a new open row instead.
+
+**ENFORCED SEQUENCE (re-sequencing ruling 2026-07-30).** The partial index migration is REMOVED from PR-B and
+ships in its own follow-up PR. The order is enforced by PR sequencing, not by documentation:
+
+1. PR-B merges and deploys (applies only the `gap_detection_runs` CREATE TABLE - no data dependency).
+2. The shadow-dedupe **executes** under snapshot + operator GO, clearing the 185 duplicate open pairs.
+3. A **verified-zero-duplicates** check passes.
+4. ONLY THEN does the index PR merge, so its migration succeeds by construction.
+
+**Why the index could not ride PR-B.** The container CMD is `npx prisma migrate deploy && node
+dist/server.js`. `migrate deploy` applies ALL pending migrations at container start, and there is no
+directory exclusion, guard clause, or feature flag anywhere in the Dockerfile or deploy workflow. Against the
+185 still-duplicated pairs the index raises `23505 unique_violation`; the `&&` then prevents the server from
+starting, the task exits non-zero, and the ROLLOUT fails - and stays failing for every subsequent deploy until
+the dedupe runs. The in-transaction abort protects the DATA but wedges the DEPLOY, which is a different
+property. See DRIFT-58.
+
+**The self-guarding alternative was REJECTED** (a `DO $$ ... skip if duplicates exist $$` migration): it would
+be recorded in `_prisma_migrations` as applied while the constraint was silently absent, so nothing would ever
+re-attempt it - trading a loud, recoverable failure for a permanent invisible gap in the invariant.

@@ -7,6 +7,9 @@ import { logger } from '../utils/logger';
 import { evaluateGapRules } from './gaps/gapRuleEngine';
 import { buildPatientEvalContext } from './buildPatientEvalContext';
 import { Prisma } from '@prisma/client';
+import {
+  StoredOpenRow, RESOLVE_ACTOR, selectResolveTargets, classifyResolveReason, resolvedStatus,
+} from './gapResolvePass';
 
 // AUDIT-148 Slice 1 (STEP 1): the per-patient context assembly + these constants moved to the shared
 // buildPatientEvalContext (single source, also consumed by gapDetectionRunner + the trial matcher).
@@ -63,7 +66,8 @@ export async function runGapDetectionForPatient(
     // created. See docs/audit/AUDIT_222_223_JOINT_DESIGN.md.
     const existingGaps = await prisma.therapyGap.findMany({
       where: { patientId, hospitalId },
-      select: { id: true, gapType: true, module: true, ruleId: true },
+      select: { id: true, gapType: true, module: true, ruleId: true,
+        currentStatus: true, identifiedAt: true, resolvedAt: true, resolvedBy: true },
     });
 
     // Rows with a NULL ruleId (pre-backfill rows, and the AUDIT-195/196 consolidation orphans) are INERT:
@@ -73,7 +77,37 @@ export async function runGapDetectionForPatient(
     const existingMap = new Map<string, string>();
     for (const g of existingGaps as any[]) {
       if (!g.ruleId) continue;
+      // AUDIT-223: only OPEN rows are match targets (see gapDetectionRunner for the full rationale) - a
+      // re-firing rule creates a new episode rather than rewriting a closed row.
+      if (g.resolvedAt) continue;
       if (!existingMap.has(g.ruleId)) existingMap.set(g.ruleId, g.id);
+    }
+
+    // AUDIT-223 resolve pass (single-patient). NOTE: the completeness gate that guards the BATCH runner does
+    // not apply here - this runner is scoped to one patient by construction, so "did we evaluate enough
+    // patients" is not a meaningful question. The clinician-touched guard and never-delete property DO apply.
+    const nowMsRes = Date.now();
+    const storedOpen: StoredOpenRow[] = (existingGaps as any[])
+      .filter(g => !g.resolvedAt)
+      .map(g => ({ id: g.id, ruleId: g.ruleId, currentStatus: g.currentStatus,
+        identifiedAt: g.identifiedAt, resolvedBy: g.resolvedBy }));
+    const detectedIds = new Set(detectedGaps.map((g: any) => g.ruleId));
+    const onDateRes = new Date().toISOString().slice(0, 10);
+    for (const t of selectResolveTargets(storedOpen, detectedIds)) {
+      const thenCtx = buildPatientEvalContext(patient, new Date(t.identifiedAt).getTime());
+      const thenGaps = evaluateGapRules(
+        thenCtx.dxCodes, thenCtx.labValues, thenCtx.medCodes, thenCtx.age,
+        thenCtx.gender, thenCtx.race, thenCtx.meds, thenCtx.procedureCodes,
+      );
+      const reason = classifyResolveReason(thenGaps.some((g: any) => g.ruleId === t.ruleId));
+      await prisma.therapyGap.updateMany({
+        where: { id: t.id, hospitalId, resolvedAt: null },
+        data: {
+          resolvedAt: new Date(nowMsRes),
+          resolvedBy: RESOLVE_ACTOR,
+          currentStatus: resolvedStatus(t.currentStatus, reason, onDateRes),
+        },
+      });
     }
 
     const toCreate: any[] = [];
