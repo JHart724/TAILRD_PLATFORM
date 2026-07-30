@@ -1320,13 +1320,16 @@ model TherapyGap {
   @@index([hospitalId, module, resolvedAt])
   @@index([hospitalId, patientId])
   @@index([hospitalId, ruleId]) // AUDIT-222: rule-scoped lookups (backfill attribution, PR-B resolve pass)
-  // AUDIT-223: at most one OPEN row per (patient, rule). The runner enforces this today (the match map is
-  // open-rows-only); a PARTIAL unique index will enforce it at the DB level in a FOLLOW-UP PR that merges
-  // only AFTER the shadow-dedupe execute clears the 185 duplicate open pairs and a verified-zero-duplicates
-  // check passes. Prisma's DSL cannot express a partial unique, so it will live in SQL. A TOTAL unique on
-  // (patientId, ruleId) would be WRONG: a resolved row keeps its ruleId, so a genuine new episode (therapy
-  // lapsed, value drifted back out of range) must be able to create a new open row beside the resolved one.
-  // The index migration is deliberately NOT in this PR - see DRIFT-58.
+  // AUDIT-223: at most one OPEN row per (patient, rule). The runners enforce this in code (the match map is
+  // open-rows-only) AND the DB now enforces it via the PARTIAL unique index
+  // `therapy_gaps_patient_rule_open_uniq` on (patientId, ruleId) WHERE resolvedAt IS NULL AND ruleId IS NOT
+  // NULL - migration 20260730223000_audit_223_open_gap_unique, which merged only AFTER the shadow-dedupe
+  // execute cleared the 185 duplicate open pairs and a verified-zero-duplicates check passed (DRIFT-58).
+  // It is absent from this model block because Prisma's DSL cannot express a partial unique, NOT because it
+  // is missing - `prisma migrate deploy` does not drift-check, so the SQL-only index is the canonical
+  // definition. A TOTAL unique on (patientId, ruleId) would be WRONG: a resolved row keeps its ruleId, so a
+  // genuine new episode (therapy lapsed, value drifted back out of range) must be able to create a new open
+  // row beside the resolved one.
   @@map("therapy_gaps")
 }
 
