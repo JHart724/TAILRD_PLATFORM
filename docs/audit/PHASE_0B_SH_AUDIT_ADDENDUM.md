@@ -79,12 +79,12 @@ Structural Heart has **88 spec gaps** across 14 subcategories. Implementation: *
 
 **Registry-without-evaluator (6):** registry entries with no matching evaluator block body.
 
-- `gap-sh-9-pfo-closure` (registry line 1558): No evaluator body matched via similarity scoring
-- `gap-sh-003-lflg-classical` (registry line 3093): No evaluator body matched via similarity scoring
-- `gap-sh-004-lflg-paradoxical` (registry line 3100): No evaluator body matched via similarity scoring
-- `gap-sh-006-asymptomatic-as` (registry line 3107): No evaluator body matched via similarity scoring
-- `gap-sh-050-moderate-as-grading` (registry line 3114): No evaluator body matched via similarity scoring
-- `gap-sh-017-primary-mr-pasp` (registry line 3128): No evaluator body matched via similarity scoring
+- `gap-sh-9-pfo-closure` (registry line 1585): No evaluator body matched via similarity scoring
+- `gap-sh-003-lflg-classical` (registry line 3120): No evaluator body matched via similarity scoring
+- `gap-sh-004-lflg-paradoxical` (registry line 3127): No evaluator body matched via similarity scoring
+- `gap-sh-006-asymptomatic-as` (registry line 3134): No evaluator body matched via similarity scoring
+- `gap-sh-050-moderate-as-grading` (registry line 3141): No evaluator body matched via similarity scoring
+- `gap-sh-017-primary-mr-pasp` (registry line 3155): No evaluator body matched via similarity scoring
 
 
 ---

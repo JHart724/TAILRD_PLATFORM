@@ -82,31 +82,31 @@ Valvular Heart Disease has **105 spec gaps** across 18 subcategories. Implementa
 
 **Registry-without-evaluator (3):** registry entries with no matching evaluator block body.
 
-- `gap-vd-functional-status` (registry line 4090): No evaluator body matched via similarity scoring
-- `gap-vd-preop-assessment` (registry line 4102): No evaluator body matched via similarity scoring
-- `gap-vd-pulmonary-htn` (registry line 4114): No evaluator body matched via similarity scoring
+- `gap-vd-functional-status` (registry line 4117): No evaluator body matched via similarity scoring
+- `gap-vd-preop-assessment` (registry line 4129): No evaluator body matched via similarity scoring
+- `gap-vd-pulmonary-htn` (registry line 4141): No evaluator body matched via similarity scoring
 
 **Naming convention mismatches (19):** registry IDs not following `gap-vd-` convention.
 
-- `gap-vhd-103-severe-ar-surgical` (line 4151): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-060-ie-large-vegetation` (line 4158): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-100-mech-valve-pregnancy-antixa` (line 4165): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-102-ar-surveillance` (line 4172): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-104-mixed-valve-staging` (line 4179): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-105-mr-quant-triangulation` (line 4186): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-068-mech-pvt-gradient` (line 4194): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-011-bio-svd-gradient` (line 4201): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-001-subtherapeutic-inr` (line 4209): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-006-mech-asa-adjunct` (line 4216): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-057-ie-hf-surgery` (line 4224): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-059-ie-embolic-surgery` (line 4231): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-064-prior-ie-dental-prophylaxis` (line 4238): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-079-rheumatic-prophylaxis` (line 4245): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-083-rheumatic-af-warfarin` (line 4252): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-098-mech-valve-preconception` (line 4260): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-099-mech-valve-pregnancy-anticoag` (line 4267): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-091-dopamine-agonist-valve-surveillance` (line 4274): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-092-ergot-alkaloid-valve-surveillance` (line 4281): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-103-severe-ar-surgical` (line 4178): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-060-ie-large-vegetation` (line 4185): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-100-mech-valve-pregnancy-antixa` (line 4192): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-102-ar-surveillance` (line 4199): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-104-mixed-valve-staging` (line 4206): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-105-mr-quant-triangulation` (line 4213): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-068-mech-pvt-gradient` (line 4221): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-011-bio-svd-gradient` (line 4228): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-001-subtherapeutic-inr` (line 4236): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-006-mech-asa-adjunct` (line 4243): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-057-ie-hf-surgery` (line 4251): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-059-ie-embolic-surgery` (line 4258): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-064-prior-ie-dental-prophylaxis` (line 4265): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-079-rheumatic-prophylaxis` (line 4272): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-083-rheumatic-af-warfarin` (line 4279): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-098-mech-valve-preconception` (line 4287): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-099-mech-valve-pregnancy-anticoag` (line 4294): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-091-dopamine-agonist-valve-surveillance` (line 4301): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-092-ergot-alkaloid-valve-surveillance` (line 4308): expected prefix `gap-vd-`, got `gap-vhd-`
 
 
 ---

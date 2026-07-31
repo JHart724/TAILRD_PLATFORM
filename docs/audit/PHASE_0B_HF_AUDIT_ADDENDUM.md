@@ -80,14 +80,14 @@ Heart Failure has **126 spec gaps** across 15 subcategories. Implementation: **6
 
 **Evaluator-without-registry (1):** evaluator blocks with no registry entry.
 
-- `HF-91` (line 9757): No registry entry matched via similarity scoring
+- `HF-91` (line 9784): No registry entry matched via similarity scoring
 
 **Naming convention mismatches (4):** registry IDs not following `gap-hf-` convention.
 
-- `gap-1-attr-cm` (line 272): expected prefix `gap-hf-`, got `gap-1-`
-- `gap-2-iron-deficiency` (line 284): expected prefix `gap-hf-`, got `gap-2-`
-- `gap-6-finerenone` (line 296): expected prefix `gap-hf-`, got `gap-6-`
-- `gap-44-digoxin-toxicity` (line 320): expected prefix `gap-hf-`, got `gap-44-`
+- `gap-1-attr-cm` (line 275): expected prefix `gap-hf-`, got `gap-1-`
+- `gap-2-iron-deficiency` (line 287): expected prefix `gap-hf-`, got `gap-2-`
+- `gap-6-finerenone` (line 299): expected prefix `gap-hf-`, got `gap-6-`
+- `gap-44-digoxin-toxicity` (line 323): expected prefix `gap-hf-`, got `gap-44-`
 
 
 ---
