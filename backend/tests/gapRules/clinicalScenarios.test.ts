@@ -25,7 +25,7 @@ describe('Structural: Gap rule engine integrity', () => {
     content = fs.readFileSync(ENGINE_PATH, 'utf8');
   });
 
-  it('exactly 356 gap rules defined (gaps.push calls)', () => {
+  it('exactly 370 gap rules defined (gaps.push calls)', () => {
     // Count incremented from 257 to 259 by EP-XX-7 mitigation (2026-05-04, fix/ep-017-rate-control-hfref-gating):
     // - +1: EP-017 SAFETY gap (HFrEF + on non-DHP CCB → Class 3 Harm alert)
     // - +1: EP-RC LVEF-data-required gap (HF dx + AF + LVEF undefined → structured data gap, not silent default)
@@ -97,8 +97,12 @@ describe('Structural: Gap rule engine integrity', () => {
     // Then 369 -> 368 by AUDIT-197 (2026-07-08): CAD-ISCHEMIA-GUIDED RETIRED -> SPEC_ONLY (-1 gaps.push) -
     // presence-as-proxy defect (hasModerateIschemia bound to stress_test_months !== undefined = test-presence,
     // not ischemia); moderate-ischemia RESULT finding is Synthea-absent/real-EHR-only. audit197 guard.
+    // Then 368 -> 370 by Tranche 3 Slice 1 (2026-07-31): +2 CAD procedure-timing evaluators -
+    // GAP-CAD-061 DAPT de-escalation (PCI + months_since_pci 1-3 + on full DAPT, TWILIGHT/TICO COR 2a) and
+    // GAP-CAD-051 post-PCI non-cardiac surgery timing (curated NCS <6mo post-PCI, 2016 DAPT FU COR 1).
+    // tranche3Slice1PciCabg guard.
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(368);
+    expect(count).toBe(370);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

@@ -579,3 +579,74 @@ export const RXNORM_IL1_INHIBITORS = {
 export const RXNORM_OCTREOTIDE = {
   OCTREOTIDE: '7617',
 } as const;
+
+// -- SNOMED CT Procedure Code Sets (Tranche 3 Slice 1) -----------------------
+
+/** Coronary revascularization procedures (Tranche 3 Slice 1: GAP-CAD-061 DAPT de-escalation window,
+ *  GAP-CAD-051 post-PCI non-cardiac surgery timing). SNOMED used DIRECTLY, no CPT crosswalk, per the
+ *  AUDIT-218 ruling (Synthea procedures.csv emits SNOMED natively).
+ *  Section-16 verification 2026-07-31: FSN checked per code via tx.fhir.org CodeSystem/$lookup
+ *  (official SNOMED CT release); source-emission confirmed in production demo-synthea-threaded
+ *  (procedures table, post-AUDIT-218 backfill):
+ *    415070008 FSN "Percutaneous coronary intervention (procedure)" - 2,338 rows / 2,215 patients
+ *    232717009 FSN "Coronary artery bypass grafting (procedure)"    - 705 rows / 705 patients
+ *    414088005 FSN "Emergency coronary artery bypass graft (procedure)" - 53 rows / 53 patients */
+export const SNOMED_CORONARY_REVASC = {
+  PCI: '415070008',            // Percutaneous coronary intervention (procedure)
+  CABG: '232717009',           // Coronary artery bypass grafting (procedure)
+  CABG_EMERGENCY: '414088005', // Emergency coronary artery bypass graft (procedure)
+} as const;
+
+/** Non-cardiac surgery (GAP-CAD-051 post-PCI elective non-cardiac surgery timing; 2016 ACC/AHA DAPT
+ *  Focused Update - delay elective NCS 30 days post-BMS / optimally 6 months post-DES, COR I).
+ *
+ *  CURATION RATIONALE (2026-07-31, Tranche 3 Slice 1 ruling (3)): curated from the 420 distinct SNOMED
+ *  procedure codes PRESENT in the demo-synthea-threaded substrate (not a top-down surgical ontology),
+ *  so every member is a code the data can actually emit. Inclusion principle: unambiguous INCISIONAL
+ *  OPERATIVE surgery under anesthesia, where perioperative antiplatelet interruption is a standard
+ *  consideration. Excluded classes, each deliberate:
+ *    - coronary/cardiac family (per ruling: CABG 232717009/414088005/418824004 off-pump, TAVI 773996000,
+ *      valve repair/replacement 26212005/1155885007, VAD 232965003/232967006, heart transplant 32413006,
+ *      cardiopulmonary bypass 63697000, median sternotomy 359672006, cardiac ablation 18286008)
+ *    - dental/oral procedures (DAPT is continued for dental work; 81733005, 64544008, 234687006,
+ *      79345008, 23933004, 23183008, 302351005 and dental-hygiene codes)
+ *    - endoscopic/office/minor procedures (rectal polypectomy 274031008, contraceptive device
+ *      insertion/replacement/removal, vasectomy 22523008, biopsies, IUD codes)
+ *    - non-incisional manipulation under anesthesia (699253003 knee MUA, 387685009 shoulder MUA,
+ *      closed reductions 24832002/179632003)
+ *    - transfusions/infusions and care-process/administrative codes (referrals, admissions,
+ *      pre/post-operative care regimes, "Operative procedure planned" 183976008, generic
+ *      "Incision" 34896006 - uninterpretable root concept)
+ *    - emergent-dominant procedures where elective-delay logic does not apply (appendectomy 80146002,
+ *      ectopic-pregnancy salpingectomy 445912000, trauma-surgery admission 305433001, portal-vein
+ *      thrombectomy 433112001)
+ *  Electiveness and stent type are NOT in the substrate; the consuming rule states both (see the
+ *  GAP-CAD-051 evaluator's evidence note).
+ *
+ *  Section-16 verification 2026-07-31: FSN checked per code via tx.fhir.org CodeSystem/$lookup
+ *  (official SNOMED CT release); every code source-emission-confirmed in the substrate's 420-code list. */
+export const SNOMED_NONCARDIAC_SURGERY = {
+  KIDNEY_TRANSPLANT: '70536003',        // Transplant of kidney (procedure)
+  CESAREAN_SECTION: '11466000',         // Cesarean section (procedure)
+  PARTIAL_COLON_RESECTION: '43075005',  // Partial resection of colon (procedure)
+  BILATERAL_TUBAL_LIGATION: '287664005',// Bilateral tubal ligation (procedure)
+  PROSTATECTOMY: '90470006',            // Prostatectomy (procedure)
+  BREAST_LUMPECTOMY: '392021009',       // Lumpectomy of breast (procedure)
+  BREAST_LESION_EXCISION: '392023007',  // Excision of lesion of breast (procedure)
+  LUNG_VOLUME_REDUCTION: '429609002',   // Lung volume reduction surgery (procedure)
+  LUNG_TRANSPLANT: '88039007',          // Transplant of lung (procedure)
+  LAPAROSCOPIC_CHOLECYSTECTOMY: '45595009', // Laparoscopic cholecystectomy (procedure)
+  SENTINEL_NODE_EXCISION: '443497002',  // Excision of sentinel lymph node (procedure)
+  AXILLARY_NODE_EXCISION: '234262008',  // Excision of axillary lymph node (procedure)
+  CHOLECYSTECTOMY: '38102005',          // Cholecystectomy (procedure)
+  FOOT_AMPUTATION: '180030006',         // Amputation of the foot (procedure)
+  ABOVE_KNEE_AMPUTATION: '79733001',    // Amputation above-knee (procedure)
+  TOTAL_KNEE_REPLACEMENT: '609588000',  // Total knee replacement (procedure)
+  MYELOMENINGOCELE_REPAIR: '42839003',  // Repair of myelomeningocele (procedure)
+  TOTAL_HIP_REPLACEMENT: '52734007',    // Total replacement of hip (procedure)
+  SHOULDER_AMPUTATION: '13995008',      // Amputation of arm through shoulder (procedure)
+  SINGLE_LUNG_TRANSPLANT: '232657004',  // Single lung transplant (procedure)
+  SUBMANDIBULAR_GLAND_EXCISION: '47227006', // Excision of submandibular gland (procedure)
+  HAND_AMPUTATION: '46028000',          // Amputation of hand (procedure)
+  LOOP_COLOSTOMY: '9905009',            // Loop colostomy (procedure)
+} as const;

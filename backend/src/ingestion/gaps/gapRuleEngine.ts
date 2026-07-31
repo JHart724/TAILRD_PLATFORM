@@ -35,6 +35,9 @@ import {
   CIED_EXTRACTION_CPT,
   LAAC_CPT,
   RXNORM_ALPHA_BLOCKERS,
+  RXNORM_ASPIRIN,
+  SNOMED_CORONARY_REVASC,
+  SNOMED_NONCARDIAC_SURGERY,
 } from '../../terminology/cardiovascularValuesets';
 
 /** Extract code arrays from valueset objects for medication matching */
@@ -1181,6 +1184,30 @@ export const RUNTIME_GAP_REGISTRY = [
     nextReviewDue: '2027-01-03',
     classOfRecommendation: '2a',
     levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-cad-061-dapt-deescalation',
+    name: 'DAPT De-escalation Post-PCI (TWILIGHT/TICO)',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2021 ACC/AHA/SCAI Coronary Artery Revascularization Guideline (TWILIGHT; TICO)',
+    guidelineVersion: '2021',
+    guidelineOrg: 'ACC/AHA/SCAI',
+    lastReviewDate: '2026-07-31',
+    nextReviewDue: '2027-01-31',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-cad-051-ncs-timing',
+    name: 'Post-PCI Non-Cardiac Surgery Timing',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2016 ACC/AHA Focused Update on Duration of Dual Antiplatelet Therapy (elective NCS delay 30d post-BMS / optimally 6mo post-DES)',
+    guidelineVersion: '2016',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-07-31',
+    nextReviewDue: '2027-01-31',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B-NR',
   },
   {
     id: 'gap-cad-diabetes-control',
@@ -11848,6 +11875,109 @@ export function evaluateGapRules(
           classOfRecommendation: 'Class 2a',
           levelOfEvidence: 'LOE B-R',
           exclusions: ['Hospice/palliative care (Z51.5)', 'Fish/shellfish allergy', 'Active bleeding'],
+        },
+      });
+    }
+  }
+
+  // GAP-CAD-061: DAPT De-escalation Post-PCI (TWILIGHT/TICO) -- Tranche 3 Slice 1
+  // Guideline: 2021 ACC/AHA/SCAI Coronary Artery Revascularization Guideline, Class 2a, LOE B-R
+  //   (in selected patients undergoing PCI, ticagrelor monotherapy after 1-3 months of DAPT is
+  //   reasonable to reduce bleeding risk; TWILIGHT, TICO)
+  // Trigger: PCI (SNOMED 415070008) + months_since_pci in [1,3] (derived, procedureRecency.ts) +
+  //   STILL on full DAPT (aspirin RxNorm 1191/243670/198467 AND a P2Y12 inhibitor 32968/613391/1116632
+  //   both active) -> the de-escalation window is open and de-escalation has not happened.
+  // PARTIAL ceiling (recorded in canonical crosswalk): the spec's low-ischemic-risk stratification and
+  //   the ticagrelor-monotherapy-evaluation event are NOT in the substrate, so this fires for the whole
+  //   on-DAPT window cohort including high-ischemic-risk patients for whom continued DAPT is correct -
+  //   which is why the language is "consider ... review", never directive.
+  // never-fire-on-absence: months_since_pci undefined (no PCI) -> no fire; no meds -> no fire.
+  if (procedureCodes.includes(SNOMED_CORONARY_REVASC.PCI) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const ASPIRIN_CODES_061 = codes(RXNORM_ASPIRIN);
+    const onAspirin061 = medCodes.some(c => ASPIRIN_CODES_061.includes(c));
+    const onP2y12_061 = medCodes.some(c => P2Y12_CODES_CV.includes(c));
+    if (
+      labValues['months_since_pci'] !== undefined &&
+      labValues['months_since_pci'] >= 1 && labValues['months_since_pci'] <= 3 &&
+      onAspirin061 && onP2y12_061
+    ) {
+      gaps.push({
+        ruleId: 'gap-cad-061-dapt-deescalation',
+        type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider DAPT de-escalation review: 1-3 months post-PCI and still on full DAPT',
+        target: 'De-escalation to ticagrelor monotherapy evaluated (continue DAPT if ischemic risk warrants)',
+        medication: 'Ticagrelor monotherapy candidate (currently aspirin + P2Y12 inhibitor)',
+        recommendations: {
+          action: 'Consider evaluating ticagrelor monotherapy (aspirin discontinuation) per TWILIGHT/TICO',
+          guideline: '2021 ACC/AHA/SCAI Coronary Artery Revascularization Guideline',
+          note: 'Recommended for review: in selected patients, ticagrelor monotherapy after 1-3 months of DAPT reduced bleeding without increased ischemic events (TWILIGHT, TICO). Ischemic-risk stratification is not available to this rule - the clinician determines whether continued DAPT is warranted.',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Percutaneous coronary intervention on record (SNOMED 415070008)',
+            `Months since most recent PCI: ${labValues['months_since_pci']} (window 1-3)`,
+            'Aspirin active (RxNorm 1191 ingredient class)',
+            'P2Y12 inhibitor active (RxNorm 32968/613391/1116632)',
+          ],
+          guidelineSource: '2021 ACC/AHA/SCAI Coronary Artery Revascularization Guideline (TWILIGHT, TICO)',
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE B-R',
+          exclusions: [
+            'Hospice/palliative care (Z51.5)',
+            'NOT evaluated (unavailable in substrate): ischemic-risk stratification - high-ischemic-risk patients correctly remain on DAPT',
+            'NOT evaluated (unavailable in substrate): prior ticagrelor-monotherapy evaluation event',
+          ],
+        },
+      });
+    }
+  }
+
+  // GAP-CAD-051: Post-PCI Non-Cardiac Surgery Timing -- Tranche 3 Slice 1
+  // Guideline: 2016 ACC/AHA DAPT Focused Update, Class I -- elective noncardiac surgery should be
+  //   delayed 30 days after BMS and OPTIMALLY 6 months after DES. (Class IIb: after 3 months when the
+  //   risk of further surgical delay outweighs stent-thrombosis risk - cited here, NOT evaluated.)
+  // Trigger: PCI (SNOMED 415070008) + a curated non-cardiac surgical procedure (SNOMED_NONCARDIAC_SURGERY,
+  //   23 substrate-present codes) performed < 6 months after a PCI (ncs_after_pci_months derived pairwise,
+  //   procedureRecency.ts).
+  // CONSERVATIVE SINGLE WINDOW (Slice 1 ruling (2)): stent type (BMS vs DES) is NOT in the substrate, so
+  //   the DES Class I optimal-delay arm (6 months) is applied as the conservative default for ALL PCI.
+  //   A BMS patient whose surgery fell in months 2-5 is flagged although the BMS 30-day arm was satisfied -
+  //   the evidence note states this so the clinician can dismiss with reason. Electiveness is also not in
+  //   the substrate (emergent surgery legitimately proceeds regardless of window) - stated in the note.
+  // PARTIAL ceiling (recorded in canonical crosswalk): stent-type arm + electiveness + delay-rationale
+  //   documentation are unavailable. Retrospective coordination review, "review" language, never directive.
+  if (procedureCodes.includes(SNOMED_CORONARY_REVASC.PCI) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    if (
+      labValues['ncs_after_pci_months'] !== undefined &&
+      labValues['ncs_after_pci_months'] < 6
+    ) {
+      gaps.push({
+        ruleId: 'gap-cad-051-ncs-timing',
+        type: TherapyGapType.DOCUMENTATION_GAP,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Non-cardiac surgery performed within 6 months of PCI - review antiplatelet coordination and delay rationale',
+        target: 'Perioperative antiplatelet management and surgery-timing rationale documented',
+        medication: null,
+        recommendations: {
+          action: 'Consider reviewing whether surgery timing and perioperative antiplatelet management were coordinated with cardiology',
+          guideline: '2016 ACC/AHA DAPT Focused Update',
+          note: 'Recommended for review: elective noncardiac surgery should be delayed 30 days after BMS and optimally 6 months after DES (Class I); after 3 months it may be considered when delay risk outweighs stent-thrombosis risk (Class IIb, not evaluated by this rule). Stent type and surgical urgency are not available to this rule - the 6-month DES arm is applied as the conservative default, and emergent surgery legitimately proceeds regardless of window.',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Percutaneous coronary intervention on record (SNOMED 415070008)',
+            `Non-cardiac surgery (curated 23-code SNOMED set) performed ${labValues['ncs_after_pci_months']} months after a PCI (<6)`,
+          ],
+          guidelineSource: '2016 ACC/AHA Focused Update on Duration of Dual Antiplatelet Therapy (delay elective NCS 30d post-BMS / optimally 6mo post-DES)',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE B-NR',
+          exclusions: [
+            'Hospice/palliative care (Z51.5)',
+            'NOT evaluated (unavailable in substrate): stent type - BMS 30-day arm satisfied cases are flagged under the conservative DES default',
+            'NOT evaluated (unavailable in substrate): surgical urgency (emergent surgery proceeds regardless of window)',
+            'NOT evaluated (unavailable in substrate): documented delay rationale',
+          ],
         },
       });
     }

@@ -11,6 +11,7 @@
 
 import { expandToIngredients } from '../terminology/expandToIngredients';
 import { deriveEchoMonths } from './echoRecency';
+import { deriveMonthsSincePci, deriveNcsAfterPciMonths } from './procedureRecency';
 
 export const ECHO_CUTOFF_MS = 365 * 24 * 60 * 60 * 1000;
 export const LAB_CUTOFF_MS = 180 * 24 * 60 * 60 * 1000;
@@ -73,6 +74,13 @@ export function buildPatientEvalContext(patient: any, nowMs: number): PatientEva
   // filter above). undefined (no echo on record) is NOT written -> never-fire-on-absence downstream.
   const echoMonths = deriveEchoMonths(patient.observations, patient.procedures ?? [], nowMs);
   if (echoMonths !== undefined) labValues['echo_months'] = echoMonths;
+  // Tranche 3 Slice 1: PCI-anchored recency signals (same pattern - unfiltered dates, single clock,
+  // undefined-never-written). Consumed by GAP-CAD-061 (months_since_pci) and GAP-CAD-051
+  // (ncs_after_pci_months). See procedureRecency.ts.
+  const monthsSincePci = deriveMonthsSincePci(patient.procedures ?? [], nowMs);
+  if (monthsSincePci !== undefined) labValues['months_since_pci'] = monthsSincePci;
+  const ncsAfterPciMonths = deriveNcsAfterPciMonths(patient.procedures ?? []);
+  if (ncsAfterPciMonths !== undefined) labValues['ncs_after_pci_months'] = ncsAfterPciMonths;
 
   // AUDIT-118: ingredient-expand so product-coded (SCD/SBD) meds match the ingredient-level value sets.
   const medCodes: string[] = expandToIngredients(

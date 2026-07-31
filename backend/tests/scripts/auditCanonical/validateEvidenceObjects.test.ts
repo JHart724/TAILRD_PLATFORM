@@ -156,9 +156,11 @@ describe('validateEvidenceObjects - live gapRuleEngine.ts baseline', () => {
     // gap-cad-lipid-intensification (one gaps.push removed, CAD-PCSK9 firing block retired -> SPEC_ONLY).
     // Then 368 -> 369 by AUDIT-194-B3 (2026-07-03): VD-ECHO-INTERVAL RESTORED (echo_months derivation,
     // hollow-safe gate). Then 369 -> 368 by AUDIT-197 (2026-07-08): CAD-ISCHEMIA-GUIDED RETIRED -> SPEC_ONLY
-    // (presence-as-proxy defect). Sibling count-guard to clinicalScenarios.test.ts.
-    expect(result.pushCount).toBe(368);
-    expect(result.evidenceCount).toBe(368);
+    // (presence-as-proxy defect). Then 368 -> 370 by Tranche 3 Slice 1 (2026-07-31): +2 CAD
+    // procedure-timing evaluators (GAP-CAD-061 + GAP-CAD-051, both with full evidence objects).
+    // Sibling count-guard to clinicalScenarios.test.ts.
+    expect(result.pushCount).toBe(370);
+    expect(result.evidenceCount).toBe(370);
   });
 
   it('reports ZERO inconsistencies (clean baseline post-AUDIT-103)', () => {
