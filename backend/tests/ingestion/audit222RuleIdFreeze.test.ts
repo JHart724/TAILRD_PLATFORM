@@ -47,7 +47,9 @@ describe('AUDIT-222 ruleId freeze', () => {
   const reportRows = rowsFromReport();
 
   it('every gaps.push carries a ruleId', () => {
-    expect(engineIds).toHaveLength(368);
+    // 368 at the AUDIT-222 freeze; +2 Tranche 3 Slice 1 (gap-cad-061-dapt-deescalation,
+    // gap-cad-051-ncs-timing) per the report's 2026-07-31 amendment.
+    expect(engineIds).toHaveLength(370);
   });
 
   it('ruleIds are unique (identity must not be shared between rules)', () => {
@@ -66,9 +68,9 @@ describe('AUDIT-222 ruleId freeze', () => {
     }
   });
 
-  it('the adopted/generated split is the recorded one (260 registry / 108 generated)', () => {
+  it('the adopted/generated split is the recorded one (262 registry / 108 generated)', () => {
     const reg = reportRows.filter((r) => r.provenance === 'registry-binding').length;
-    expect({ registry: reg, generated: reportRows.length - reg }).toEqual({ registry: 260, generated: 108 });
+    expect({ registry: reg, generated: reportRows.length - reg }).toEqual({ registry: 262, generated: 108 });
   });
 
   it('every registry-adopted id is a real RUNTIME_GAP_REGISTRY entry', () => {

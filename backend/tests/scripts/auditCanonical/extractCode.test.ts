@@ -193,7 +193,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     ['HF', 'HEART_FAILURE', 90], // 56 + 34 (v3.0 HF full buildout batch, 2026-06-15, feat/hf-buildable-gap-batch)
     ['EP', 'ELECTROPHYSIOLOGY', 71], // 48 + 21 (v3.0 EP buildout) -> 71 (T0 net-new: +2 EP-010/049, 2026-06-19)
     ['SH', 'STRUCTURAL_HEART', 61], // 60 -> 61 (T1-broader PART 2: +1 gap-sh-024-tr-rv-dysfunction, 2026-06-22)
-    ['CAD', 'CORONARY_INTERVENTION', 83], // 76 -> 83 (CAD chunk 1: +7 lipid/risk/etiology registry entries; gap-cad-ivus retained as regOrphan, 2026-06-18)
+    ['CAD', 'CORONARY_INTERVENTION', 85], // 76 -> 83 (CAD chunk 1: +7 lipid/risk/etiology registry entries; gap-cad-ivus retained as regOrphan, 2026-06-18) -> 85 (Tranche 3 Slice 1: +2 gap-cad-061-dapt-deescalation + gap-cad-051-ncs-timing, 2026-07-31)
     ['VHD', 'VALVULAR_DISEASE', 51], // 49 -> 51 (T1-broader PART 2: +2 gap-vhd-060 + gap-vhd-100; VHD-103 LVESD arm is a 2nd push under the existing registry entry, 2026-06-22)
     ['PV', 'PERIPHERAL_VASCULAR', 45], // 33 -> 34 (chunk 0) -> 41 (chunk 1) -> 45 (T0 net-new: +4 PV-042/081/084/085, 2026-06-19)
   ])('module %s registry has %i entries tagged %s', (code, enumName, count) => {
@@ -210,7 +210,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(16098); // 15760 -> 16098 by AUDIT-222 (2026-07-29): the ruleId identity field added one `ruleId:` line to each of the 368 gaps.push sites (+327 of them above this content-anchor) plus the 11-line DetectedGap.ruleId doc comment = +338. No rule logic changed. (Prior 15739 -> 15760 AUDIT-199-B; 15732 -> 15739 AUDIT-199; 15745 -> 15732 AUDIT-197; 15740 -> 15745 AUDIT-195; 15697 -> 15740 AUDIT-194-B1; 15822 -> 15697 AUDIT-194 Part A; 16227 -> 15822 AUDIT-184 CAD-EXT.) Content-anchor.
+    expect(pannus!.commentLine).toBe(16228); // 16098 -> 16228 by Tranche 3 Slice 1 (2026-07-31): +2 CAD registry entries (26 lines) + the GAP-CAD-061/051 evaluator blocks + 3 import lines above this content-anchor = +130. No VHD logic changed. (Prior 15760 -> 16098 AUDIT-222; 15739 -> 15760 AUDIT-199-B; 15732 -> 15739 AUDIT-199; 15745 -> 15732 AUDIT-197; 15740 -> 15745 AUDIT-195; 15697 -> 15740 AUDIT-194-B1; 15822 -> 15697 AUDIT-194 Part A; 16227 -> 15822 AUDIT-184 CAD-EXT.) Content-anchor.
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });
@@ -234,7 +234,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
 
   it.each([
     ['SH', 61, 55, 55], // T1-broader PART 2: registry 60->61, evaluator 54->55, gapsPush 54->55 (+1 gap-sh-024-tr-rv-dysfunction, 2026-06-22)
-    ['CAD', 83, 64, 64], // AUDIT-184 CAD-EXT (2026-06-29): evaluator/push 82 -> 66 (16 hollow CAD over-fire rules RETIRED -> SPEC_ONLY); registry stays 83 (suppressed rules' entries retained as regOrphans, left-main precedent). AUDIT-195 (2026-07-03): evaluator/push 66 -> 65 (CAD-EZETIMIBE + CAD-PCSK9 CONSOLIDATED into one gap-cad-lipid-intensification; CAD-PCSK9 firing block retired -> SPEC_ONLY, registry entry retained as regOrphan so registry stays 83). AUDIT-197 (2026-07-08): evaluator/push 65 -> 64 (CAD-ISCHEMIA-GUIDED presence-as-proxy defect RETIRED -> SPEC_ONLY; gap-cad-ischemia-guided registry entry retained as regOrphan so registry stays 83)
+    ['CAD', 85, 66, 66], // AUDIT-184 CAD-EXT (2026-06-29): evaluator/push 82 -> 66 (16 hollow CAD over-fire rules RETIRED -> SPEC_ONLY); registry stays 83 (suppressed rules' entries retained as regOrphans, left-main precedent). AUDIT-195 (2026-07-03): evaluator/push 66 -> 65 (CAD-EZETIMIBE + CAD-PCSK9 CONSOLIDATED into one gap-cad-lipid-intensification; CAD-PCSK9 firing block retired -> SPEC_ONLY, registry entry retained as regOrphan so registry stays 83). AUDIT-197 (2026-07-08): evaluator/push 65 -> 64 (CAD-ISCHEMIA-GUIDED presence-as-proxy defect RETIRED -> SPEC_ONLY; registry stays 83). Tranche 3 Slice 1 (2026-07-31): registry 83 -> 85, evaluator/push 64 -> 66 (+2: GAP-CAD-061 DAPT de-escalation + GAP-CAD-051 post-PCI NCS timing)
     ['VHD', 51, 48, 46], // AUDIT-194 Part A (2026-06-30): evaluator 50->47, gapsPush 51->45 (6 hollow VHD over-fire rules RETIRED: VD-7/VD-16/VD-ECHO-INTERVAL/VD-FUNCTIONAL-STATUS/VD-PREOP-ASSESSMENT/VD-PULMONARY-HTN); registry stays 51 (suppressed rules' registry entries retained as regOrphans, RETIRE precedent). AUDIT-194-B3 (2026-07-03): evaluator 47->48, gapsPush 45->46 (VD-ECHO-INTERVAL RESTORED - echo_months derived from echo-procedure dates, hollow-safe echo_months>=12 gate); registry stays 51 (gap-vd-echo-interval entry was already present)
     ['PV', 45, 45, 45], // chunk0 33->34; chunk1 34->41; T0 net-new 41->45 (+4 PV-042/081/084/085, 2026-06-19)
   ])(

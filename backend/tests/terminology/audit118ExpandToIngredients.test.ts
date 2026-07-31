@@ -65,7 +65,12 @@ describe('AUDIT-118 coverage guard - asset covers every medication code the live
   // '2008' = guidelineVersion year of the 2008 AHA cocaine-chest-pain Scientific Statement (CAD-085, CAD chunk 1);
   // a non-RxCUI year literal caught by the registry-array static scan (the other registry years are coincidental
   // valid RxCUIs already in the IN-map). Allowlisted here, same as the other guideline-year false positives.
-  const NON_DRUG_LITERALS = new Set(['2008', '2010', '2012', '2013', '2014', '2016', '2022', '2024', ...CPT_CODES]);
+  // Tranche 3 Slice 1 (2026-07-31): SNOMED procedure codes (NOT RxNorm drugs) from SNOMED_CORONARY_REVASC /
+  //   SNOMED_NONCARDIAC_SURGERY - matched against procedureCodes, never medCodes. All are 8-9 digits and thus
+  //   invisible to the 3-7 digit RxCUI regex EXCEPT 9905009 (Loop colostomy, 7 digits) - allowlisted here,
+  //   same class as the CPT literals above.
+  const SNOMED_PROCEDURE_LITERALS = ['9905009'];
+  const NON_DRUG_LITERALS = new Set(['2008', '2010', '2012', '2013', '2014', '2016', '2022', '2024', ...CPT_CODES, ...SNOMED_PROCEDURE_LITERALS]);
 
   const QUOTED_RXCUI = /'(\d{3,7})'/g;
 

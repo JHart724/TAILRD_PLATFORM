@@ -508,10 +508,27 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-173 RESOLVED): RE-CITED from the over-detecting CAD-REHAB to the purpose-built gap-cad-rehab-mi evaluator (post-MI I21/I22/I25.2 + rehab-engagement guard). Now genuinely gated on the post-MI population; DET_OK.',
     },
     'GAP-CAD-061': {
-      classification: 'SPEC_ONLY',
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-cad-061-dapt-deescalation',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-174): DAPT de-escalation (TWILIGHT/TICO = drop aspirin while ON a P2Y12) was miscited to Gap-50, which detects P2Y12-ABSENCE (the opposite scenario; zero true-positive overlap). No genuine de-escalation evaluator exists (it needs on-DAPT + months-since-PCI, partly un-threaded). Per §16.6(ii) disjoint-target -> SPEC_ONLY; registryId dropped.',
+        'BUILT 2026-07-31 (Tranche 3 Slice 1): purpose-built de-escalation evaluator - PCI (SNOMED 415070008) + months_since_pci in [1,3] (derived, procedureRecency.ts) + aspirin AND P2Y12 both active (= still on full DAPT, so de-escalation has not happened). 2021 ACC/AHA/SCAI CRG COR 2a LOE B-R (TWILIGHT/TICO). PARTIAL ceiling: the low-ischemic-risk stratification and the monotherapy-evaluation event are not in the substrate (stated in the evidence exclusions). SPEC_ONLY -> PARTIAL_DETECTION (supersedes the 2026-06-18 AUDIT-174 MANUAL OVERRIDE, whose complaint - miscited to the P2Y12-ABSENCE Gap-50, "needs on-DAPT + months-since-PCI, partly un-threaded" - is exactly what this slice threads).',
     },
+    'GAP-CAD-051': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-cad-051-ncs-timing',
+      auditNote:
+        'BUILT 2026-07-31 (Tranche 3 Slice 1, ruling (2)): PCI (SNOMED 415070008) + curated non-cardiac surgery (SNOMED_NONCARDIAC_SURGERY, 23 substrate-present codes) < 6 months post-PCI (ncs_after_pci_months, derived pairwise). 2016 ACC/AHA DAPT Focused Update COR 1 LOE B-NR. CONSERVATIVE SINGLE WINDOW: stent type absent from substrate, so the DES 6-month optimal-delay arm is the default for all PCI; the evidence note cites BOTH arms (BMS 30d / DES 6mo) plus the IIb 3-month consideration (cited, not evaluated). PARTIAL ceiling: stent type + electiveness + delay-rationale documentation unavailable (stated in the evidence exclusions).',
+    },
+    // --- Tranche 3 Slice 1 DEFERRALS (2026-07-31, ruling (4)): the rest of the PCI/CABG-adjacent CAD
+    // SPEC_ONLY cluster stays SPEC_ONLY with its data wall NAMED (honest-classification discipline).
+    // Substrate facts measured live 2026-07-30 on demo-synthea-threaded (:407/:408). ---
+    'GAP-CAD-063': { classification: 'SPEC_ONLY', auditNote: 'DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - STEMI door-to-balloon needs first-medical-contact and device TIMESTAMPS; procedures carry a single procedureDate (no times). Permanent under the current ingest substrate.' },
+    'GAP-CAD-064': { classification: 'SPEC_ONLY', auditNote: 'DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - transfer D2B needs FMC/transfer/device timestamps; same single-date substrate wall as GAP-CAD-063.' },
+    'GAP-CAD-075': { classification: 'SPEC_ONLY', auditNote: 'DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - acute stent thrombosis needs a chest-pain/ST-changes event stream within 24h of PCI; no symptom/ECG event data and no intra-day granularity in the substrate.' },
+    'GAP-CAD-076': { classification: 'SPEC_ONLY', auditNote: 'DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - stent-thrombosis dx (T82.86*) count is ZERO in the substrate (measured live) and DAPT fill/adherence data is absent; the eligible denominator is 0, an evaluator could never fire.' },
+    'GAP-CAD-053': { classification: 'SPEC_ONLY', auditNote: 'DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - radial-vs-femoral access site is not in any ingested field.' },
+    'GAP-CAD-054': { classification: 'SPEC_ONLY', auditNote: 'DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - discharge timing needs encounters; the encounters table holds 0 rows for the tenant (measured live). Also flagged: same-day-discharge rests on a 2021 SCAI expert consensus, not an ACC/AHA/ESC COR-graded recommendation (section 8 grounding bar).' },
+    'GAP-CAD-055': { classification: 'SPEC_ONLY', auditNote: 'DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL + REVERSE-HOLLOW - post-CABG follow-up needs encounters (0 rows for the tenant, measured live); an absence-of-follow-up rule would fire for 758/758 CABG patients (~100%), the AUDIT-194 hollow signature in reverse. Also flagged: no ACC/AHA COR-graded anchor (STS practice guidance).' },
     'GAP-CAD-007': {
       classification: 'PARTIAL_DETECTION',
       registryId: 'gap-cad-lipid-panel-fu',
