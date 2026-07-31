@@ -534,7 +534,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - STEMI door-to-balloon needs first-medical-contact and device TIMESTAMPS; procedures carry a single procedureDate (no times). Permanent under the current ingest substrate.",
+      "auditNotes": "MANUAL OVERRIDE (classification CONFIRMED SPEC_ONLY with recorded reason) - DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - STEMI door-to-balloon needs first-medical-contact and device TIMESTAMPS; procedures carry a single procedureDate (no times). Permanent under the current ingest substrate.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -563,7 +563,7 @@
       "tier": "T1"
     },
     {
-      "auditNotes": "DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - transfer D2B needs FMC/transfer/device timestamps; same single-date substrate wall as GAP-CAD-063.",
+      "auditNotes": "MANUAL OVERRIDE (classification CONFIRMED SPEC_ONLY with recorded reason) - DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - transfer D2B needs FMC/transfer/device timestamps; same single-date substrate wall as GAP-CAD-063.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -706,7 +706,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "AUDIT-197 2026-07-08: CAD-ISCHEMIA-GUIDED (gap-cad-ischemia-guided) RETIRED -> SPEC_ONLY; firing block removed (gaps.push 369 -> 368). PRESENCE-AS-PROXY defect: gated hasModerateIschemia = labValues[stress_test_months] !== undefined, treating test-EXISTENCE as ischemia-PRESENCE (test-presence != disease-presence; self-admitted by the proxy comment + \"Prior stress test documented\" triggerCriteria). Never fired (stress_test_months unthreaded -> always undefined) and could not discriminate ischemia, so DET_OK was an over-claim -> SPEC_ONLY. Moderate ischemia is a RESULT finding (abnormal stress-test result / reversible perfusion defect / ischemic-burden %), Synthea-ABSENT / unthreaded everywhere = real-EHR-only. registryId dropped. RESTORE PATH (real-EHR only): re-key on a threaded abnormal-stress-RESULT / ischemic-burden signal, NEVER stress_test_months (threading the recency slug would resurrect the false-positive - the reason Tranche 2 deferred it). 2021 ACC/AHA/SCAI (ISCHEMIA trial) COR 2a context preserved. section-20 single-instance (CAD-NUCLEAR-STRESS fire-on-absence is a distinct legitimate care-gap, untouched).",
+      "auditNotes": "AUDIT-197 2026-07-08: CAD-ISCHEMIA-GUIDED (gap-cad-ischemia-guided) RETIRED -> SPEC_ONLY; firing block removed (gaps.push 369 -> 368). PRESENCE-AS-PROXY defect: gated hasModerateIschemia = labValues[stress_test_months] !== undefined, treating test-EXISTENCE as ischemia-PRESENCE (test-presence != disease-presence; self-admitted by the proxy comment + \"Prior stress test documented\" triggerCriteria). Never fired (stress_test_months unthreaded -> always undefined) and could not discriminate ischemia, so DET_OK was an over-claim -> SPEC_ONLY. Moderate ischemia is a RESULT finding (abnormal stress-test result / reversible perfusion defect / ischemic-burden %), Synthea-ABSENT / unthreaded everywhere = real-EHR-only. registryId dropped. RESTORE PATH (real-EHR only): re-key on a threaded abnormal-stress-RESULT / ischemic-burden signal, NEVER stress_test_months (threading the recency slug would resurrect the false-positive - the reason Tranche 2 deferred it). 2021 ACC/AHA/SCAI (ISCHEMIA trial) COR 2a context preserved. section-20 single-instance (CAD-NUCLEAR-STRESS fire-on-absence is a distinct legitimate care-gap, untouched). || MANUAL OVERRIDE - TRANCHE 3 CANDIDATE A CLOSED data-insufficient 2026-07-31: the RESTORE PATH named above was tested against the substrate and remains BLOCKED. Three-way probe, all negative: (i) observation types matching stress / METs / exercise / Duke / capacity / watts, tenant-wide = ZERO types; (ii) stress procedures with ANY observation within +/-1 day = 3 of 412 (0.7%), and those 3 carry only the routine wellness panel (alt/ast/bmi/creatinine/egfr/hba1c/ldl/bp/hr/hgb/triglycerides) - a coincidental same-day draw, NOT stress results; (iii) no result-bearing structured field on the Procedure row (code/name/status/date/performedBy only). The 412 rows are bare procedure occurrences. GAP-CAD-031 additionally needs planned-PCI intent, also absent. Not threaded; stays SPEC_ONLY. Unlock signal recorded in docs/audit/INGESTION_SOURCE_UNLOCK_REQUIREMENTS.md.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -919,7 +919,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - acute stent thrombosis needs a chest-pain/ST-changes event stream within 24h of PCI; no symptom/ECG event data and no intra-day granularity in the substrate.",
+      "auditNotes": "MANUAL OVERRIDE (classification CONFIRMED SPEC_ONLY with recorded reason) - DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - acute stent thrombosis needs a chest-pain/ST-changes event stream within 24h of PCI; no symptom/ECG event data and no intra-day granularity in the substrate.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -929,7 +929,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - stent-thrombosis dx (T82.86*) count is ZERO in the substrate (measured live) and DAPT fill/adherence data is absent; the eligible denominator is 0, an evaluator could never fire.",
+      "auditNotes": "MANUAL OVERRIDE (classification CONFIRMED SPEC_ONLY with recorded reason) - DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - stent-thrombosis dx (T82.86*) count is ZERO in the substrate (measured live) and DAPT fill/adherence data is absent; the eligible denominator is 0, an evaluator could never fire.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -1221,7 +1221,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "AUDIT-184 CAD-EXT 2026-06-29: CAD-STRESS-TEST (de-dup with CAD-ECHO via !lvef; stress_test arm hollow) RETIRED -> SPEC_ONLY; gaps.push removed.",
+      "auditNotes": "AUDIT-184 CAD-EXT 2026-06-29: CAD-STRESS-TEST (de-dup with CAD-ECHO via !lvef; stress_test arm hollow) RETIRED -> SPEC_ONLY; gaps.push removed. || MANUAL OVERRIDE - TRANCHE 3 CANDIDATE A CLOSED data-insufficient 2026-07-31: the spec needs exercise CAPACITY plus WHICH stress modality was used. The substrate carries one undifferentiated code (SNOMED 76746007 Cardiovascular stress testing, 412 rows / 409 patients) and no capacity measure, so a modality mismatch is undetectable. Not threaded; stays SPEC_ONLY.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -1231,7 +1231,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "AUDIT-184 CAD-EXT 2026-06-29: CAD-STRESS-TEST (second crosswalk row; de-dup with CAD-ECHO) RETIRED -> SPEC_ONLY; gaps.push removed.",
+      "auditNotes": "AUDIT-184 CAD-EXT 2026-06-29: CAD-STRESS-TEST (second crosswalk row; de-dup with CAD-ECHO) RETIRED -> SPEC_ONLY; gaps.push removed. || MANUAL OVERRIDE - TRANCHE 3 CANDIDATE A CLOSED data-insufficient 2026-07-31: the count-only form is the one arm needing no result values, but the MEASURED distribution is 406 patients with exactly 1 stress test and 3 with 2 - none with 3 or more. The eligible population for a serial-overuse rule is at most 3 under any reading, and no indication data exists to judge appropriateness. Denominator-starved; not threaded.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -1318,7 +1318,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - radial-vs-femoral access site is not in any ingested field.",
+      "auditNotes": "MANUAL OVERRIDE (classification CONFIRMED SPEC_ONLY with recorded reason) - DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - radial-vs-femoral access site is not in any ingested field.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -1328,7 +1328,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - discharge timing needs encounters; the encounters table holds 0 rows for the tenant (measured live). Also flagged: same-day-discharge rests on a 2021 SCAI expert consensus, not an ACC/AHA/ESC COR-graded recommendation (section 8 grounding bar).",
+      "auditNotes": "MANUAL OVERRIDE (classification CONFIRMED SPEC_ONLY with recorded reason) - DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL - discharge timing needs encounters; the encounters table holds 0 rows for the tenant (measured live). Also flagged: same-day-discharge rests on a 2021 SCAI expert consensus, not an ACC/AHA/ESC COR-graded recommendation (section 8 grounding bar).",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -1338,7 +1338,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL + REVERSE-HOLLOW - post-CABG follow-up needs encounters (0 rows for the tenant, measured live); an absence-of-follow-up rule would fire for 758/758 CABG patients (~100%), the AUDIT-194 hollow signature in reverse. Also flagged: no ACC/AHA COR-graded anchor (STS practice guidance).",
+      "auditNotes": "MANUAL OVERRIDE (classification CONFIRMED SPEC_ONLY with recorded reason) - DEFERRED 2026-07-31 (Tranche 3 Slice 1): DATA WALL + REVERSE-HOLLOW - post-CABG follow-up needs encounters (0 rows for the tenant, measured live); an absence-of-follow-up rule would fire for 758/758 CABG patients (~100%), the AUDIT-194 hollow signature in reverse. Also flagged: no ACC/AHA COR-graded anchor (STS practice guidance).",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
