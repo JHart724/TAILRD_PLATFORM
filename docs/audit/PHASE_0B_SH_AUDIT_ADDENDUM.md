@@ -148,12 +148,14 @@ Cross-module satisfaction (HF Device Therapy → EP CRT/ICD pattern; CAD-027 →
 
 ## 9. Module-specific findings
 
-### Manual classification overrides (4)
+### Manual classification overrides (6)
 
 Rows where the auto-classifier was wrong and the audit author corrected the classification with explicit reasoning:
 
 - **GAP-SH-008** (T3, PARTIAL_DETECTION, `gap-sh-bicuspid-surveillance` (SH-BICUSPID)): MANUAL OVERRIDE 2026-06-08 (SH audit Batch 1): DET_OK -> PARTIAL per AUDIT_METHODOLOGY.md 16.6(ii) / AUDIT-121. SH-BICUSPID gates dxCodes.startsWith(Q23.1) (congenital aortic insufficiency) for "bicuspid aortic valve", but bicuspid is Q23.81; the rule misses true bicuspid patients and false-fires on congenital AI. Partial overlap -> PARTIAL not SPEC_ONLY. Evaluator retained; PARTIAL until AUDIT-121 remediated (Q23.1 -> Q23.81).
 - **GAP-SH-013** (T2, PARTIAL_DETECTION, `gap-sh-13-paravalvular-leak` (SH-13)): MANUAL OVERRIDE 2026-06-08 (SH audit Batch 2): DET_OK -> PARTIAL per 16.6(ii) / AUDIT-122. SH-13 matches I35.1 OR I34.0 as "new regurgitation", but the gap is aortic-prosthesis PVL-specific: I35.1 (aortic insufficiency) is correct while I34.0 (mitral insufficiency) over-fires on unrelated post-prosthetic mitral regurg with no PVL. Partial overlap -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-122 remediated (drop I34.0, keep I35.1).
+- **GAP-SH-058** (T2, SPEC_ONLY, no cite): MANUAL OVERRIDE - TRANCHE 3 CANDIDATE B 2026-07-31 DATA WALL: post-TAVR HALT surveillance needs a CARDIAC CT; no cardiac-CT code exists among the 420 SNOMED procedure codes in the substrate. TAVR dates ARE available (145 patients). Sibling of GAP-VHD-012. Not threaded.
+- **GAP-SH-062** (T2, SPEC_ONLY, no cite): MANUAL OVERRIDE - TRANCHE 3 CANDIDATE B 2026-07-31 DATA WALL: prosthesis-patient mismatch needs iEOA (EOA / BSA); no valve-size, EOA, or BSA field exists. Sibling of GAP-VHD-021. Not threaded.
 - **GAP-SH-028** (T2, SPEC_ONLY, no cite): MANUAL OVERRIDE 2026-06-08 (SH audit Batch 5): PARTIAL -> SPEC_ONLY per 16.6(ii) wrong-target / AUDIT-129. SH-7 detects endocarditis PROPHYLAXIS candidates (prosthetic valve Z95.2/3/4 + high-risk procedure Z01.2/Z96), but GAP-SH-028 targets SUSPECTED-IE Duke-criteria diagnostic workup; prevention vs diagnosis share zero true positives (fully disjoint), so PARTIAL would overclaim. Per the 16.6(ii) overlap rule, disjoint -> SPEC_ONLY. registryId dropped (no genuine coverage). Remediation = a suspected-IE detection rule for GAP-SH-028 (AUDIT-129).
 - **GAP-SH-104** (T2, SPEC_ONLY, no cite): MANUAL OVERRIDE 2026-06-08 (SH audit Batch 4, STEP-0): DET_OK -> SPEC_ONLY per 16.6(ii) wrong-target / AUDIT-126. SH-15 detects PRE-procedure ASA candidacy (I42.1 obstructive HCM + obstruction symptoms), but GAP-SH-104 targets POST-ASA conduction surveillance; the two are fully disjoint (zero true-positive overlap), so PARTIAL would overclaim. Per the 16.6(ii) overlap rule, disjoint -> SPEC_ONLY. registryId dropped (no genuine coverage); SH-15 correctly serves the sibling GAP-SH-105. Remediation = a post-ASA procedure-history gate for GAP-SH-104 (AUDIT-126).
 

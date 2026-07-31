@@ -399,7 +399,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "MANUAL OVERRIDE - TRANCHE 3 CANDIDATE B 2026-07-31 DATA WALL: post-TAVR HALT surveillance needs a CARDIAC CT; no cardiac-CT code exists among the 420 SNOMED procedure codes in the substrate. TAVR dates ARE available (145 patients). Sibling of GAP-VHD-012. Not threaded.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -447,7 +447,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "MANUAL OVERRIDE - TRANCHE 3 CANDIDATE B 2026-07-31 DATA WALL: prosthesis-patient mismatch needs iEOA (EOA / BSA); no valve-size, EOA, or BSA field exists. Sibling of GAP-VHD-021. Not threaded.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,

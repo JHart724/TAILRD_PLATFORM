@@ -124,7 +124,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE 2026-06-10 (VHD audit): DET_OK -> SPEC_ONLY. The 2026-05-04 baseline DET_OK override (VD-2 gap-vd-2-bioprosthetic-echo) failed re-review under §16.6/§16.5 + clinical-code verification: VD-2 does not genuinely detect the VHD-010 spec target (underclaim governs). registryId dropped.",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-10 (VHD audit): DET_OK -> SPEC_ONLY. The 2026-05-04 baseline DET_OK override (VD-2 gap-vd-2-bioprosthetic-echo) failed re-review under §16.6/§16.5 + clinical-code verification: VD-2 does not genuinely detect the VHD-010 spec target (underclaim governs). registryId dropped. || TRANCHE 3 CANDIDATE B 2026-07-31 - NOT THREADED BY RULING (section-20 counter-discipline). This is the ONE valve-cluster gap technically threadable on the current substrate: TAVR (SNOMED 773996000, 145 patients) implies a bioprosthetic valve and echo_months is already derived, so a TAVR + echo_months>=12 arm would work mechanically. It was ruled NOT threaded on two measured grounds: (i) it would fire 128 of 145 TAVR patients (88.3%), and (ii) it is a NEAR-DUPLICATE of the LIVE VD-ECHO-INTERVAL rule, which already fires on echo_months>=12 for any I05-I08 / I34-I37 valve dx across a 551-patient AS cohort - post-TAVR patients hold I35* almost by definition. Under AUDIT-222 ruleId keying the two would coexist rather than clobber (safe), but that would inflate the clinician-facing open-gap surface with a redundant recommendation, and duplicating a legitimate rule is as wrong as shipping an over-fire. The SAVR arm is separately blocked: prosthesis TYPE is absent (SAVR 26212005 is type-agnostic) and Z95* device-status conditions are 0 rows / 0 patients tenant-wide. Unlock signal recorded in docs/audit/INGESTION_SOURCE_UNLOCK_REQUIREMENTS.md.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -153,7 +153,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "MANUAL OVERRIDE - TRANCHE 3 CANDIDATE B 2026-07-31 DATA WALL: post-TAVR HALT screening needs a CARDIAC 4D CT. No cardiac-CT code exists among the 420 distinct SNOMED procedure codes present in the substrate (chest / chest-abdomen / head CTs exist but are not cardiac gated studies). TAVR dates ARE available; the imaging modality is not. Not threaded.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -163,7 +163,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "MANUAL OVERRIDE - TRANCHE 3 CANDIDATE B 2026-07-31 DATA WALL: needs a HALT imaging FINDING (not the imaging procedure) plus an anticoagulation decision. No finding stream exists, and anticoagulant medication rows are 0 tenant-wide (warfarin 0 patients, DOAC 0 patients). Doubly blocked. Not threaded.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -173,7 +173,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "MANUAL OVERRIDE - TRANCHE 3 CANDIDATE B 2026-07-31 DATA WALL + REVERSE-HOLLOW: post-SAVR bioprosthetic 3-6 month anticoagulation needs (i) prosthesis TYPE, absent, and (ii) anticoagulant med rows - measured 0 warfarin patients and 0 DOAC patients tenant-wide. An absence-of-anticoagulation rule would fire ~100% of its cohort, the AUDIT-194 hollow signature in reverse. Not threaded.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -183,7 +183,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "MANUAL OVERRIDE - TRANCHE 3 CANDIDATE B 2026-07-31 DATA WALL + REVERSE-HOLLOW: post-bioprosthetic MVR warfarin gap. Same zero-anticoagulant substrate as GAP-VHD-014 (warfarin 0 patients), plus no mitral-prosthesis type signal. Not threaded.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -212,7 +212,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE 2026-06-10 (VHD audit Batch 5, D-B5-2): PARTIAL -> SPEC_ONLY. The prior VD-11 (gap-vd-11-bioprosthetic-degeneration) consolidation cite does not genuinely detect the VHD-017 spec target (underclaim governs; coverage incidental, not the spec target). registryId dropped.",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-10 (VHD audit Batch 5, D-B5-2): PARTIAL -> SPEC_ONLY. The prior VD-11 (gap-vd-11-bioprosthetic-degeneration) consolidation cite does not genuinely detect the VHD-017 spec target (underclaim governs; coverage incidental, not the spec target). registryId dropped. || TRANCHE 3 CANDIDATE B 2026-07-31 - DATA WALL, not threaded: needs a structural-valve-deterioration FINDING plus a heart-team-discussion record. The substrate carries procedure occurrences and numeric observations only - no finding stream of any kind. Valve dates ARE available (SAVR 26212005, 72 patients) but occurrence alone cannot express SVD.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -222,7 +222,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "MANUAL OVERRIDE - TRANCHE 3 CANDIDATE B 2026-07-31 DATA WALL: prosthesis-selection (mechanical in elderly) needs valve TYPE plus a shared-decision note. Type is not carried by the procedure code and Z95* is 0 rows tenant-wide; the decision note has no source. Age IS available. Not threaded.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -232,7 +232,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "MANUAL OVERRIDE - TRANCHE 3 CANDIDATE B 2026-07-31 DATA WALL: bioprosthetic-in-young needs valve TYPE plus a re-operation discussion record. Same type wall as GAP-VHD-018. Not threaded.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -252,7 +252,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "MANUAL OVERRIDE - TRANCHE 3 CANDIDATE B 2026-07-31 DATA WALL: patient-prosthesis mismatch needs iEOA = EOA / BSA. No valve-size, no EOA, and no BSA field exists in the substrate; the computation has no inputs. Not threaded.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -262,7 +262,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "MANUAL OVERRIDE - TRANCHE 3 CANDIDATE B 2026-07-31 DATA WALL: severe PPM management. Same missing iEOA inputs as GAP-VHD-021, plus an intervention-consideration record with no source. Not threaded.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -272,7 +272,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "MANUAL OVERRIDE - TRANCHE 3 CANDIDATE B 2026-07-31 DATA WALL: sutureless/rapid-deployment candidacy needs annulus/aortic-root dimensions - the same echo-morphometric cluster AUDIT-198 documents as real-EHR-only (standard Synthea emits only LVEF among echo signals). Not threaded.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -520,7 +520,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "MANUAL OVERRIDE - TRANCHE 3 CANDIDATE B 2026-07-31 DATA WALL: prosthetic-valve endocarditis FDG-PET/CT consideration needs a PET procedure code; none exists among the 420 substrate codes. Not threaded.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -863,7 +863,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "MANUAL OVERRIDE - TRANCHE 3 CANDIDATE B 2026-07-31 DATA WALL, measured directly: prosthesis dysfunction gates on post-op mean gradient >20. Gradient observation TYPES in the tenant: none (empty result set); valve patients with any gradient observation dated after their valve procedure: 0. The threshold has nothing to read. Not threaded.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
