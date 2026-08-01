@@ -1,7 +1,13 @@
-import React, { useState, useMemo } from 'react';
-import { FileText, Beaker, AlertTriangle, Clock, CheckCircle, Filter, Users } from 'lucide-react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { FileText, Beaker, AlertTriangle, Clock, CheckCircle, Filter, Users, HelpCircle, XCircle, RefreshCw } from 'lucide-react';
+import { getTrials, getTrialEligiblePatients } from '../../../services/api';
+import type { Trial, TrialMatchCandidate, TrialMatchStatus } from '../../../services/api';
 
 // ── Registry Abstraction Queue Data ─────────────────────────────────────────
+//
+// STILL MOCK (AUDIT-148 Slice 1 wires the TRIAL section only). The registry backend exists
+// (GET /registry/:registryType/cases + the maker-checker write endpoints) and api.ts now carries the
+// full contract, but this section is NOT wired and the rows below are illustrative, not real.
 
 const registryCases = [
   { name: 'Williams, James', registry: 'CathPCI', date: '2026-03-13', completeness: 56, flags: 6, deadline: 3, assignee: 'J. Park', status: 'Needs Review' },
@@ -23,35 +29,14 @@ const registryCases = [
 
 type RegistryFilter = 'All' | 'Needs Review' | 'Ready to Submit' | 'Submitted';
 
-// ── Trial Eligibility Queue Data ────────────────────────────────────────────
+// -- Trial Eligibility (REAL DATA - AUDIT-148 honest matcher) ----------------
+//
+// Wired to GET /trials + GET /trials/:trialId/eligible-patients. The endpoint returns ALL THREE match
+// states and this view renders all three: filtering INDETERMINATE out of the UI would silently undo the
+// matcher's central honesty property. INDETERMINATE means "one signal away", not "no" - it is the
+// actionable worklist, so it is shown with the missing signals named per patient.
 
-type TrialStatus = 'New' | 'In Review' | 'Referred' | 'Enrolled' | 'Screen Failed';
-type SponsorType = 'industry' | 'nih' | 'investigator';
-type ConfidenceLevel = 'High' | 'Moderate' | 'Review';
-
-interface TrialRow {
-  name: string;
-  trial: string;
-  sponsorType: SponsorType;
-  confidence: ConfidenceLevel;
-  criteria: string;
-  status: TrialStatus;
-}
-
-const trialQueue: TrialRow[] = [
-  { name: 'Harold Simmons', trial: 'HELIOS-B Extension', sponsorType: 'industry', confidence: 'High', criteria: 'ATTR-CM confirmed \u00b7 NYHA II \u00b7 LVEF 55%', status: 'New' as const },
-  { name: 'Ruth Caldwell', trial: 'HELIOS-B Extension', sponsorType: 'industry', confidence: 'High', criteria: 'ATTR-CM confirmed \u00b7 NYHA II \u00b7 LVEF 48%', status: 'New' as const },
-  { name: 'Margaret Torres', trial: 'STEP-HFpEF Registry', sponsorType: 'industry', confidence: 'Moderate', criteria: 'HFpEF \u00b7 BMI 34 \u00b7 NYHA II', status: 'In Review' as const },
-  { name: 'Walter Chen', trial: 'HEART-FID', sponsorType: 'nih', confidence: 'High', criteria: 'HFrEF \u00b7 Ferritin 45 \u00b7 TSAT 15% \u00b7 NYHA III', status: 'Referred' as const },
-  { name: 'Patricia Okafor', trial: 'OCEAN(a) -- Olpasiran', sponsorType: 'industry', confidence: 'Moderate', criteria: 'ASCVD \u00b7 Lp(a) 289 \u00b7 On rosuvastatin 40mg', status: 'New' as const },
-  { name: 'James Kowalski', trial: 'FINEARTS-HF Extension', sponsorType: 'industry', confidence: 'High', criteria: 'HFpEF \u00b7 LVEF 52% \u00b7 eGFR 48 \u00b7 K+ 4.2', status: 'In Review' as const },
-  { name: 'Elena Vasquez', trial: 'GUIDE-HF 2', sponsorType: 'industry', confidence: 'High', criteria: 'NYHA III \u00b7 HF hosp 2mo ago \u00b7 LVEF 28%', status: 'Referred' as const },
-  { name: 'Thomas Wright', trial: 'ORION-4 -- Inclisiran', sponsorType: 'industry', confidence: 'Moderate', criteria: 'ASCVD \u00b7 LDL 92 \u00b7 On atorva 80mg \u00b7 Age 62', status: 'New' as const },
-  { name: 'David Kim', trial: 'MANIFEST-PF Registry', sponsorType: 'industry', confidence: 'High', criteria: 'Prior ablation 18mo \u00b7 AF recurrence \u00b7 LVEF 45%', status: 'New' as const },
-  { name: 'Sandra Oyelaran', trial: 'DECISION-CTO 2', sponsorType: 'investigator', confidence: 'Moderate', criteria: 'CTO LAD \u00b7 CCS II \u00b7 On max meds', status: 'In Review' as const },
-];
-
-type TrialFilter = 'All' | 'New' | 'Industry Sponsored' | 'Referred' | 'Enrolled';
+type TrialFilter = 'All' | TrialMatchStatus;
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -72,24 +57,30 @@ function registryStatusChip(status: string) {
   return map[status] || 'bg-titanium-50 text-titanium-600';
 }
 
-function trialStatusChip(status: TrialStatus): string {
-  const map: Record<TrialStatus, string> = {
-    'New': 'bg-blue-50 text-blue-700 border border-blue-200',
-    'In Review': 'bg-amber-50 text-amber-600 border border-titanium-300',
-    'Referred': 'bg-chrome-50 text-teal-700 border border-titanium-300',
-    'Enrolled': 'bg-chrome-50 text-teal-700 border border-titanium-300',
-    'Screen Failed': 'bg-red-50 text-red-700 border border-red-200',
+/** Match-status chip. INDETERMINATE is styled as a NEUTRAL unknown, never as a soft negative. */
+function matchStatusChip(status: TrialMatchStatus): string {
+  const map: Record<TrialMatchStatus, string> = {
+    ELIGIBLE: 'bg-chrome-50 text-teal-700 border border-titanium-300',
+    INDETERMINATE: 'bg-blue-50 text-blue-700 border border-blue-200',
+    INELIGIBLE: 'bg-titanium-50 text-titanium-600 border border-titanium-300',
   };
   return map[status];
 }
 
-function confidenceBadge(level: 'High' | 'Moderate' | 'Review'): string {
+function MatchStatusIcon({ status }: { status: TrialMatchStatus }) {
+  if (status === 'ELIGIBLE') return <CheckCircle className="w-3.5 h-3.5" />;
+  if (status === 'INDETERMINATE') return <HelpCircle className="w-3.5 h-3.5" />;
+  return <XCircle className="w-3.5 h-3.5" />;
+}
+
+/** Per-criterion verdict pill. UNEVALUABLE reads as unknown, not as a failure. */
+function verdictPill(verdict: 'MET' | 'FAILED' | 'UNEVALUABLE'): string {
   const map = {
-    High: 'bg-chrome-50 text-teal-700 border border-titanium-300',
-    Moderate: 'bg-amber-50 text-amber-600 border border-titanium-300',
-    Review: 'bg-red-50 text-red-700 border border-red-200',
+    MET: 'bg-chrome-50 text-teal-700 border border-titanium-300',
+    FAILED: 'bg-titanium-50 text-titanium-600 border border-titanium-300',
+    UNEVALUABLE: 'bg-blue-50 text-blue-700 border border-blue-200',
   };
-  return map[level];
+  return map[verdict];
 }
 
 // ── Component ───────────────────────────────────────────────────────────────
@@ -116,18 +107,57 @@ const ResearchCareTeamView: React.FC = () => {
     return rows;
   }, [registryFilter]);
 
-  // Trial filtering
-  const filteredTrials = useMemo(() => {
-    if (trialFilter === 'All') return trialQueue;
-    if (trialFilter === 'New') return trialQueue.filter(t => t.status === 'New');
-    if (trialFilter === 'Industry Sponsored') return trialQueue.filter(t => t.sponsorType === 'industry');
-    if (trialFilter === 'Referred') return trialQueue.filter(t => t.status === 'Referred');
-    if (trialFilter === 'Enrolled') return trialQueue.filter(t => t.status === 'Enrolled');
-    return trialQueue;
-  }, [trialFilter]);
+  // -- Trial eligibility: REAL data (AUDIT-148) ------------------------------
+  const [trials, setTrials] = useState<Trial[]>([]);
+  const [selectedTrialId, setSelectedTrialId] = useState<string | null>(null);
+  const [candidates, setCandidates] = useState<TrialMatchCandidate[]>([]);
+  const [trialsLoading, setTrialsLoading] = useState(true);
+  const [candidatesLoading, setCandidatesLoading] = useState(false);
+  const [trialError, setTrialError] = useState<string | null>(null);
+  const [expandedPatientId, setExpandedPatientId] = useState<string | null>(null);
+
+  const loadTrials = useCallback(async () => {
+    setTrialsLoading(true);
+    setTrialError(null);
+    try {
+      const list = await getTrials();
+      setTrials(list);
+      setSelectedTrialId(prev => prev ?? (list.length > 0 ? list[0].id : null));
+    } catch (e) {
+      setTrialError(e instanceof Error ? e.message : 'Could not load trials');
+    } finally {
+      setTrialsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { void loadTrials(); }, [loadTrials]);
+
+  useEffect(() => {
+    if (!selectedTrialId) { setCandidates([]); return; }
+    let cancelled = false;
+    setCandidatesLoading(true);
+    setTrialError(null);
+    getTrialEligiblePatients(selectedTrialId)
+      .then(rows => { if (!cancelled) setCandidates(rows); })
+      .catch(e => { if (!cancelled) setTrialError(e instanceof Error ? e.message : 'Could not evaluate eligibility'); })
+      .finally(() => { if (!cancelled) setCandidatesLoading(false); });
+    return () => { cancelled = true; };
+  }, [selectedTrialId]);
+
+  const filteredTrials = useMemo(
+    () => (trialFilter === 'All' ? candidates : candidates.filter(c => c.matchStatus === trialFilter)),
+    [candidates, trialFilter],
+  );
+
+  // Counts across ALL three states - shown even when a filter is active, so the denominator is never hidden.
+  const matchCounts = useMemo(() => candidates.reduce(
+    (acc, c) => { acc[c.matchStatus] += 1; return acc; },
+    { ELIGIBLE: 0, INDETERMINATE: 0, INELIGIBLE: 0 } as Record<TrialMatchStatus, number>,
+  ), [candidates]);
 
   const registryFilters: RegistryFilter[] = ['All', 'Needs Review', 'Ready to Submit', 'Submitted'];
-  const trialFilters: TrialFilter[] = ['All', 'New', 'Industry Sponsored', 'Referred', 'Enrolled'];
+  const trialFilters: TrialFilter[] = ['All', 'ELIGIBLE', 'INDETERMINATE', 'INELIGIBLE'];
+  const selectedTrial = trials.find(t => t.id === selectedTrialId) ?? null;
 
   return (
     <div className="space-y-8">
@@ -228,19 +258,53 @@ const ResearchCareTeamView: React.FC = () => {
         </div>
       </div>
 
-      {/* ── Section 2: Trial Eligibility Queue ────────────────────────────── */}
+      {/* -- Section 2: Trial Eligibility (REAL DATA - AUDIT-148 honest matcher) -- */}
       <div className="bg-white border border-titanium-200 rounded-2xl shadow-sm overflow-hidden">
-        <div className="px-6 py-5 border-b border-titanium-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-50">
-              <Beaker className="w-5 h-5 text-blue-600" />
+        <div className="px-6 py-5 border-b border-titanium-100 flex flex-col gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-blue-50">
+                <Beaker className="w-5 h-5 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="text-base font-semibold text-titanium-900">Trial Eligibility</h3>
+                <p className="text-sm text-titanium-500">
+                  {candidatesLoading
+                    ? 'Evaluating eligibility...'
+                    : `${matchCounts.ELIGIBLE} eligible \u00b7 ${matchCounts.INDETERMINATE} indeterminate \u00b7 ${matchCounts.INELIGIBLE} ineligible`}
+                </p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-lg font-bold text-titanium-900">Trial Eligibility -- Pending Review</h2>
-              <p className="text-sm text-titanium-500">{filteredTrials.length} patients matched to active trials</p>
-            </div>
+            <button
+              onClick={() => { void loadTrials(); }}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-titanium-50 text-titanium-600 hover:bg-titanium-100 transition-all"
+            >
+              <RefreshCw className="w-3.5 h-3.5" /> Refresh
+            </button>
           </div>
-          <div className="flex items-center gap-1.5">
+
+          {/* Trial selector - real trials from GET /trials */}
+          {trials.length > 0 && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs font-medium text-titanium-500 mr-1">Trial</span>
+              {trials.map(t => (
+                <button
+                  key={t.id}
+                  onClick={() => { setSelectedTrialId(t.id); setExpandedPatientId(null); }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    selectedTrialId === t.id
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'bg-titanium-50 text-titanium-600 hover:bg-titanium-100'
+                  }`}
+                >
+                  {t.name}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Match-state filter. INDETERMINATE is a first-class state, never hidden. */}
+          <div className="flex items-center gap-1.5 flex-wrap">
             <Filter className="w-4 h-4 text-titanium-400 mr-1" />
             {trialFilters.map(f => (
               <button
@@ -252,74 +316,130 @@ const ResearchCareTeamView: React.FC = () => {
                     : 'bg-titanium-50 text-titanium-600 hover:bg-titanium-100'
                 }`}
               >
-                {f}
+                {f === 'All' ? 'All' : f.charAt(0) + f.slice(1).toLowerCase()}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-titanium-50 text-titanium-500 text-xs uppercase tracking-wide">
-                <th className="text-left px-5 py-3 font-semibold">Patient</th>
-                <th className="text-left px-4 py-3 font-semibold">Trial Name</th>
-                <th className="text-center px-4 py-3 font-semibold">Sponsor</th>
-                <th className="text-center px-4 py-3 font-semibold">Match Confidence</th>
-                <th className="text-left px-4 py-3 font-semibold">Qualifying Criteria</th>
-                <th className="text-left px-4 py-3 font-semibold">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-titanium-100">
-              {filteredTrials.map((row, i) => (
-                <tr
-                  key={`${row.name}-${i}`}
-                  className={`hover:bg-titanium-25 transition-colors ${
-                    row.sponsorType === 'industry' ? 'border-l-4 border-l-[#6B7280]' : ''
-                  }`}
-                >
-                  <td className="px-5 py-3 font-medium text-titanium-900 whitespace-nowrap">{row.name}</td>
-                  <td className="px-4 py-3 text-titanium-800 font-medium">{row.trial}</td>
-                  <td className="px-4 py-3 text-center">
-                    {row.sponsorType === 'industry' ? (
-                      <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide bg-amber-50 text-amber-600 border border-titanium-300">
-                        Industry
-                      </span>
-                    ) : row.sponsorType === 'nih' ? (
-                      <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide bg-blue-50 text-blue-700 border border-blue-200">
-                        NIH
-                      </span>
-                    ) : (
-                      <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide bg-titanium-50 text-titanium-600 border border-titanium-200">
-                        Investigator
-                      </span>
+        {/* Loading */}
+        {(trialsLoading || candidatesLoading) && (
+          <div className="px-6 py-12 text-center text-sm text-titanium-500">
+            <Clock className="w-5 h-5 mx-auto mb-2 text-titanium-400 animate-pulse" />
+            {trialsLoading ? 'Loading trials...' : 'Evaluating patient eligibility...'}
+          </div>
+        )}
+
+        {/* Error - explicit, never a silent fallback to illustrative rows */}
+        {!trialsLoading && !candidatesLoading && trialError && (
+          <div className="px-6 py-12 text-center">
+            <AlertTriangle className="w-5 h-5 mx-auto mb-2 text-amber-500" />
+            <p className="text-sm text-titanium-700 font-medium">Could not load trial eligibility</p>
+            <p className="text-xs text-titanium-500 mt-1">{trialError}</p>
+            <button
+              onClick={() => { void loadTrials(); }}
+              className="mt-3 px-3 py-1.5 rounded-lg text-xs font-medium bg-titanium-50 text-titanium-600 hover:bg-titanium-100"
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
+        {/* Empty */}
+        {!trialsLoading && !candidatesLoading && !trialError && trials.length === 0 && (
+          <div className="px-6 py-12 text-center text-sm text-titanium-500">
+            No active trials are configured for this organization.
+          </div>
+        )}
+
+        {/* Results */}
+        {!trialsLoading && !candidatesLoading && !trialError && trials.length > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-titanium-50 border-b border-titanium-100">
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-titanium-600">Patient</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-titanium-600">MRN</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-titanium-600">Age</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-titanium-600">Match</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-titanium-600">Missing signals</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-titanium-600">Criteria</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredTrials.map(c => (
+                  <React.Fragment key={c.id}>
+                    <tr className="border-b border-titanium-50 hover:bg-titanium-50/50 transition-colors">
+                      <td className="px-6 py-3 font-medium text-titanium-900">{c.name}</td>
+                      <td className="px-6 py-3 text-titanium-600">{c.mrn}</td>
+                      <td className="px-6 py-3 text-titanium-600">{c.age}</td>
+                      <td className="px-6 py-3">
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${matchStatusChip(c.matchStatus)}`}>
+                          <MatchStatusIcon status={c.matchStatus} />
+                          {c.matchStatus.charAt(0) + c.matchStatus.slice(1).toLowerCase()}
+                        </span>
+                      </td>
+                      <td className="px-6 py-3">
+                        {c.indeterminateSignals.length === 0 ? (
+                          <span className="text-xs text-titanium-400">--</span>
+                        ) : (
+                          <div className="flex flex-wrap gap-1">
+                            {c.indeterminateSignals.map(s => (
+                              <span key={s} className="px-2 py-0.5 rounded text-xs font-mono bg-blue-50 text-blue-700 border border-blue-200">
+                                {s}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-6 py-3">
+                        <button
+                          onClick={() => setExpandedPatientId(expandedPatientId === c.id ? null : c.id)}
+                          className="text-xs font-medium text-blue-600 hover:text-blue-700"
+                        >
+                          {expandedPatientId === c.id ? 'Hide' : `${c.criteriaResults.length} criteria`}
+                        </button>
+                      </td>
+                    </tr>
+                    {expandedPatientId === c.id && (
+                      <tr className="border-b border-titanium-50 bg-titanium-50/40">
+                        <td colSpan={6} className="px-6 py-4">
+                          <div className="flex flex-wrap gap-2">
+                            {c.criteriaResults.map(r => (
+                              <span
+                                key={r.criterionId}
+                                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs ${verdictPill(r.verdict)}`}
+                              >
+                                <span className="font-mono">{r.criterionId}</span>
+                                <span className="opacity-60">({r.polarity})</span>
+                                <span className="font-semibold">{r.verdict}</span>
+                                {r.missingSignal && <span className="font-mono opacity-75">- {r.missingSignal}</span>}
+                              </span>
+                            ))}
+                          </div>
+                          <p className="mt-3 text-xs text-titanium-500">
+                            UNEVALUABLE means the platform does not have that signal for this patient - it is not
+                            evidence against eligibility. A patient is never reported ELIGIBLE while any criterion is
+                            unevaluable.
+                          </p>
+                        </td>
+                      </tr>
                     )}
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold ${confidenceBadge(row.confidence)}`}>
-                      {row.confidence}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-titanium-600 text-xs max-w-xs">
-                    <span className="font-mono">{row.criteria}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-medium ${trialStatusChip(row.status)}`}>
-                      {row.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-              {filteredTrials.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-titanium-400 text-sm">
-                    No patients match the selected filter.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                  </React.Fragment>
+                ))}
+                {filteredTrials.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="px-6 py-10 text-center text-sm text-titanium-500">
+                      {candidates.length === 0
+                        ? `No patients evaluated for ${selectedTrial?.name ?? 'this trial'}.`
+                        : 'No patients match the selected filter.'}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

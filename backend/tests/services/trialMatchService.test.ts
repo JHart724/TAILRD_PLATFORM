@@ -87,10 +87,19 @@ describe('AUDIT-148 curated seed: exercises all three states + section-16 codes'
   const ph = CURATED_TRIALS.find(t => t.name.includes('Pulmonary'))!;
 
   it('the HFrEF trial is fully threadable -> can reach ELIGIBLE and INELIGIBLE', () => {
-    const eligible = evaluateTrialMatch(hfref as any, ctx({ dxCodes: ['I50.22'], age: 68, labValues: { lvef: 30 } }));
+    // AUDIT-226: the ELIGIBLE case now passes a POPULATED medCodes list (atorvastatin 83367). Before the
+    // med two-stage guard this test reached ELIGIBLE with medCodes: [] - i.e. it certified "not on SGLT2i"
+    // for a patient with NO medication record at all, which is precisely the unsafe assertion AUDIT-226
+    // removes. An empty list is now UNEVALUABLE -> INDETERMINATE. Reaching ELIGIBLE honestly requires a
+    // medication signal that exists and does not contain the excluded drug.
+    const eligible = evaluateTrialMatch(hfref as any, ctx({ dxCodes: ['I50.22'], age: 68, labValues: { lvef: 30 }, medCodes: ['83367'] }));
     const ineligible = evaluateTrialMatch(hfref as any, ctx({ dxCodes: ['I50.22'], age: 68, labValues: { lvef: 30 }, medCodes: ['1545653'] }));
     expect(eligible.status).toBe('ELIGIBLE');
     expect(ineligible.status).toBe('INELIGIBLE'); // on empagliflozin -> exclusion violated
+
+    // And the AUDIT-226 property itself, pinned here beside the seed: no med signal -> INDETERMINATE.
+    const noMedSignal = evaluateTrialMatch(hfref as any, ctx({ dxCodes: ['I50.22'], age: 68, labValues: { lvef: 30 }, medCodes: [] }));
+    expect(noMedSignal.status).toBe('INDETERMINATE');
   });
 
   it('the PH trial forces INDETERMINATE (pasp Synthea-absent)', () => {
