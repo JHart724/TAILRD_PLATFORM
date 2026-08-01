@@ -42,10 +42,13 @@ describe('AUDIT-200 calibration: the prefix now matches Synthea unspecified code
 
 describe('AUDIT-200 trial 1 (HFrEF): I50.9 Synthea patients now reach the LVEF gate', () => {
   it('I50.9 + LVEF 30 + not-on-SGLT2i -> ELIGIBLE (the coverage gain: was 0 pre-calibration)', () => {
-    const r = evaluateTrialMatch(HFREF, ctx({ dxCodes: ['I50.9'], age: 68, labValues: { lvef: 30 } }));
+    // AUDIT-226: medCodes POPULATED (atorvastatin, not the excluded SGLT2i). An empty list is UNEVALUABLE.
+    const r = evaluateTrialMatch(HFREF, ctx({ dxCodes: ['I50.9'], age: 68, labValues: { lvef: 30 }, medCodes: [RX_ATORVA] }));
     expect(r.status).toBe('ELIGIBLE');
   });
   it('I50.9 + LVEF 55 (HFpEF) -> INELIGIBLE (the LVEF gate discriminates, not the dx)', () => {
+    // The LVEF inclusion FAILS on present data, which short-circuits to INELIGIBLE ahead of the
+    // med criterion's UNEVALUABLE (AUDIT-201 precedence, preserved by the AUDIT-226 fix).
     const r = evaluateTrialMatch(HFREF, ctx({ dxCodes: ['I50.9'], labValues: { lvef: 55 } }));
     expect(r.status).toBe('INELIGIBLE');
   });
@@ -69,21 +72,36 @@ describe('AUDIT-200 trial 2 (CAD lipid): I25.9 Synthea patients reach the LDL + 
     const r = evaluateTrialMatch(CADLIPID, ctx({ dxCodes: ['I25.9'], age: 55, labValues: { ldl: 50 }, medCodes: [RX_ATORVA] }));
     expect(r.status).toBe('INELIGIBLE');
   });
-  it('I25.9 + LDL 90 + NOT on a statin -> INELIGIBLE (on-statin inclusion fails)', () => {
-    const r = evaluateTrialMatch(CADLIPID, ctx({ dxCodes: ['I25.9'], age: 55, labValues: { ldl: 90 }, medCodes: [] }));
+  it('I25.9 + LDL 90 + on a DIFFERENT med (not a statin) -> INELIGIBLE (on-statin inclusion fails)', () => {
+    // AUDIT-226: the medication list must be POPULATED for "not on a statin" to be a genuine FAILED.
+    // Here the patient is demonstrably on dapagliflozin and demonstrably not on a statin - real evidence
+    // of absence, so INELIGIBLE is honest.
+    const r = evaluateTrialMatch(CADLIPID, ctx({ dxCodes: ['I25.9'], age: 55, labValues: { ldl: 90 }, medCodes: [RX_DAPA] }));
     expect(r.status).toBe('INELIGIBLE');
+  });
+
+  it('I25.9 + LDL 90 + NO medication record at all -> INDETERMINATE, not INELIGIBLE (AUDIT-226)', () => {
+    // The defect this replaces: an empty list returned FAILED -> a definite INELIGIBLE on data we do not
+    // have. Measured tenant-wide, no patient has an antiplatelet/anticoagulant row, so this was the shape
+    // that would have produced false definite exclusions across the whole population.
+    const r = evaluateTrialMatch(CADLIPID, ctx({ dxCodes: ['I25.9'], age: 55, labValues: { ldl: 90 }, medCodes: [] }));
+    expect(r.status).toBe('INDETERMINATE');
+    expect(r.indeterminateSignals).toContain('med');
   });
 });
 
 describe('AUDIT-200 HOLLOW GUARD: ELIGIBLE is a real subset of the dx cohort, NOT ~100%', () => {
   it('a mixed I50.9 cohort resolves to a discriminating split, not all-ELIGIBLE', () => {
     // Every patient carries the dx (I50.9) - so if the dx were the only gate this would be 100% ELIGIBLE.
+    // AUDIT-226: every ELIGIBLE/INELIGIBLE row now carries a POPULATED medication list - a definite verdict
+    // requires a med signal that exists. The two rows that intentionally lack one resolve INDETERMINATE,
+    // which is itself part of the discriminating split this guard checks.
     const cohort: PatientEvalContext[] = [
-      ctx({ dxCodes: ['I50.9'], labValues: { lvef: 30 } }),                 // ELIGIBLE
-      ctx({ dxCodes: ['I50.9'], labValues: { lvef: 25 } }),                 // ELIGIBLE
-      ctx({ dxCodes: ['I50.9'], labValues: { lvef: 55 } }),                 // INELIGIBLE (HFpEF)
-      ctx({ dxCodes: ['I50.9'], labValues: { lvef: 30 }, medCodes: [RX_DAPA] }), // INELIGIBLE (on SGLT2i)
-      ctx({ dxCodes: ['I50.9'], labValues: {} }),                          // INDETERMINATE (no LVEF)
+      ctx({ dxCodes: ['I50.9'], labValues: { lvef: 30 }, medCodes: [RX_ATORVA] }), // ELIGIBLE
+      ctx({ dxCodes: ['I50.9'], labValues: { lvef: 25 }, medCodes: [RX_ATORVA] }), // ELIGIBLE
+      ctx({ dxCodes: ['I50.9'], labValues: { lvef: 55 }, medCodes: [RX_ATORVA] }), // INELIGIBLE (HFpEF)
+      ctx({ dxCodes: ['I50.9'], labValues: { lvef: 30 }, medCodes: [RX_DAPA] }),   // INELIGIBLE (on SGLT2i)
+      ctx({ dxCodes: ['I50.9'], labValues: {} }),                                  // INDETERMINATE (no LVEF, no meds)
     ];
     const statuses = cohort.map(c => evaluateTrialMatch(HFREF, c).status);
     const eligible = statuses.filter(s => s === 'ELIGIBLE').length;

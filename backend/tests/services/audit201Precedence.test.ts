@@ -67,7 +67,10 @@ describe('AUDIT-201 (d) ELIGIBLE unchanged (all criteria threaded AND met)', () 
       { criterionId: 'lvef', polarity: 'inclusion', type: 'lab', slug: 'lvef', op: '<=', value: 40 },
       { criterionId: 'sglt2i', polarity: 'exclusion', type: 'med', codes: [RX_DAPA] },
     ]);
-    const r = evaluateTrialMatch(t, ctx({ dxCodes: ['I50.9'], labValues: { lvef: 30 } }));
+    // AUDIT-226: medCodes is now POPULATED (atorvastatin 83367, not the excluded dapagliflozin). An empty
+    // list would be UNEVALUABLE -> INDETERMINATE, because "no medication record at all" cannot certify
+    // "not on SGLT2i". Reaching ELIGIBLE honestly requires a med signal that exists and lacks the drug.
+    const r = evaluateTrialMatch(t, ctx({ dxCodes: ['I50.9'], labValues: { lvef: 30 }, medCodes: ['83367'] }));
     expect(r.status).toBe('ELIGIBLE');
     expect(r.indeterminateSignals).toEqual([]);
   });

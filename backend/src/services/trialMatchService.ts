@@ -24,6 +24,11 @@ export const THREADED_LAB_SLUGS: ReadonlySet<string> = new Set([
   'systolic_bp', 'diastolic_bp', 'heart_rate', 'bmi',
   // echo-numeric proxy + derived recency (Tranche 2)
   'lvef', 'echo_months',
+  // PCI-anchored derived recency (Threading Tranche 3 Slice 1, procedureRecency.ts). Both are derived
+  // from PCI/CABG procedure dates, which ARE source-present (PCI 415070008: 2,338 rows / 2,215 patients;
+  // CABG 232717009 + 414088005: 758 rows; procedureDate NULLs 0/3,096). Same undefined-never-written
+  // discipline as echo_months, so a patient with no PCI has no value and the criterion stays UNEVALUABLE.
+  'months_since_pci', 'ncs_after_pci_months',
 ]);
 
 export type CriterionPolarity = 'inclusion' | 'exclusion';
@@ -88,6 +93,21 @@ export function evaluateCriterion(c: TrialCriterion, ctx: PatientEvalContext): C
       return { ...base, verdict: met ? 'MET' : 'FAILED' };
     }
     case 'med': {
+      // AUDIT-226: mirror the AUDIT-201 procedure two-stage guard (:104-108, the exemplar). medCodes is
+      // built from patient.medications; an EMPTY list is AMBIGUOUS - it means EITHER "this patient is
+      // genuinely on no medications" OR "this tenant/ingest path does not represent this drug class at
+      // all", and the context cannot distinguish the two (both yield a no-match). So an empty list is
+      // UNEVALUABLE - err toward unknown, NEVER a false definite negative. This is load-bearing because
+      // of the AUDIT-201 precedence rule below: a FAILED short-circuits to INELIGIBLE, so a FAILED on a
+      // drug class the substrate cannot represent becomes a false definite INELIGIBLE for EVERY patient
+      // in the tenant - the mirror of the false-ELIGIBLE this matcher exists to prevent. Measured on
+      // demo-synthea-threaded (25,571 patients / 203,602 medication rows): aspirin 0 patients, P2Y12 0,
+      // warfarin 0, DOAC 0 - by RxNorm AND by name, at any status. Only a NON-EMPTY medication list is a
+      // populated signal in which a no-match is a genuine FAILED (same threading-completeness caveat as
+      // dx/procedure: a specific drug that was prescribed but not threaded can still under-detect).
+      if (!ctx.medCodes || ctx.medCodes.length === 0) {
+        return { ...base, verdict: 'UNEVALUABLE', missingSignal: 'med' };
+      }
       const met = (c.codes ?? []).some(code => ctx.medCodes.includes(code));
       return { ...base, verdict: met ? 'MET' : 'FAILED' };
     }

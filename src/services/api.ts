@@ -421,8 +421,20 @@ export async function updateRegistryCase(caseId: string, fields: Record<string, 
   });
 }
 
+export async function submitRegistryCase(caseId: string): Promise<void> {
+  await apiFetch<void>(`/registry/cases/${caseId}/submit`, { method: 'POST' });
+}
+
 export async function approveRegistryCase(caseId: string): Promise<void> {
   await apiFetch<void>(`/registry/cases/${caseId}/approve`, { method: 'POST' });
+}
+
+// The backend requires a non-empty reason (<= 1000 chars) - maker-checker rejections are never silent.
+export async function rejectRegistryCase(caseId: string, reason: string): Promise<void> {
+  await apiFetch<void>(`/registry/cases/${caseId}/reject`, {
+    method: 'POST',
+    body: JSON.stringify({ reason }),
+  });
 }
 
 // ─── Trials ─────────────────────────────────────────────────────────────────
@@ -436,8 +448,33 @@ export async function getTrials(filters?: TrialFilters): Promise<Trial[]> {
   return apiFetch<Trial[]>(`/trials${qs}`);
 }
 
-export async function getTrialEligiblePatients(trialId: string): Promise<Patient[]> {
-  return apiFetch<Patient[]>(`/trials/${trialId}/eligible-patients`);
+/**
+ * AUDIT-148 honest-matcher shape. The endpoint returns ALL THREE match states (INDETERMINATE is NOT
+ * filtered out), with per-criterion verdicts and the named unthreaded signals - the previous
+ * `Promise<Patient[]>` signature under-described it and dropped exactly the honesty payload.
+ */
+export type TrialMatchStatus = 'ELIGIBLE' | 'INELIGIBLE' | 'INDETERMINATE';
+
+export interface TrialCriterionResult {
+  criterionId: string;
+  polarity: 'inclusion' | 'exclusion';
+  verdict: 'MET' | 'FAILED' | 'UNEVALUABLE';
+  missingSignal?: string;
+}
+
+export interface TrialMatchCandidate {
+  id: string;
+  name: string;
+  mrn: string;
+  age: number;
+  gender?: string;
+  matchStatus: TrialMatchStatus;
+  criteriaResults: TrialCriterionResult[];
+  indeterminateSignals: string[];
+}
+
+export async function getTrialEligiblePatients(trialId: string): Promise<TrialMatchCandidate[]> {
+  return apiFetch<TrialMatchCandidate[]>(`/trials/${trialId}/eligible-patients`);
 }
 
 export async function referPatientToTrial(patientId: string, trialId: string): Promise<void> {
