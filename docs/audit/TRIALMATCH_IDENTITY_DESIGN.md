@@ -330,13 +330,75 @@ exists to protect.
 
 ---
 
-## 6. Open questions for the operator
+## 6. Operator rulings (2026-08-03)
 
-1. **`criteriaVersion` mechanism**: content hash (recommended) vs bumped integer vs both (section
-   3.3).
-2. **Staleness bound**: 36h proposed (section 3.6).
-3. **Deploy-triggered refresh** on matcher change: deferred as proposed, or in scope (section 3.4)?
-4. **Ingest-triggered invalidation**: deferred as proposed, accepting up to one day of lag made
-   visible by the as-of indicator?
+All four open questions are RULED. The design above stands as written except where a ruling
+sharpens it; each ruling below names the section it binds.
 
-No implementation is scoped until these are ruled on.
+### R1 - `criteriaVersion` is a content hash of the structured criteria (binds section 3.3)
+
+**Ruled: Option B, the content hash**, computed over the structured criteria with `stableStringify`.
+Rationale as recorded: mechanism over convention, per this repo's own drift history - a bumped
+integer depends on a writer remembering, which is the documented-discipline-instead-of-mechanism
+failure DRIFT-58 exists to name.
+
+The two provenance fields are complementary and BOTH are stored per row, covering different axes:
+
+| field | covers | changes when |
+|---|---|---|
+| `buildSha` | the CODE that evaluated | the matcher is redeployed |
+| `criteriaVersion` (content hash) | the DATA it evaluated against | a trial's criteria are edited |
+
+Neither substitutes for the other: AUDIT-226 was a code change that moved verdicts with criteria
+untouched; a criteria edit moves verdicts with code untouched. A verdict is only fully explained by
+both.
+
+### R2 - staleness bound is 36 hours (binds section 3.6)
+
+**Accepted as proposed.** One missed nightly run becomes visible; normal operation does not alarm.
+Past the bound the UI marks the figures stale and names the last successful run, and does not hide
+them.
+
+### R3 - deploy-triggered refresh DEFERRED, but detection is MECHANIZED (binds section 3.4)
+
+**The refresh run stays operator-gated.** What is NOT deferred is knowing that a divergence exists:
+
+- Every persisted verdict already carries the `buildSha` that produced it (R1).
+- **The read path compares the persisted `buildSha` against the live build.** On divergence, the
+  as-of indicator states the figures were **"computed under a prior build"**, alongside the existing
+  as-of timestamp.
+
+This is the deliberate split: automatic *detection*, operator-gated *action*. It follows the same
+logic as the section 3.6 staleness bound - the platform says what it knows and how current it is, and
+declines to imply currency it cannot back - and it avoids a deploy silently triggering a 451-second
+write pass. A stale-by-build figure is honest and usable; a silently auto-refreshing one is neither
+gated nor visible.
+
+Worth stating plainly: this closes the gap that would otherwise have been the design's weakest point.
+Without it, a matcher change like AUDIT-226 could leave every stored verdict wrong with nothing on
+screen to say so.
+
+### R4 - ingest-triggered invalidation DEFERRED at zero cost today; the mutation protocol absorbs it (binds section 3.4)
+
+**Deferred**, and the reason it costs nothing today is worth recording: the demo tenants are not
+under continuous ingest, so the nightly refresh already covers every realistic data change, with the
+as-of indicator making any lag visible.
+
+**In exchange, the standing production-data-mutation protocol gains a line:**
+
+> Any data backfill's gated closeout includes a verdict-refresh run.
+
+That is the honest coupling. A backfill is precisely the event that changes patient `state` at scale -
+the AUDIT-218 procedures backfill inserted 5,480,901 rows - and it is already an operator-gated,
+snapshotted, invariant-checked ceremony. Attaching the refresh there gets the correctness benefit of
+ingest-triggered invalidation at the moment it actually matters, without instrumenting the
+high-volume ingest write path. It also means the refresh inherits the protocol's existing
+verification discipline rather than needing its own.
+
+Once implemented, this line belongs alongside the protocol in `CLAUDE.md` section 18 / the runbooks,
+not only here.
+
+---
+
+**Implementation may now be scoped** against this design as ruled. Scoping is a separate, read-only
+step; authoring follows a PAUSE on the scope note.
