@@ -75,6 +75,7 @@ model Hospital {
   contraindicationAssessments ContraindicationAssessment[]
   clinicalTrials              ClinicalTrial[] // AUDIT-148 Slice 1: tenant-scoped curated trials (null hospitalId = global)
   trialMatches                TrialMatch[] // AUDIT-148 Slice 1: clinical-trial eligibility matches
+  trialMatchRuns              TrialMatchRun[] // TrialMatch identity design: per-run verdict-refresh records
   registryCases               RegistryCase[] // AUDIT-148 Slice 2: registry submission cases (tenant-scoped)
   trialReferrals              TrialReferral[] // AUDIT-148 Slice 3: patient-to-trial referrals (tenant-scoped)
   recommendations             Recommendation[]
@@ -2741,9 +2742,70 @@ model TrialMatch {
   evaluatedAt DateTime  @default(now())
   evaluatedBy String?
 
-  @@unique([patientId, trialId, hospitalId])
+  /// PROVENANCE (TrialMatch identity design R1). Two axes, neither substituting for the other:
+  /// buildSha is the CODE that produced this verdict, criteriaVersion is the DATA it evaluated
+  /// against. AUDIT-226 was a code change that moved verdicts with criteria untouched; a criteria
+  /// edit moves verdicts with code untouched. A verdict is only fully explained by both.
+  buildSha String?
+  /// Content hash of the trial's structured criteria (src/lib/canonicalJson.ts#criteriaHash). A hash
+  /// rather than a bumped integer because a bumped integer depends on a writer remembering - the
+  /// documented-discipline-instead-of-mechanism failure DRIFT-58 names.
+  criteriaVersion String?
+
+  /// LIFECYCLE (design section 3.2): version-and-supersede, never overwrite. A re-evaluation that
+  /// yields the SAME verdict advances lastConfirmedAt only; a DIFFERENT verdict supersedes this row
+  /// and inserts a new current one. Keeps the table proportional to verdict CHANGES, not runs.
+  lastConfirmedAt DateTime @default(now())
+  supersededAt    DateTime?
+  supersededBy    String?
+  /// Three-way discriminator (design section 3.3), extending AUDIT-223's two-way:
+  /// 'criteria' (the trial's criteria changed) | 'clock' (a staleness window elapsed, same data)
+  /// | 'state' (the patient's data changed). criteria is checked FIRST - it is decidable by version
+  /// comparison without re-evaluation, and it explains the flip completely.
+  supersessionReason String?
+
+  // At most ONE CURRENT verdict per (patient, trial, tenant) is enforced by the PARTIAL unique index
+  // `trial_matches_patient_trial_current_uniq` ... WHERE "supersededAt" IS NULL (migration
+  // 20260803_trialmatch_identity). Prisma's DSL cannot express a partial unique, so it lives in SQL -
+  // absent from this block because the DSL cannot say it, NOT because it is missing.
+  // A TOTAL @@unique([patientId, trialId, hospitalId]) was the ORIGINAL shape and was WRONG for the
+  // AUDIT-223 reason: it forces overwrite-in-place, destroying the prior verdict and making a flip
+  // inexplicable. It was dropped by that migration while the table held zero rows.
   @@index([hospitalId, trialId, status])
+  @@index([hospitalId, trialId, supersededAt])
   @@map("trial_matches")
+}
+
+/// TrialMatch identity design section 3.4: the durable per-run record for the verdict-refresh runner.
+/// Mirrors GapDetectionRun field-for-field (AUDIT-224): opened UP-FRONT so a crashed run still leaves
+/// evidence it started, closed with tallies plus the completeness verdict.
+model TrialMatchRun {
+  id String @id @default(cuid())
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  /// AUDIT-221 execution-vehicle self-attestation: which build actually ran.
+  buildSha String
+
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
+
+  trialsEvaluated   Int @default(0)
+  patientsEvaluated Int @default(0)
+  matchesCreated    Int @default(0)
+  matchesSuperseded Int @default(0)
+  matchesConfirmed  Int @default(0)
+
+  /// evaluated / stored-patient-count at run start. Below COMPLETENESS_MIN_FRACTION nothing is
+  /// superseded (AUDIT-193 class): a truncated run must never mass-supersede.
+  completenessFraction Float?
+  /// 'COMPLETED' | 'ABORTED_INCOMPLETE' | 'FAILED'
+  outcome String @default("COMPLETED")
+  notes   String?
+
+  @@index([hospitalId, startedAt])
+  @@map("trial_match_runs")
 }
 
 // AUDIT-148 Slice 2: a curated registry submission case (NCDR / STS / GWTG-style) with a
