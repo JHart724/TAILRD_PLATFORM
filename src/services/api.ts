@@ -473,10 +473,84 @@ export interface TrialMatchCandidate {
   indeterminateSignals: string[];
 }
 
-export async function getTrialEligiblePatients(trialId: string): Promise<TrialMatchCandidate[]> {
-  return apiFetch<TrialMatchCandidate[]>(`/trials/${trialId}/eligible-patients`);
+/**
+ * AUDIT-227: the endpoint is PAGED. It previously returned every tenant patient in one array, which
+ * deterministically OOM'd at real tenant scale (25,571 patients; a 3,000-patient probe died exit 137).
+ * `pageCounts` is PAGE-LOCAL - never sum pages to get tenant totals, call getTrialsSummary() instead.
+ */
+export interface TrialEligiblePage {
+  patients: TrialMatchCandidate[];
+  pageSize: number;
+  nextCursor: string | null;
+  hasMore: boolean;
+  pageCounts: Partial<Record<TrialMatchStatus, number>>;
 }
 
+export async function getTrialEligiblePatients(
+  trialId: string,
+  opts?: { cursor?: string | null; pageSize?: number },
+): Promise<TrialEligiblePage> {
+  const params = new URLSearchParams();
+  if (opts?.cursor) params.set('cursor', opts.cursor);
+  if (opts?.pageSize) params.set('pageSize', String(opts.pageSize));
+  const qs = params.toString() ? `?${params.toString()}` : '';
+  return apiFetch<TrialEligiblePage>(`/trials/${trialId}/eligible-patients${qs}`);
+}
+
+/** Counts-only aggregate across all three match states. Never returns patient rows. */
+export interface TrialSummaryRow {
+  trialId: string;
+  name: string;
+  module: string;
+  phase: string;
+  status: string;
+  eligible: number;
+  indeterminate: number;
+  ineligible: number;
+  evaluated: number;
+}
+
+export interface TrialsSummary {
+  trials: TrialSummaryRow[];
+  patientsEvaluated: number;
+  computedInMs: number;
+  /**
+   * FALSE when the server hit its wall-clock budget before walking the whole tenant. The counts then
+   * cover `patientsEvaluated` patients, NOT the tenant. Measured: a complete walk of a 25,571-patient
+   * tenant takes ~451s, past any sane HTTP timeout - so callers MUST label a partial as a sample rather
+   * than present it as a total.
+   */
+  complete: boolean;
+}
+
+export async function getTrialsSummary(): Promise<TrialsSummary> {
+  return apiFetch<TrialsSummary>('/trials/summary');
+}
+
+export interface TrialReferralRow {
+  referralId: string;
+  patientId: string;
+  trialId: string;
+  status: string;
+  matchStatusAtReferral: TrialMatchStatus;
+  referredBy: string;
+  referredAt: string;
+  notes: string | null;
+}
+
+export async function getTrialReferrals(trialId: string): Promise<TrialReferralRow[]> {
+  return apiFetch<TrialReferralRow[]>(`/trials/${trialId}/referrals`);
+}
+
+/**
+ * Record a clinician's referral decision. NOT gated on matchStatus - an INDETERMINATE patient may be
+ * referred precisely to drive the one missing test.
+ *
+ * CLIENT CONVENTION (AUDIT-227): idempotency is enforced by the DB constraint
+ * `@@unique([patientId, trialId, hospitalId])`, so a duplicate referral returns **409**, not a silent
+ * success. Callers should treat 409 as SUCCESS-EQUIVALENT ("already referred") rather than an error -
+ * a retried or double-clicked referral has achieved its intent. Any other non-2xx is a real failure.
+ */
 export async function referPatientToTrial(patientId: string, trialId: string): Promise<void> {
   await apiFetch<void>(`/trials/${trialId}/refer`, {
     method: 'POST',

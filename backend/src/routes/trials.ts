@@ -10,6 +10,7 @@
 
 import { Router, Response } from 'express';
 import { body, validationResult } from 'express-validator';
+import { Prisma } from '@prisma/client';
 import prisma from '../lib/prisma';
 import { APIResponse, UserRole } from '../types';
 import { authenticateToken, authorizeRole, requireMFA, AuthenticatedRequest } from '../middleware/auth';
@@ -17,6 +18,23 @@ import { writeAuditLog } from '../middleware/auditLogger';
 import { logger } from '../utils/logger';
 import { buildPatientEvalContext } from '../ingestion/buildPatientEvalContext';
 import { evaluateTrialMatch, TrialCriterion } from '../services/trialMatchService';
+import {
+  PAGE_SIZE_MAX, SUMMARY_BATCH_SIZE,
+  resolvePageSize, resolveCursor, pageArgs, nextPage, budgetExhausted,
+  emptyCounts, tally, totalEvaluated, MatchCounts,
+} from '../services/trialMatchPaging';
+
+/**
+ * The relation set buildPatientEvalContext needs. One definition, so every read loads the same graph.
+ * Annotated with Prisma's own include type: extracting the literal to a const widens `status: 'ACTIVE'`
+ * to `string` and loses the enum, which the generated types reject.
+ */
+const EVAL_INCLUDE: Prisma.PatientInclude = {
+  conditions: { where: { clinicalStatus: { notIn: ['RESOLVED', 'INACTIVE'] } } },
+  medications: { where: { status: 'ACTIVE' } },
+  observations: { orderBy: { observedDateTime: 'desc' } },
+  procedures: true,
+};
 
 const router = Router();
 
@@ -57,6 +75,148 @@ router.get('/', authenticateToken, requireMFA, authorizeRole(TRIAL_ROLES),
   });
 
 /**
+ * GET /api/trials/summary
+ * AUDIT-227: COUNTS ONLY, per trial, across all three match states. This exists so the Executive and
+ * Service Line views never need patient rows to render an aggregate - the shape that made the unbounded
+ * read tempting in the first place.
+ *
+ * Walks the tenant's patients in SUMMARY_BATCH_SIZE cursor batches, evaluating every visible trial per
+ * batch so the relation graph is loaded ONCE per patient rather than once per trial. Nothing but tallies
+ * is retained: no patient row, name, or MRN ever enters the payload or the logs.
+ *
+ * REGISTERED BEFORE '/:trialId/...' deliberately - Express matches in order, and '/summary' would
+ * otherwise be captured as a trialId.
+ */
+router.get('/summary', authenticateToken, requireMFA, authorizeRole(TRIAL_ROLES),
+  async (req: AuthenticatedRequest, res: Response) => {
+    const startedAt = Date.now();
+    try {
+      const hospitalId = req.user!.hospitalId;
+
+      const trials = await prisma.clinicalTrial.findMany({
+        where: tenantTrialWhere(hospitalId),
+        orderBy: { createdAt: 'asc' },
+      });
+      if (trials.length === 0) {
+        return res.json(ok({ trials: [], patientsEvaluated: 0, computedInMs: Date.now() - startedAt, complete: true }));
+      }
+
+      const counts = new Map<string, MatchCounts>(trials.map(t => [t.id, emptyCounts()]));
+      const criteriaByTrial = new Map<string, TrialCriterion[]>(
+        trials.map(t => [t.id, t.criteria as unknown as TrialCriterion[]]),
+      );
+
+      let cursor: string | undefined;
+      let patientsEvaluated = 0;
+      const now = Date.now();
+      // MEASURED: a complete walk of this tenant takes 451s (25,571 patients, 17.64 ms each) - past any
+      // sane HTTP timeout. The walk is budgeted and reports what it covered; `complete` says which.
+      let complete = true;
+
+      for (;;) {
+        if (budgetExhausted(startedAt, Date.now())) { complete = false; break; }
+
+        const batch = await prisma.patient.findMany({
+          where: { hospitalId, isActive: true },
+          include: EVAL_INCLUDE,
+          ...pageArgs(SUMMARY_BATCH_SIZE, cursor),
+        });
+        if (batch.length === 0) break;
+
+        for (const p of batch as any[]) {
+          const ctx = buildPatientEvalContext(p, now);
+          for (const t of trials) {
+            const m = evaluateTrialMatch({ id: t.id, criteria: criteriaByTrial.get(t.id)! }, ctx);
+            tally(counts.get(t.id)!, m.status);
+          }
+        }
+        patientsEvaluated += batch.length;
+        cursor = batch[batch.length - 1].id;
+        if (batch.length < SUMMARY_BATCH_SIZE) break;
+      }
+
+      const payload = trials.map(t => {
+        const c = counts.get(t.id)!;
+        return {
+          trialId: t.id,
+          name: t.name,
+          module: t.module ?? '',
+          phase: t.phase ?? '',
+          status: t.status ?? '',
+          eligible: c.ELIGIBLE,
+          indeterminate: c.INDETERMINATE,
+          ineligible: c.INELIGIBLE,
+          evaluated: totalEvaluated(c),
+        };
+      });
+
+      const computedInMs = Date.now() - startedAt;
+      logger.info('Trial summary computed', {
+        hospitalId, trials: trials.length, patientsEvaluated, computedInMs, complete,
+      });
+      // `complete: false` means the counts cover patientsEvaluated of the tenant, NOT the whole tenant.
+      // The client must label it a sample - a partial presented as a total is the dishonest failure here.
+      res.json(ok({ trials: payload, patientsEvaluated, computedInMs, complete }));
+    } catch (error) {
+      logger.error('Trial summary failed', {
+        hospitalId: req.user?.hospitalId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      res.status(500).json(fail('Failed to compute trial summary'));
+    }
+  });
+
+/**
+ * GET /api/trials/:trialId/referrals
+ * AUDIT-227: the read side of the referral flow (the write, POST /:trialId/refer, shipped in Slice 3
+ * with no way to list what it wrote). Tenant-scoped; returns internal patient UUIDs and the recorded
+ * verdict-at-referral, never PHI in logs.
+ */
+router.get('/:trialId/referrals', authenticateToken, requireMFA, authorizeRole(TRIAL_ROLES),
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const hospitalId = req.user!.hospitalId;
+      const { trialId } = req.params;
+
+      // Trial must be visible to this tenant; else 404 (no existence leak), same guard as the siblings.
+      const trial = await prisma.clinicalTrial.findFirst({
+        where: { id: trialId, ...tenantTrialWhere(hospitalId) },
+      });
+      if (!trial) {
+        return res.status(404).json(fail('Trial not found'));
+      }
+
+      // hospitalId in the WHERE is the tenant-isolation invariant - a referral from another tenant is
+      // unreachable here even though the trial itself may be the shared global-curated row.
+      const referrals = await prisma.trialReferral.findMany({
+        where: { hospitalId, trialId },
+        orderBy: { referredAt: 'desc' },
+        take: PAGE_SIZE_MAX,
+      });
+
+      const payload = referrals.map(r => ({
+        referralId: r.id,
+        patientId: r.patientId,
+        trialId: r.trialId,
+        status: r.status,
+        matchStatusAtReferral: r.matchStatusAtReferral,
+        referredBy: r.referredBy,
+        referredAt: r.referredAt.toISOString(),
+        notes: r.notes,
+      }));
+
+      logger.info('Trial referrals listed', { hospitalId, trialId, count: payload.length });
+      res.json(ok(payload));
+    } catch (error) {
+      logger.error('List trial referrals failed', {
+        hospitalId: req.user?.hospitalId, trialId: req.params.trialId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      res.status(500).json(fail('Failed to list trial referrals'));
+    }
+  });
+
+/**
  * GET /api/trials/:trialId/eligible-patients
  * Run the honest matcher over the tenant's active patients for the given trial. Returns each patient
  * enriched with matchStatus (ELIGIBLE|INELIGIBLE|INDETERMINATE) + per-criterion results + the named
@@ -76,15 +236,17 @@ router.get('/:trialId/eligible-patients', authenticateToken, requireMFA, authori
         return res.status(404).json(fail('Trial not found'));
       }
 
-      // Load the tenant's active patients with exactly what buildPatientEvalContext needs.
+      // AUDIT-227: ONE PAGE of the tenant's active patients, never the whole set. The prior shape loaded
+      // every patient with all four relations and mapped the matcher over the array in memory - a
+      // 3,000-patient probe with that graph died exit 137 (OOM) at production task size, and this tenant
+      // holds 25,571. Page size is CLAMPED (resolvePageSize), so a caller cannot request its way back to
+      // the unbounded read. Cursor shape mirrors gapDetectionRunner's proven id-cursor batch.
+      const pageSize = resolvePageSize(req.query.pageSize);
+      const cursor = resolveCursor(req.query.cursor);
       const patients = await prisma.patient.findMany({
         where: { hospitalId, isActive: true },
-        include: {
-          conditions: { where: { clinicalStatus: { notIn: ['RESOLVED', 'INACTIVE'] } } },
-          medications: { where: { status: 'ACTIVE' } },
-          observations: { orderBy: { observedDateTime: 'desc' } },
-          procedures: true,
-        },
+        include: EVAL_INCLUDE,
+        ...pageArgs(pageSize, cursor),
       });
 
       const now = Date.now();
@@ -108,9 +270,15 @@ router.get('/:trialId/eligible-patients', authenticateToken, requireMFA, authori
       const counts = results.reduce((acc: Record<string, number>, r) => {
         acc[r.matchStatus] = (acc[r.matchStatus] ?? 0) + 1; return acc;
       }, {});
-      logger.info('Trial eligibility evaluated', { hospitalId, trialId, evaluated: results.length, counts });
+      logger.info('Trial eligibility evaluated (page)', {
+        hospitalId, trialId, evaluated: results.length, pageSize, hasCursor: Boolean(cursor), counts,
+      });
 
-      res.json(ok(results));
+      // AUDIT-227: the payload is now an ENVELOPE, not a bare array. The page's counts are page-local by
+      // construction - a client must call GET /trials/summary for tenant-wide totals rather than summing
+      // pages, which would only ever be right after walking every page.
+      const { nextCursor, hasMore } = nextPage(results, pageSize);
+      res.json(ok({ patients: results, pageSize, nextCursor, hasMore, pageCounts: counts }));
     } catch (error) {
       logger.error('Trial eligibility match failed', {
         hospitalId: req.user?.hospitalId, trialId: req.params.trialId,
