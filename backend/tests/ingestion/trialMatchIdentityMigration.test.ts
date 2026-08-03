@@ -109,12 +109,42 @@ describe('the runner ships INERT: merging this PR changes no data', () => {
   });
 
   it('every write is gated behind EXECUTE', () => {
-    // Each mutating prisma call must sit inside the `if (EXECUTE)` region.
-    const executeBlockStart = RUNNER.indexOf('if (EXECUTE) {');
-    expect(executeBlockStart).toBeGreaterThan(-1);
+    // AUDIT-228 rewrote this from a POSITION check to a REACHABILITY check. It used to assert every
+    // mutating prisma call sat textually after `if (EXECUTE) {` - which was true only while the calls
+    // were inlined there, and broke the moment the write phase was extracted behind an injected
+    // writer (`buildPrismaWriter`, hoisted to the top of the file like every other helper) even
+    // though the writes were no more reachable in a dry-run than before. A test that fails on a
+    // refactor which preserves the property it names is testing the layout, not the property.
+    //
+    // The property is: there is exactly ONE seam that writes trial_matches, and it is only INVOKED
+    // under EXECUTE. Both halves are asserted, so neither a stray write outside the writer nor an
+    // ungated invocation can pass.
+    const writerStart = RUNNER.indexOf('function buildPrismaWriter(');
+    expect(writerStart).toBeGreaterThan(-1);
+    // Closing brace at column 0 - the end of the factory. Line-ending agnostic (the file is CRLF on
+    // Windows checkouts and LF in CI, and a test that passes on only one of those is a trap).
+    const closing = /\r?\n\}\r?\n/g;
+    closing.lastIndex = writerStart;
+    const writerEnd = closing.exec(RUNNER)?.index ?? -1;
+    expect(writerEnd).toBeGreaterThan(writerStart);
+
     const writeCalls = [...RUNNER.matchAll(/prisma\.trialMatch\.(create|updateMany|update)\(/g)];
     expect(writeCalls.length).toBeGreaterThan(0);
-    for (const m of writeCalls) expect(m.index!).toBeGreaterThan(executeBlockStart);
+    // (a) every trial_matches write lives inside the one writer seam
+    for (const m of writeCalls) {
+      expect(m.index!).toBeGreaterThan(writerStart);
+      expect(m.index!).toBeLessThan(writerEnd);
+    }
+
+    // (b) that seam, and the phase that drives it, are only reached under EXECUTE
+    const executeBlockStart = RUNNER.indexOf('if (EXECUTE) {');
+    expect(executeBlockStart).toBeGreaterThan(-1);
+    const invocations = [
+      ...RUNNER.matchAll(/buildPrismaWriter\(/g),
+      ...RUNNER.matchAll(/applyWritePhase\(/g),
+    ].filter(m => m.index! !== writerStart + 'function '.length);
+    expect(invocations.length).toBeGreaterThan(0);
+    for (const m of invocations) expect(m.index!).toBeGreaterThan(executeBlockStart);
   });
 
   it('carries the AUDIT-221 buildSha self-emit and the AUDIT-225 full-scan invariant', () => {

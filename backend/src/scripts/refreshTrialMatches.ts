@@ -31,8 +31,9 @@ import { criteriaHash } from '../lib/canonicalJson';
 import { buildPatientEvalContext } from '../ingestion/buildPatientEvalContext';
 import { evaluateTrialMatch, TrialCriterion } from '../services/trialMatchService';
 import {
-  REFRESH_ACTOR, TrialMatchStatus, StoredMatch,
-  decideAction, evaluateCompleteness, emptyTallies, assertFullScan,
+  REFRESH_ACTOR, TrialMatchStatus, StoredMatch, SupersessionReason,
+  MatchPayload, TrialMatchWriter, RunTallies,
+  decideAction, evaluateCompleteness, emptyTallies, assertFullScan, applyWritePhase,
 } from '../services/trialMatchLifecycle';
 
 const EXECUTE = process.argv.includes('--execute');
@@ -47,6 +48,102 @@ const BATCH = 100;
 function plog(msg: string, extra?: Record<string, unknown>): void {
   // eslint-disable-next-line no-console
   console.log(msg, extra ? JSON.stringify(extra) : '');
+}
+
+/* --------------------------------------------------------------------------------------------------
+ * AUDIT-228 run-record closure. The run record is opened up-front (AUDIT-224) so a crashed run leaves
+ * evidence it started - but the AUDIT-228 crash proved the other half was missing: the record was
+ * STRANDED at `outcome: RUNNING`, `finishedAt: null`, indefinitely claiming to be in flight. A row
+ * that lies about being live is worse than a row that says FAILED, because any future concurrency
+ * guard would read it as a run in progress.
+ *
+ * HOW A MID-RUN FAILURE IS NOW CLOSED: `activeRun` holds the open record and `liveTallies` /
+ * `liveFraction` hold the counts as they stand. The entry-point catch calls `closeActiveRunFailed`
+ * BEFORE reporting, so ANY throw after the record opens - a failed write chunk, a walk failure, an
+ * assertFullScan abort - closes it as FAILED with `finishedAt` set, the partial applied counts
+ * preserved, and the error text in `notes`. A successful close clears `activeRun`, so the handler is
+ * a no-op on the happy path and cannot overwrite a COMPLETED record. If the closure write ITSELF
+ * fails (a DB outage is the likeliest cause of the original throw), that is logged and the ORIGINAL
+ * error still propagates - a failed cleanup must never mask the failure it was cleaning up after.
+ * ------------------------------------------------------------------------------------------------ */
+let activeRun: { id: string } | null = null;
+let liveTallies: RunTallies = emptyTallies();
+let liveFraction: number | null = null;
+
+async function closeRun(
+  runId: string,
+  tallies: RunTallies,
+  completenessFraction: number | null,
+  outcome: string,
+  notes: string | null,
+): Promise<void> {
+  await prisma.trialMatchRun.update({
+    where: { id: runId },
+    data: {
+      finishedAt: new Date(),
+      trialsEvaluated: tallies.trialsEvaluated,
+      patientsEvaluated: tallies.patientsEvaluated,
+      matchesCreated: tallies.matchesCreated,
+      matchesSuperseded: tallies.matchesSuperseded,
+      matchesConfirmed: tallies.matchesConfirmed,
+      completenessFraction,
+      outcome,
+      notes,
+    },
+  });
+  activeRun = null;
+}
+
+export async function closeActiveRunFailed(err: unknown): Promise<void> {
+  if (!activeRun) return;
+  const message = err instanceof Error ? err.message : String(err);
+  try {
+    await closeRun(activeRun.id, liveTallies, liveFraction, 'FAILED', `Run failed: ${message}`);
+    plog('[trialmatch-refresh] run record closed FAILED (not stranded)', { ...liveTallies });
+  } catch (closeErr) {
+    plog('[trialmatch-refresh] WARNING: could not close run record - it remains RUNNING', {
+      runId: activeRun.id,
+      closeError: closeErr instanceof Error ? closeErr.message : String(closeErr),
+    });
+  }
+}
+
+/**
+ * The prisma-backed implementation of the injected `TrialMatchWriter`. Every write is tenant-scoped;
+ * the supersede update additionally re-checks `supersededAt: null` so a row another actor already
+ * superseded is not clobbered (and reports 0, which the applied-count tally surfaces).
+ */
+function buildPrismaWriter(
+  tenant: string,
+  buildSha: string,
+  versions: Map<string, string>,
+  stamp: Date,
+): TrialMatchWriter {
+  return {
+    async create(payload) {
+      return prisma.trialMatch.create({
+        data: {
+          ...payload, hospitalId: tenant, criteriaResults: payload.criteriaResults as any,
+          buildSha, criteriaVersion: versions.get(payload.trialId)!,
+          evaluatedAt: stamp, lastConfirmedAt: stamp, evaluatedBy: REFRESH_ACTOR,
+        } as any,
+      });
+    },
+    async confirm(ids) {
+      const res = await prisma.trialMatch.updateMany({
+        where: { id: { in: ids }, hospitalId: tenant },
+        data: { lastConfirmedAt: stamp, buildSha },
+      });
+      return res.count;
+    },
+    async supersede(rowId, supersededBy, reason) {
+      const res = await prisma.trialMatch.updateMany({
+        where: { id: rowId, hospitalId: tenant, supersededAt: null },
+        data: { supersededAt: stamp, supersededBy, supersessionReason: reason },
+      });
+      return res.count;
+    },
+  };
 }
 
 async function main(): Promise<void> {
@@ -84,13 +181,18 @@ async function main(): Promise<void> {
 
   const tallies = emptyTallies();
   tallies.trialsEvaluated = trials.length;
+  // AUDIT-228: publish the open record and the live counts so ANY later throw closes it as FAILED
+  // rather than stranding it at RUNNING. `tallies` is mutated in place, so this one reference stays
+  // current for the whole run.
+  activeRun = run;
+  liveTallies = tallies;
 
   // Deferred writes: supersessions are WITHHELD until the completeness gate passes at the end of the
   // walk (AUDIT-193 class). Creates-for-new-pairs and confirmations are safe to apply immediately,
   // but are batched here too so a dry-run reports exactly what an execute would do.
-  const toCreate: Array<{ patientId: string; trialId: string; status: TrialMatchStatus; criteriaResults: unknown; indeterminateSignals: string[] }> = [];
+  const toCreate: MatchPayload[] = [];
   const toConfirm: string[] = [];
-  const toSupersede: Array<{ rowId: string; reason: string; next: { patientId: string; trialId: string; status: TrialMatchStatus; criteriaResults: unknown; indeterminateSignals: string[] } }> = [];
+  const toSupersede: Array<{ rowId: string; reason: SupersessionReason; next: MatchPayload }> = [];
 
   let cursor: string | undefined;
   let scanned = 0;
@@ -162,71 +264,48 @@ async function main(): Promise<void> {
   }
 
   const completeness = evaluateCompleteness(tallies.patientsEvaluated, expectedTotal);
+  liveFraction = completeness.fraction;
   let outcome = 'COMPLETED';
 
   if (EXECUTE) {
     const stamp = new Date();
 
-    for (const c of toCreate) {
-      await prisma.trialMatch.create({
-        data: {
-          ...c, hospitalId: TARGET_TENANT, criteriaResults: c.criteriaResults as any,
-          buildSha, criteriaVersion: versions.get(c.trialId)!,
-          evaluatedAt: stamp, lastConfirmedAt: stamp, evaluatedBy: REFRESH_ACTOR,
-        } as any,
-      });
-    }
+    // AUDIT-228: the id-list write is CHUNKED (see applyWritePhase / dbChunk.ts). The planned tallies
+    // computed during the walk are replaced by APPLIED counts, and any divergence is logged rather
+    // than absorbed.
+    const planned = { ...tallies };
+    const result = await applyWritePhase(
+      buildPrismaWriter(TARGET_TENANT, buildSha, versions, stamp),
+      { toCreate, toConfirm, toSupersede },
+      completeness,
+    );
 
-    if (toConfirm.length > 0) {
-      await prisma.trialMatch.updateMany({
-        where: { id: { in: toConfirm }, hospitalId: TARGET_TENANT },
-        data: { lastConfirmedAt: stamp, buildSha },
-      });
-    }
+    tallies.matchesCreated = result.created;
+    tallies.matchesConfirmed = result.confirmed;
+    tallies.matchesSuperseded = result.superseded;
 
-    if (!completeness.ok) {
+    if (result.supersessionWithheld) {
       // AUDIT-193 class: withhold supersession, keep creates/confirmations, record why.
       outcome = 'ABORTED_INCOMPLETE';
-      tallies.matchesSuperseded = 0;
       plog('[trialmatch-refresh] supersession WITHHELD (completeness gate)', {
         evaluated: tallies.patientsEvaluated, stored: expectedTotal, message: completeness.message,
       });
-    } else {
-      for (const s of toSupersede) {
-        // Supersede-then-insert. The partial unique (WHERE supersededAt IS NULL) permits both rows to
-        // coexist precisely because the old one is no longer current.
-        const inserted = await prisma.trialMatch.create({
-          data: {
-            ...s.next, hospitalId: TARGET_TENANT, criteriaResults: s.next.criteriaResults as any,
-            buildSha, criteriaVersion: versions.get(s.next.trialId)!,
-            evaluatedAt: stamp, lastConfirmedAt: stamp, evaluatedBy: REFRESH_ACTOR,
-          } as any,
-        });
-        await prisma.trialMatch.updateMany({
-          where: { id: s.rowId, hospitalId: TARGET_TENANT, supersededAt: null },
-          data: { supersededAt: stamp, supersededBy: inserted.id, supersessionReason: s.reason },
-        });
-      }
+    }
+
+    const divergent =
+      planned.matchesCreated !== result.created ||
+      planned.matchesConfirmed !== result.confirmed ||
+      (!result.supersessionWithheld && planned.matchesSuperseded !== result.superseded);
+    if (divergent) {
+      plog('[trialmatch-refresh] planned vs applied DIVERGED', { planned, applied: result });
     }
   }
 
   assertFullScan(scanned, expectedTotal, EXECUTE);
 
   if (EXECUTE && run) {
-    await prisma.trialMatchRun.update({
-      where: { id: run.id },
-      data: {
-        finishedAt: new Date(),
-        trialsEvaluated: tallies.trialsEvaluated,
-        patientsEvaluated: tallies.patientsEvaluated,
-        matchesCreated: tallies.matchesCreated,
-        matchesSuperseded: tallies.matchesSuperseded,
-        matchesConfirmed: tallies.matchesConfirmed,
-        completenessFraction: completeness.fraction,
-        outcome,
-        notes: completeness.ok ? null : (completeness.message ?? null),
-      },
-    });
+    await closeRun(run.id, tallies, completeness.fraction, outcome,
+      completeness.ok ? null : (completeness.message ?? null));
   }
 
   plog('[trialmatch-refresh] DONE', {
@@ -238,7 +317,10 @@ async function main(): Promise<void> {
 if (require.main === module) {
   main()
     .then(() => process.exit(0))
-    .catch((err) => {
+    .catch(async (err) => {
+      // AUDIT-228: close before reporting, so the durable record never outlives the process claiming
+      // to be RUNNING. The original error is reported either way.
+      await closeActiveRunFailed(err);
       plog('[trialmatch-refresh] FAILED', { error: err instanceof Error ? err.message : String(err) });
       process.exit(1);
     });

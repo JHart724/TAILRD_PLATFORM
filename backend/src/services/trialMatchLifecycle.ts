@@ -7,6 +7,8 @@
  * See docs/audit/TRIALMATCH_IDENTITY_DESIGN.md sections 3.2 (lifecycle) and 3.3 (discriminator).
  */
 
+import { applyInChunks, ID_CHUNK_SIZE } from '../lib/dbChunk';
+
 /** Actor recorded on supersessions. Reserved `system:` prefix (gapResolutionActor.ts convention). */
 export const REFRESH_ACTOR = 'system:trialmatch-refresh' as const;
 
@@ -145,4 +147,96 @@ export function assertFullScan(scanned: number, expectedTotal: number, execute: 
         `paginator skipped ${expectedTotal - scanned}. Refusing to report success on a short scan (AUDIT-225).`,
     );
   }
+}
+
+/* ------------------------------------------------------------------------------------------------
+ * WRITE PHASE (AUDIT-228)
+ *
+ * WHY THIS IS HERE AND NOT INLINE IN THE RUNNER. AUDIT-228's real lesson is not the bind-variable
+ * number: it is that the pure decision module above was tested exhaustively - including the
+ * idempotency property that a no-change pass returns `confirm` for every pair - while the BATCHED I/O
+ * SHELL that turns those decisions into writes had no test at all. The decisions were right; the code
+ * applying them was wrong; and the seam between them was exactly where no test looked. Moving the
+ * write phase behind an injected writer makes that seam addressable: the chunking, the tally
+ * aggregation, and the at-scale idempotency property are now assertable without a database.
+ * ---------------------------------------------------------------------------------------------- */
+
+export interface MatchPayload {
+  patientId: string;
+  trialId: string;
+  status: TrialMatchStatus;
+  criteriaResults: unknown;
+  indeterminateSignals: string[];
+}
+
+export interface WritePlan {
+  toCreate: MatchPayload[];
+  toConfirm: string[];
+  toSupersede: Array<{ rowId: string; reason: SupersessionReason; next: MatchPayload }>;
+}
+
+/**
+ * The three writes the runner performs, injected so the phase is testable. `confirm` receives an
+ * ALREADY-CHUNKED id list and returns the number of rows it matched; `supersede` is per-row by
+ * construction and returns 0 or 1.
+ */
+export interface TrialMatchWriter {
+  create(payload: MatchPayload): Promise<{ id: string }>;
+  confirm(ids: string[]): Promise<number>;
+  supersede(rowId: string, supersededBy: string, reason: SupersessionReason): Promise<number>;
+}
+
+export interface WriteOutcome {
+  created: number;
+  confirmed: number;
+  superseded: number;
+  /** True when the AUDIT-193 completeness gate withheld the supersede half. */
+  supersessionWithheld: boolean;
+}
+
+/**
+ * Apply a planned changeset.
+ *
+ * COUNTS ARE APPLIED COUNTS, NOT PLANNED COUNTS. Every number returned is summed from what the writer
+ * reported it actually touched - `confirmed` sums the per-chunk match counts rather than assuming
+ * `toConfirm.length`. A chunk that matched fewer rows than it was handed (a row superseded by a
+ * concurrent actor between the walk and the write, say) therefore shows up as a divergence in the run
+ * record instead of being papered over by a length.
+ *
+ * CHUNKING: the confirm path is the only id-list write here, and it is chunked at `chunkSize`
+ * (default `ID_CHUNK_SIZE`, ~6.5x below PostgreSQL's 32,767 bind-variable ceiling - see dbChunk.ts).
+ * The supersede path is deliberately NOT chunked: it is one insert plus one id-scoped update per
+ * supersession, so its bind-variable count is constant regardless of how many rows supersede.
+ *
+ * FAILURE: a throw from any writer call propagates immediately, with prior chunks left applied. The
+ * caller owns closing its run record as FAILED - see refreshTrialMatches. Re-running converges rather
+ * than double-applying, because every write here is idempotent by construction (confirm sets a stamp;
+ * supersede is scoped to rows still current).
+ */
+export async function applyWritePhase(
+  writer: TrialMatchWriter,
+  plan: WritePlan,
+  completeness: CompletenessVerdict,
+  chunkSize: number = ID_CHUNK_SIZE,
+): Promise<WriteOutcome> {
+  let created = 0;
+  for (const payload of plan.toCreate) {
+    await writer.create(payload);
+    created++;
+  }
+
+  const confirmed = await applyInChunks(plan.toConfirm, chunkSize, (ids) => writer.confirm(ids));
+
+  if (!completeness.ok) {
+    return { created, confirmed, superseded: 0, supersessionWithheld: true };
+  }
+
+  let superseded = 0;
+  for (const s of plan.toSupersede) {
+    // Supersede-then-insert. The partial unique (WHERE supersededAt IS NULL) permits both rows to
+    // coexist precisely because the old one is no longer current.
+    const inserted = await writer.create(s.next);
+    superseded += await writer.supersede(s.rowId, inserted.id, s.reason);
+  }
+  return { created, confirmed, superseded, supersessionWithheld: false };
 }
