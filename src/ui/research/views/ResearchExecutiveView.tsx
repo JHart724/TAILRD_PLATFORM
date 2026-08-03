@@ -1,8 +1,17 @@
-import React from 'react';
-import { FileText, Beaker, TrendingUp, Clock, CheckCircle, Users, FlaskConical, AlertTriangle } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { FileText, Beaker, TrendingUp, Clock, CheckCircle, Users, FlaskConical, AlertTriangle, HelpCircle } from 'lucide-react';
+import { getTrialsSummary } from '../../../services/api';
+import type { TrialsSummary } from '../../../services/api';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
-// ── Inline Data ──────────────────────────────────────────────────────────────
+// -- Registry data: STILL MOCK, deliberately -------------------------------
+//
+// The 5 registry endpoints exist and api.ts carries the full contract, but `registry_cases` holds
+// ZERO rows in every tenant (measured). Wiring these cards today would render zeros; seeding demo
+// rows to make them look populated is precisely the defect AUDIT-148 was filed against. The
+// abstraction-hours-saved / auto-fill-rate framing is additionally needs-data - no substrate models
+// per-field provenance or effort - so it stays marked rather than fabricated (AUDIT-187 precedent:
+// fabricated revenue constants were dropped, not re-derived).-----
 
 const registryKPIs = [
   { label: 'Cases Auto-Populated This Month', value: '159', icon: FileText, color: 'border-l-[#2E3440]' },
@@ -61,22 +70,16 @@ const chartData = registries.map((r) => ({
   targetHigh: r.targetHigh,
 }));
 
-const trialKPIs = [
-  { label: 'Patients Screened', value: '284', icon: Users, color: 'border-l-[#2E3440]' },
-  { label: 'Eligible Identified', value: '156', icon: CheckCircle, color: 'border-l-[#2C4A60]' },
-  { label: 'Active Trials', value: '14', icon: FlaskConical, color: 'border-l-blue-500' },
-  { label: 'Industry-Sponsored', value: '9', icon: AlertTriangle, color: 'border-l-[#6B7280]' },
-];
+// -- Trial eligibility: REAL DATA via GET /trials/summary (AUDIT-227) -------
+//
+// Counts-only aggregate. The Executive tier needs numbers, never patient rows - which is exactly why
+// the summary endpoint exists: the previous shape would have required the unbounded per-patient read
+// that AUDIT-227 was filed against.
+//
+// Sponsor-type ("Industry-Sponsored") is NOT rendered as a number: ClinicalTrial has no sponsorType
+// column, so any figure would be invented. It is marked needs-data instead.
 
-const trials = [
-  { name: 'HELIOS-B Extension', sponsor: 'Alnylam', type: 'Industry' as const, eligible: 127, phase: 'Phase 3', status: 'Enrolling' },
-  { name: 'OCEAN(a) - Olpasiran', sponsor: 'Amgen', type: 'Industry' as const, eligible: 312, phase: 'Phase 3', status: 'Enrolling' },
-  { name: 'ORION-4 - Inclisiran', sponsor: 'Novartis', type: 'Industry' as const, eligible: 234, phase: 'Phase 3', status: 'Enrolling' },
-  { name: 'HEART-FID', sponsor: 'AHA/NIH', type: 'Investigator' as const, eligible: 287, phase: 'Phase 3', status: 'Enrolling' },
-  { name: 'GUIDE-HF 2', sponsor: 'Abbott', type: 'Industry' as const, eligible: 253, phase: 'Phase 4', status: 'Enrolling' },
-];
-
-// ── Custom Tooltip ───────────────────────────────────────────────────────────
+// -- Custom Tooltip -----------------------------------------------------------
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
@@ -90,9 +93,34 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   );
 };
 
-// ── Component ────────────────────────────────────────────────────────────────
+// -- Component ----------------------------------------------------------------
 
 const ResearchExecutiveView: React.FC = () => {
+  const [summary, setSummary] = useState<TrialsSummary | null>(null);
+  const [summaryLoading, setSummaryLoading] = useState(true);
+  const [summaryError, setSummaryError] = useState<string | null>(null);
+
+  const loadSummary = useCallback(async () => {
+    setSummaryLoading(true);
+    setSummaryError(null);
+    try {
+      setSummary(await getTrialsSummary());
+    } catch (e) {
+      setSummaryError(e instanceof Error ? e.message : 'Could not load trial summary');
+    } finally {
+      setSummaryLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { void loadSummary(); }, [loadSummary]);
+
+  // Derived, never invented. `evaluated` is identical across trials (every trial is scored against the
+  // same tenant cohort), so the first row is the screened denominator.
+  const patientsScreened = summary?.patientsEvaluated ?? 0;
+  const eligibleIdentified = summary?.trials.reduce((a, t) => a + t.eligible, 0) ?? 0;
+  const indeterminateTotal = summary?.trials.reduce((a, t) => a + t.indeterminate, 0) ?? 0;
+  const activeTrials = summary?.trials.length ?? 0;
+
   return (
     <div className="min-h-screen p-6 relative overflow-hidden">
       {/* ── Page Heading ─────────────────────────────────────── */}
@@ -226,9 +254,14 @@ const ResearchExecutiveView: React.FC = () => {
           Trial Eligibility Screening
         </h2>
 
-        {/* KPI Row */}
+        {/* KPI Row - REAL counts from /trials/summary; needs-data cards marked, never invented */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          {trialKPIs.map((kpi) => (
+          {[
+            { label: summary && !summary.complete ? 'Patients Screened (sample)' : 'Patients Screened', value: patientsScreened, icon: Users, color: 'border-l-[#2E3440]' },
+            { label: 'Eligible Identified', value: eligibleIdentified, icon: CheckCircle, color: 'border-l-[#2C4A60]' },
+            { label: 'Indeterminate (one signal away)', value: indeterminateTotal, icon: HelpCircle, color: 'border-l-blue-500' },
+            { label: 'Active Trials', value: activeTrials, icon: FlaskConical, color: 'border-l-[#6B7280]' },
+          ].map((kpi) => (
             <div
               key={kpi.label}
               className={`metal-card bg-white border border-titanium-200 rounded-2xl p-4 border-l-4 ${kpi.color}`}
@@ -237,53 +270,70 @@ const ResearchExecutiveView: React.FC = () => {
                 <kpi.icon className="w-4 h-4 text-titanium-400" />
                 <span className="text-xs font-medium text-titanium-500 uppercase tracking-wide">{kpi.label}</span>
               </div>
-              <p className="text-2xl font-bold text-titanium-900">{kpi.value}</p>
+              <p className="text-2xl font-bold text-titanium-900">
+                {summaryLoading ? '--' : summaryError ? '--' : kpi.value.toLocaleString()}
+              </p>
             </div>
           ))}
         </div>
 
+        {/* AUDIT-227: a budget-truncated summary is labelled a SAMPLE, never presented as a total. */}
+        {!summaryLoading && !summaryError && summary && !summary.complete && (
+          <div className="flex items-start gap-2 text-xs text-titanium-600 bg-blue-50 border border-blue-200 rounded-xl p-3 mb-4">
+            <HelpCircle className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
+            <span>
+              Counts cover a sample of <strong>{summary.patientsEvaluated.toLocaleString()}</strong> patients, not the
+              full population - the server stopped at its time budget. Treat these as indicative, not as portfolio
+              totals.
+            </span>
+          </div>
+        )}
+
+        {summaryError && (
+          <div className="flex items-start gap-2 text-xs text-titanium-600 bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4">
+            <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+            <span>Could not load trial eligibility counts: {summaryError}</span>
+            <button onClick={() => { void loadSummary(); }} className="ml-auto underline">Retry</button>
+          </div>
+        )}
+
         {/* Top 5 Trials Table */}
         <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6 mb-4">
-          <h3 className="text-sm font-semibold text-titanium-700 mb-4">Top 5 Active Trials</h3>
+          <h3 className="text-sm font-semibold text-titanium-700 mb-4">Active Trials - eligibility counts</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-titanium-200">
                   <th className="text-left py-3 px-4 font-semibold text-titanium-600 uppercase tracking-wide text-xs">Trial</th>
-                  <th className="text-left py-3 px-4 font-semibold text-titanium-600 uppercase tracking-wide text-xs">Sponsor</th>
-                  <th className="text-right py-3 px-4 font-semibold text-titanium-600 uppercase tracking-wide text-xs">Eligible Patients</th>
+                  <th className="text-left py-3 px-4 font-semibold text-titanium-600 uppercase tracking-wide text-xs">Module</th>
+                  <th className="text-right py-3 px-4 font-semibold text-titanium-600 uppercase tracking-wide text-xs">Eligible</th>
+                  <th className="text-right py-3 px-4 font-semibold text-titanium-600 uppercase tracking-wide text-xs">Indeterminate</th>
                   <th className="text-left py-3 px-4 font-semibold text-titanium-600 uppercase tracking-wide text-xs">Phase</th>
                   <th className="text-left py-3 px-4 font-semibold text-titanium-600 uppercase tracking-wide text-xs">Status</th>
                 </tr>
               </thead>
               <tbody>
-                {trials.map((trial) => (
-                  <tr key={trial.name} className="border-b border-titanium-100 hover:bg-titanium-50 transition-colors">
+                {(summary?.trials ?? []).map((trial) => (
+                  <tr key={trial.trialId} className="border-b border-titanium-100 hover:bg-titanium-50 transition-colors">
                     <td className="py-3 px-4 font-medium text-titanium-800">{trial.name}</td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-titanium-700">{trial.sponsor}</span>
-                        <span
-                          className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
-                            trial.type === 'Industry'
-                              ? 'bg-amber-50 text-amber-600'
-                              : 'bg-slate-100 text-slate-600'
-                          }`}
-                        >
-                          {trial.type}
-                        </span>
-                      </div>
-                    </td>
+                    <td className="py-3 px-4 text-titanium-600">{trial.module || '--'}</td>
                     <td className="py-3 px-4 text-right font-medium text-titanium-800">{trial.eligible.toLocaleString()}</td>
-                    <td className="py-3 px-4 text-titanium-600">{trial.phase}</td>
+                    <td className="py-3 px-4 text-right font-medium text-blue-700">{trial.indeterminate.toLocaleString()}</td>
+                    <td className="py-3 px-4 text-titanium-600">{trial.phase || '--'}</td>
                     <td className="py-3 px-4">
                       <span className="inline-flex items-center gap-1 text-teal-700 font-medium">
                         <span className="w-1.5 h-1.5 rounded-full bg-chrome-50" />
-                        {trial.status}
+                        {trial.status || '--'}
                       </span>
                     </td>
                   </tr>
                 ))}
+                {!summaryLoading && !summaryError && (summary?.trials.length ?? 0) === 0 && (
+                  <tr><td colSpan={6} className="py-8 text-center text-titanium-500">No active trials configured for this organization.</td></tr>
+                )}
+                {summaryLoading && (
+                  <tr><td colSpan={6} className="py-8 text-center text-titanium-500">Computing eligibility counts...</td></tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -293,7 +343,10 @@ const ResearchExecutiveView: React.FC = () => {
         <div className="flex items-start gap-2 text-xs text-titanium-500 bg-titanium-50 border border-titanium-200 rounded-xl p-3">
           <AlertTriangle className="w-4 h-4 text-gray-500 mt-0.5 shrink-0" />
           <span>
-            Industry-sponsored trials flagged. Eligibility screening is automated — enrollment decisions require PI review.
+            Eligibility counts are computed by the honest matcher across all three states; INDETERMINATE means one
+            signal is missing, not that a patient is ineligible. Enrollment decisions require PI review. Sponsor
+            type is not shown: it is not modelled in the trial record, and inventing it would misreport the
+            portfolio.
           </span>
         </div>
       </section>

@@ -3,7 +3,7 @@ import { FileText, Beaker, AlertTriangle, Clock, CheckCircle, Filter, Users, Hel
 import { getTrials, getTrialEligiblePatients } from '../../../services/api';
 import type { Trial, TrialMatchCandidate, TrialMatchStatus } from '../../../services/api';
 
-// ── Registry Abstraction Queue Data ─────────────────────────────────────────
+// -- Registry Abstraction Queue Data -----------------------------------------
 //
 // STILL MOCK (AUDIT-148 Slice 1 wires the TRIAL section only). The registry backend exists
 // (GET /registry/:registryType/cases + the maker-checker write endpoints) and api.ts now carries the
@@ -38,7 +38,7 @@ type RegistryFilter = 'All' | 'Needs Review' | 'Ready to Submit' | 'Submitted';
 
 type TrialFilter = 'All' | TrialMatchStatus;
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
+// -- Helpers -----------------------------------------------------------------
 
 function completenessColor(pct: number): string {
   if (pct >= 85) return 'text-teal-700 bg-chrome-50';
@@ -83,7 +83,7 @@ function verdictPill(verdict: 'MET' | 'FAILED' | 'UNEVALUABLE'): string {
   return map[verdict];
 }
 
-// ── Component ───────────────────────────────────────────────────────────────
+// -- Component ---------------------------------------------------------------
 
 const ResearchCareTeamView: React.FC = () => {
   const [registryFilter, setRegistryFilter] = useState<RegistryFilter>('All');
@@ -115,6 +115,10 @@ const ResearchCareTeamView: React.FC = () => {
   const [candidatesLoading, setCandidatesLoading] = useState(false);
   const [trialError, setTrialError] = useState<string | null>(null);
   const [expandedPatientId, setExpandedPatientId] = useState<string | null>(null);
+  // AUDIT-227 paging state
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const loadTrials = useCallback(async () => {
     setTrialsLoading(true);
@@ -132,17 +136,44 @@ const ResearchCareTeamView: React.FC = () => {
 
   useEffect(() => { void loadTrials(); }, [loadTrials]);
 
+  // AUDIT-227: the endpoint is PAGED. The view renders INCREMENTALLY (accumulate + "Load more") rather
+  // than auto-walking every page: auto-walking would re-create the unbounded read one request at a time
+  // and stall a coordinator behind ~256 round trips on this tenant. A coordinator works the top of a
+  // worklist, so first-page-fast with explicit continuation is both cheaper and the honest interaction.
+  // Tenant-wide totals come from getTrialsSummary(), never from summing the pages on screen.
+  const loadCandidatePage = useCallback(async (trialId: string, cursor: string | null) => {
+    const page = await getTrialEligiblePatients(trialId, { cursor });
+    setCandidates(prev => (cursor ? [...prev, ...page.patients] : page.patients));
+    setNextCursor(page.nextCursor);
+    setHasMore(page.hasMore);
+  }, []);
+
   useEffect(() => {
-    if (!selectedTrialId) { setCandidates([]); return; }
+    if (!selectedTrialId) { setCandidates([]); setNextCursor(null); setHasMore(false); return; }
     let cancelled = false;
     setCandidatesLoading(true);
     setTrialError(null);
-    getTrialEligiblePatients(selectedTrialId)
-      .then(rows => { if (!cancelled) setCandidates(rows); })
+    setCandidates([]);
+    getTrialEligiblePatients(selectedTrialId, { cursor: null })
+      .then(page => {
+        if (cancelled) return;
+        setCandidates(page.patients);
+        setNextCursor(page.nextCursor);
+        setHasMore(page.hasMore);
+      })
       .catch(e => { if (!cancelled) setTrialError(e instanceof Error ? e.message : 'Could not evaluate eligibility'); })
       .finally(() => { if (!cancelled) setCandidatesLoading(false); });
     return () => { cancelled = true; };
   }, [selectedTrialId]);
+
+  const loadMore = useCallback(() => {
+    if (!selectedTrialId || !nextCursor) return;
+    setLoadingMore(true);
+    setTrialError(null);
+    loadCandidatePage(selectedTrialId, nextCursor)
+      .catch(e => setTrialError(e instanceof Error ? e.message : 'Could not load more patients'))
+      .finally(() => setLoadingMore(false));
+  }, [selectedTrialId, nextCursor, loadCandidatePage]);
 
   const filteredTrials = useMemo(
     () => (trialFilter === 'All' ? candidates : candidates.filter(c => c.matchStatus === trialFilter)),
@@ -271,7 +302,7 @@ const ResearchCareTeamView: React.FC = () => {
                 <p className="text-sm text-titanium-500">
                   {candidatesLoading
                     ? 'Evaluating eligibility...'
-                    : `${matchCounts.ELIGIBLE} eligible \u00b7 ${matchCounts.INDETERMINATE} indeterminate \u00b7 ${matchCounts.INELIGIBLE} ineligible`}
+                    : `${matchCounts.ELIGIBLE} eligible \u00b7 ${matchCounts.INDETERMINATE} indeterminate \u00b7 ${matchCounts.INELIGIBLE} ineligible${hasMore ? ' (loaded so far)' : ''}`}
                 </p>
               </div>
             </div>
@@ -438,6 +469,23 @@ const ResearchCareTeamView: React.FC = () => {
                 )}
               </tbody>
             </table>
+
+            {/* AUDIT-227: explicit continuation. The counts above are "loaded so far", not tenant totals -
+                saying so is the point; a partial count presented as a total would be the dishonest option. */}
+            {hasMore && (
+              <div className="px-6 py-4 border-t border-titanium-100 flex items-center justify-between">
+                <p className="text-xs text-titanium-500">
+                  Showing {candidates.length} patients. Counts above cover the loaded set only.
+                </p>
+                <button
+                  onClick={loadMore}
+                  disabled={loadingMore}
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium bg-titanium-50 text-titanium-600 hover:bg-titanium-100 disabled:opacity-50 transition-all"
+                >
+                  {loadingMore ? 'Loading...' : 'Load more'}
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

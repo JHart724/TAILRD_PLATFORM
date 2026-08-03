@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FileText, Search, CheckCircle, AlertTriangle, ExternalLink, Shield, FlaskConical, Clock, Users, Filter, ChevronDown, ChevronRight } from 'lucide-react';
 import { PLATFORM_TOTALS } from '../../../data/platformTotals';
+import { getTrials, getTrialsSummary, getTrialReferrals } from '../../../services/api';
+import type { TrialsSummary, TrialReferralRow } from '../../../services/api';
 
-// ── Types ───────────────────────────────────────────────────
+// -- Types ---------------------------------------------------
 
 type MainTab = 'registry' | 'trial-eligibility';
 type RegistryTab = 'cathpci' | 'tvt' | 'icd' | 'gwtg-hf';
@@ -57,7 +59,15 @@ interface ApiTrial {
   conditions: string[];
 }
 
-// ── Mock Data: CathPCI Cases ────────────────────────────────
+// -- Registry data: STILL MOCK, deliberately --------------------------------
+//
+// The 5 registry endpoints exist and api.ts carries the full contract, but `registry_cases` holds ZERO
+// rows in every tenant (measured). Wiring these renders zeros; seeding demo rows to look populated is
+// the defect AUDIT-148 was filed against. Per-field confidence/source provenance is additionally
+// needs-data (not modelled). PI names, case flags, and gap<->trial cross-links below are likewise
+// unmodelled-deferred.
+
+// -- Mock Data: CathPCI Cases ----------------------------------------
 
 const cathpciCases: RegistryCase[] = [
   { id: 'CP-001', name: 'Martinez, Robert', date: '2026-03-15', completeness: 92, flags: 0, status: 'Approved', type: 'STEMI', dtb: 52 },
@@ -72,7 +82,7 @@ const cathpciCases: RegistryCase[] = [
   { id: 'CP-010', name: 'Anderson, Lisa', date: '2026-03-10', completeness: 86, flags: 1, status: 'In Review', type: 'Elective', dtb: null },
 ];
 
-// ── Mock Data: TVT Cases ────────────────────────────────────
+// -- Mock Data: TVT Cases ------------------------------------
 
 const tvtCases: RegistryCase[] = [
   { id: 'TV-001', name: 'Harrison, Beverly', date: '2026-03-16', completeness: 94, flags: 0, status: 'Approved', type: 'TAVR', dtb: null },
@@ -85,7 +95,7 @@ const tvtCases: RegistryCase[] = [
   { id: 'TV-008', name: 'Lopez, Maria', date: '2026-03-09', completeness: 73, flags: 3, status: 'Auto-populated', type: 'TAVR', dtb: null },
 ];
 
-// ── Mock Data: ICD Registry Cases ───────────────────────────
+// -- Mock Data: ICD Registry Cases ---------------------------
 
 const icdCases: RegistryCase[] = [
   { id: 'IC-001', name: 'Foster, Gerald', date: '2026-03-16', completeness: 89, flags: 1, status: 'In Review', type: 'ICD Implant', dtb: null },
@@ -98,7 +108,7 @@ const icdCases: RegistryCase[] = [
   { id: 'IC-008', name: 'Evans, Cynthia', date: '2026-03-09', completeness: 90, flags: 0, status: 'Approved', type: 'S-ICD', dtb: null },
 ];
 
-// ── Mock Data: GWTG-HF Cases ────────────────────────────────
+// -- Mock Data: GWTG-HF Cases --------------------------------
 
 const gwtgCases: RegistryCase[] = [
   { id: 'GW-001', name: 'Morris, Arthur', date: '2026-03-17', completeness: 88, flags: 1, status: 'In Review', type: 'HFrEF', dtb: null },
@@ -115,7 +125,7 @@ const gwtgCases: RegistryCase[] = [
   { id: 'GW-012', name: 'Green, Irene', date: '2026-03-10', completeness: 90, flags: 0, status: 'Submitted', type: 'HFpEF', dtb: null },
 ];
 
-// ── Registry Field Sections ─────────────────────────────────
+// -- Registry Field Sections ---------------------------------
 
 const cathpciSections: RegistrySection[] = [
   {
@@ -260,7 +270,7 @@ const gwtgSections: RegistrySection[] = [
   },
 ];
 
-// ── Registry section lookup ─────────────────────────────────
+// -- Registry section lookup ---------------------------------
 
 const registrySectionsMap: Record<RegistryTab, RegistrySection[]> = {
   cathpci: cathpciSections,
@@ -276,7 +286,13 @@ const registryCasesMap: Record<RegistryTab, RegistryCase[]> = {
   'gwtg-hf': gwtgCases,
 };
 
-// ── Mock Data: Curated Trials ───────────────────────────────
+// -- Curated-trial PROSE (criteria narrative only; NO counts) ---------------
+//
+// AUDIT-227: the trial CATALOG and every eligibility COUNT are now real (GET /trials +
+// GET /trials/summary). This literal survives only as the inclusion/exclusion narrative source for
+// trials whose curated backend record carries no prose yet. Its `eligiblePatients` field is NEVER
+// read - counts come from the summary endpoint. A real trial with no prose match renders empty
+// criteria lists rather than borrowed ones.---------
 
 const curatedTrials: CuratedTrial[] = [
   { id: 'T01', name: 'HELIOS-B Extension -- Vutrisiran Long-Term', nct: 'NCT04153058', phase: '3', status: 'Enrolling', sponsor: 'Alnylam Pharmaceuticals', sponsorType: 'industry', eligiblePatients: PLATFORM_TOTALS.modules.hf.patients > 0 ? 127 : 0, gapRef: 'Gap 1', gapName: 'ATTR-CM Detection', inclusion: ['ATTR-CM confirmed by Tc-99m PYP or biopsy', 'NYHA I-III', 'LVEF >=40%'], exclusion: ['Prior tafamidis', 'Severe renal impairment', 'Liver transplant'] },
@@ -295,7 +311,7 @@ const curatedTrials: CuratedTrial[] = [
   { id: 'T14', name: 'EARLY-TAVR Extended Follow-up', nct: 'NCT03042104', phase: '3', status: 'Enrolling', sponsor: 'Edwards Lifesciences', sponsorType: 'industry', eligiblePatients: 72, gapRef: 'Gap 3', gapName: 'Asymptomatic Severe AS', inclusion: ['Severe AS', 'Asymptomatic', 'STS PROM <3%'], exclusion: ['Symptomatic AS', 'Other valve disease requiring intervention'] },
 ];
 
-// ── Mock PIs ────────────────────────────────────────────────
+// -- Mock PIs ------------------------------------------------
 
 const trialPIs: Record<string, { name: string; dept: string }> = {
   T01: { name: 'Dr. Maurer, Mathew', dept: 'Cardiology / Amyloidosis Program' },
@@ -314,7 +330,7 @@ const trialPIs: Record<string, { name: string; dept: string }> = {
   T14: { name: 'Dr. Leon, Martin', dept: 'Structural Heart' },
 };
 
-// ── Flag data by case ───────────────────────────────────────
+// -- Flag data by case ---------------------------------------
 
 const caseFlags: Record<string, Array<{ field: string; issue: string; recommendation: string }>> = {
   'CP-002': [{ field: 'Door-to-Balloon', issue: 'Above 60 min threshold', recommendation: 'Verify arrival time documentation for accuracy' }],
@@ -438,7 +454,7 @@ const caseFlags: Record<string, Array<{ field: string; issue: string; recommenda
   ],
 };
 
-// ── Helpers ──────────────────────────────────────────────────
+// -- Helpers --------------------------------------------------
 
 function completenessColor(pct: number): string {
   if (pct >= 85) return 'bg-titanium-300';
@@ -498,7 +514,7 @@ function sponsorLabel(type: string): string {
   }
 }
 
-// ── Component ───────────────────────────────────────────────
+// -- Component -----------------------------------------------
 
 const ResearchServiceLineView: React.FC = () => {
   const [activeTab, _setActiveTab] = useState<MainTab>('registry');
@@ -515,7 +531,7 @@ const ResearchServiceLineView: React.FC = () => {
   const [apiLoading, setApiLoading] = useState<boolean>(false);
   const [apiError, setApiError] = useState<boolean>(false);
 
-  // ── ClinicalTrials.gov API fetch ────────────────────────
+  // -- ClinicalTrials.gov API fetch ------------------------
   useEffect(() => {
     if (activeTab !== 'trial-eligibility') return;
     setApiLoading(true);
@@ -559,7 +575,7 @@ const ResearchServiceLineView: React.FC = () => {
       });
   }, [activeTab]);
 
-  // ── Derived data ────────────────────────────────────────
+  // -- Derived data ----------------------------------------
   const cases = registryCasesMap[activeRegistry];
   const sections = registrySectionsMap[activeRegistry];
   const currentCase = cases.find((c) => c.id === selectedCase) ?? null;
@@ -575,17 +591,76 @@ const ResearchServiceLineView: React.FC = () => {
   const inferred = sections.reduce((s, sec) => s + sec.fields.filter((f) => f.source === 'Inferred').length, 0);
   const manual = sections.reduce((s, sec) => s + sec.fields.filter((f) => f.source === 'Manual').length, 0);
 
-  // Trial filtering
-  const filteredTrials = curatedTrials.filter((t) => {
+  // -- REAL trial catalog + counts + referrals (AUDIT-227) -------------------
+  //
+  // The catalog and every count come from the backend. The curated literal above contributes ONLY the
+  // inclusion/exclusion prose, joined by name; a real trial with no prose match renders empty criteria
+  // lists rather than borrowing another trial's. `eligiblePatients` is the measured ELIGIBLE count from
+  // GET /trials/summary - never the literal's hardcoded number.
+  const [catalogTrials, setCatalogTrials] = useState<CuratedTrial[]>([]);
+  const [trialSummary, setTrialSummary] = useState<TrialsSummary | null>(null);
+  const [referrals, setReferrals] = useState<TrialReferralRow[]>([]);
+  const [catalogLoading, setCatalogLoading] = useState(true);
+  const [catalogErr, setCatalogErr] = useState<string | null>(null);
+
+  const loadTrialData = useCallback(async () => {
+    setCatalogLoading(true);
+    setCatalogErr(null);
+    try {
+      const [list, summary] = await Promise.all([getTrials(), getTrialsSummary()]);
+      const countsById = new Map(summary.trials.map((t) => [t.trialId, t]));
+      setCatalogTrials(list.map((t): CuratedTrial => {
+        const prose = curatedTrials.find((c) => c.name.split(' -')[0].trim() === t.name.split(' -')[0].trim());
+        return {
+          id: t.id,
+          name: t.name,
+          nct: prose?.nct ?? '',
+          phase: String(t.phase ?? ''),
+          status: t.status ?? '',
+          sponsor: prose?.sponsor ?? '',
+          sponsorType: prose?.sponsorType ?? 'investigator',
+          eligiblePatients: countsById.get(t.id)?.eligible ?? 0,
+          gapRef: prose?.gapRef ?? '',
+          gapName: prose?.gapName ?? '',
+          inclusion: prose?.inclusion ?? [],
+          exclusion: prose?.exclusion ?? [],
+        };
+      }));
+      setTrialSummary(summary);
+    } catch (e) {
+      setCatalogErr(e instanceof Error ? e.message : 'Could not load trial data');
+    } finally {
+      setCatalogLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { void loadTrialData(); }, [loadTrialData]);
+
+  // Referral flow for the selected trial - the read side that shipped with AUDIT-227.
+  useEffect(() => {
+    if (!selectedTrial) { setReferrals([]); return; }
+    let cancelled = false;
+    getTrialReferrals(selectedTrial)
+      .then((rows) => { if (!cancelled) setReferrals(rows); })
+      .catch(() => { if (!cancelled) setReferrals([]); });
+    return () => { cancelled = true; };
+  }, [selectedTrial]);
+
+  const countsByTrialId = new Map((trialSummary?.trials ?? []).map((t) => [t.trialId, t]));
+
+  // Phase filters read the trial's own phase. The industry filter is inert against real data:
+  // sponsorType is not modelled on ClinicalTrial, so filtering by it would silently hide everything.
+  const filteredTrials = catalogTrials.filter((t) => {
     if (trialFilter === 'all') return true;
     if (trialFilter === 'industry') return t.sponsorType === 'industry';
     const phaseNum = trialFilter.replace('phase-', '');
     return t.phase === phaseNum;
   });
 
-  const selectedTrialData = curatedTrials.find((t) => t.id === selectedTrial) ?? null;
+  const selectedTrialData = catalogTrials.find((t) => t.id === selectedTrial) ?? null;
+  const selectedCounts = selectedTrial ? countsByTrialId.get(selectedTrial) ?? null : null;
 
-  // ── Registry tab labels ─────────────────────────────────
+  // -- Registry tab labels ---------------------------------
   const registryTabs: { id: RegistryTab; label: string }[] = [
     { id: 'cathpci', label: 'CathPCI' },
     { id: 'tvt', label: 'TVT' },
@@ -601,7 +676,7 @@ const ResearchServiceLineView: React.FC = () => {
     { id: 'industry', label: 'Industry Sponsored' },
   ];
 
-  // ── Render ──────────────────────────────────────────────
+  // -- Render ----------------------------------------------
   return (
     <div className="space-y-4">
       {/* ── Main Tab Bar ──────────────────────────────────── */}
