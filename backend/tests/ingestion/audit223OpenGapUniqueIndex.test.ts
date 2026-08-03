@@ -72,11 +72,18 @@ describe('AUDIT-223 open-gap partial unique index', () => {
     expect(raw).toMatch(/DRIFT-58/);
   });
 
-  it('is the newest migration, so it applies after the dedupe-era migrations', () => {
+  it('applies AFTER the dedupe-era migrations (the ordering this index depends on)', () => {
+    // Originally asserted "is the newest migration". That was a MOVING TARGET - the next migration
+    // added anywhere in the repo broke it (and did: 20260803120000_trialmatch_identity). The property
+    // this test actually cares about is RELATIVE: the index must not apply before the dedupe-era
+    // migrations, because it can only hold once duplicates are gone. Asserted directly now.
     const dirs = readdirSync(MIGRATIONS_DIR, { withFileTypes: true })
       .filter(d => d.isDirectory())
       .map(d => d.name)
       .sort();
-    expect(dirs[dirs.length - 1]).toBe(MIGRATION_DIR_NAME);
+    expect(dirs).toContain(MIGRATION_DIR_NAME);
+    const dedupeEra = '20260730000000_audit_224_gap_detection_run';
+    expect(dirs).toContain(dedupeEra);
+    expect(dirs.indexOf(MIGRATION_DIR_NAME)).toBeGreaterThan(dirs.indexOf(dedupeEra));
   });
 });
