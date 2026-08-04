@@ -11,6 +11,61 @@
 
 ---
 
+## 0. Operator phase-sequencing directive (recorded 2026-08-04) - READ BEFORE SECTIONS 1-6
+
+This section is an OPERATOR RULING on ordering, recorded canonically here so future sessions inherit it
+rather than re-deriving it or drifting off it. Where it conflicts with the sequencing implied anywhere
+below, this section wins; sections 1-6 remain authoritative for content, scope, and standard.
+
+**The sequence is three phases, in this order. Do not interleave them.**
+
+### Phase 1 - complete the full build spec
+
+Finish what is already specified before adding anything that is not.
+
+1. **Trials module completion.** The trials module is mid-arc, not done: the honest matcher, the paged
+   endpoints, and the TrialMatch identity/persistence spine have landed (AUDIT-148 Slices 1-3,
+   AUDIT-201/226/227/228), and the remaining work is the completion of that specified scope - not new
+   surface.
+2. **Registry abstraction, GATED on the operator-side registry data dictionaries.** This is
+   operator-side-blocked by construction (CLAUDE.md section 12 off-repo discipline): the abstraction
+   cannot be honestly scoped until the dictionaries exist, and scoping it earlier would mean inventing
+   a specification the registries themselves own. It waits. It does not get approximated.
+
+### Phase 2 - hardening (debug, refactor, security testing)
+
+**No new function and no gap expansion begins until Phase 2 completes.** The build spec being complete
+is not the same as the build being sound, and the platform has now demonstrated twice in one arc
+(AUDIT-227 unbounded read, AUDIT-228 unbounded write) that scale defects hide in code that passes every
+test and every review. Hardening is where they get found deliberately instead of in production.
+
+**The parked backlog belongs to this phase.** These are named here so "parked" cannot quietly become
+"forgotten" - the register is the tracker, this is the phase assignment:
+
+- **Option B CSRF** - the deferred CSRF posture decision.
+- **maxUsers lockdown** - tenant user-cap enforcement.
+- **eslint@10 migration** - toolchain currency.
+- **The clinician-text-overwrite asymmetry** - named during AUDIT-223 PR-B: a system actor can overwrite
+  clinician-authored text on a path where the reverse is guarded.
+- **AUDIT-118-class runtime-wrapper retrofits.**
+- **demo-synthea-proof procedures disposition** - what happens to the proof-run procedure rows.
+- **The BAA fail-open posture** - the guard currently runs in `audit` mode; fail-open is a decision, and
+  it should be an explicit one.
+- **`.claude/settings.local.json` untracking** - CLAUDE.md RULE 9 hygiene.
+- **The stale local-branch backlog** - ~200 merged-and-abandoned local branches.
+
+### Phase 3 - gap and function growth
+
+New gap rules, new modules, new capability. Only after Phase 2. Growth built on an unhardened base is
+how a 300-gap target becomes 300 places for the same defect class to hide.
+
+**Why this ordering, stated once so it is not re-litigated:** the temptation at every phase boundary is
+to add capability because it is more visible than hardening. The operator has ruled that visible
+progress on an unsound base is not progress. A session that finds itself reaching for Phase 3 work
+while Phase 2 is open should stop and surface that, not proceed.
+
+---
+
 ## 1. Current State + Forward Path (READ THIS FIRST - the reconciliation core)
 
 ### 1.1 DONE this session (merged to main, proven)
