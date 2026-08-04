@@ -46,6 +46,35 @@ Finish what is already specified before adding anything that is not.
    cannot be honestly scoped until the dictionaries exist, and scoping it earlier would mean inventing
    a specification the registries themselves own. It waits. It does not get approximated.
 
+### Clarification (operator ruling 2026-08-04) - an externally-gated Phase 1 node does not block Phase 2
+
+**This supersedes the stricter reading of the phase ordering above. The prior text is RETAINED, not
+rewritten, so the correction is legible rather than invisible.**
+
+As first written, "complete Phase 1, THEN harden" was read to mean that Phase 2 could not begin while
+ANY Phase 1 node was open - including the registry abstraction, which is blocked on an operator-side
+input the repo cannot produce. That reading makes the hardening phase hostage to a dependency nobody
+inside the codebase controls, which was never the intent and is the opposite of what the directive is
+for.
+
+**The correct reading:**
+
+- **What the directive prohibits is NEW FUNCTION AND GAP EXPANSION before hardening.** That prohibition
+  stands unchanged and is the whole point: growth on an unhardened base is how one defect class becomes
+  many. Phase 3 still waits for Phase 2.
+- **It does NOT prohibit hardening from starting while an externally-gated Phase 1 node waits.** When a
+  Phase 1 node is blocked on an operator-side dependency (today: the registry data dictionaries), Phase 2
+  may proceed. Idling the whole program on an input that has not arrived buys nothing and costs the
+  hardening that could have been done meanwhile.
+- **Registry abstraction remains Phase 1's FINAL NODE and resumes the moment its input arrives, taking
+  PRIORITY over in-progress Phase 2 work at that point.** It is deferred by its dependency, not demoted
+  by it. A session holding Phase 2 work when the dictionaries land should surface that and expect to be
+  re-pointed, not quietly finish what it was doing first.
+
+The distinction in one line: **the gate is on what comes AFTER hardening, not on what may run ALONGSIDE
+a blocked node.**
+
+
 ### Phase 2 - hardening (debug, refactor, security testing)
 
 **No new function and no gap expansion begins until Phase 2 completes.** The build spec being complete
