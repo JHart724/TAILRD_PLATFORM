@@ -53,6 +53,10 @@ test and every review. Hardening is where they get found deliberately instead of
   it should be an explicit one.
 - **`.claude/settings.local.json` untracking** - CLAUDE.md RULE 9 hygiene.
 - **The stale local-branch backlog** - ~200 merged-and-abandoned local branches.
+- **A mechanical PARSED-CANONICAL-DOC detector (AUDIT-229)** - fail CI whenever a `docs/**` or
+  repo-root `*.md` path is read by anything under `backend/tests/**` while absent from the
+  CLAUDE.md section 19.4 snapshot list. The list is hand-maintained and has now demonstrably
+  rotted; its own "non-exhaustive, may rot" caveat is an admission, not a control.
 
 ### Phase 3 - gap and function growth
 
