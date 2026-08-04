@@ -176,14 +176,30 @@ export interface WritePlan {
 }
 
 /**
- * The three writes the runner performs, injected so the phase is testable. `confirm` receives an
- * ALREADY-CHUNKED id list and returns the number of rows it matched; `supersede` is per-row by
- * construction and returns 0 or 1.
+ * The writes the runner performs, injected so the phase is testable. `confirm` receives an
+ * ALREADY-CHUNKED id list and returns the number of rows it matched.
+ *
+ * AUDIT-230: `supersedeThenInsert` REPLACED a pair of separate `create` + `supersede` calls, and the
+ * replacement is the fix, not a tidy-up. The old shape let `applyWritePhase` choose the ORDER of the
+ * two writes, and it chose wrong: it inserted the replacement while the row being retired was still
+ * current, so two rows momentarily satisfied `supersededAt IS NULL` for the same
+ * (patientId, trialId, hospitalId) - exactly what the partial unique index forbids. It failed on the
+ * first supersession this table ever saw.
+ *
+ * Ordering is now the WRITER'S obligation and is unrepresentable-wrong at this layer: there is no way
+ * to express "insert first" through this interface. That is deliberate. An ordering constraint that
+ * lives in a comment is a convention; one the type system will not let you violate is a mechanism.
  */
 export interface TrialMatchWriter {
   create(payload: MatchPayload): Promise<{ id: string }>;
   confirm(ids: string[]): Promise<number>;
-  supersede(rowId: string, supersededBy: string, reason: SupersessionReason): Promise<number>;
+  /**
+   * ATOMICALLY retire `rowId` and install `next` as the new current row. Returns 1 if the row was
+   * retired and replaced, 0 if `rowId` was no longer current (another actor got there first) - in
+   * which case NOTHING is inserted, because a replacement for a row that was not retired would be
+   * the second current row all over again.
+   */
+  supersedeThenInsert(rowId: string, reason: SupersessionReason, next: MatchPayload): Promise<number>;
 }
 
 export interface WriteOutcome {
@@ -233,10 +249,10 @@ export async function applyWritePhase(
 
   let superseded = 0;
   for (const s of plan.toSupersede) {
-    // Supersede-then-insert. The partial unique (WHERE supersededAt IS NULL) permits both rows to
-    // coexist precisely because the old one is no longer current.
-    const inserted = await writer.create(s.next);
-    superseded += await writer.supersede(s.rowId, inserted.id, s.reason);
+    // Supersede THEN insert, atomically, inside the writer. The partial unique index permits the old
+    // and new rows to coexist only because the old one is no longer current by the time the new one
+    // lands - so the order is load-bearing, not stylistic (AUDIT-230).
+    superseded += await writer.supersedeThenInsert(s.rowId, s.reason, s.next);
   }
   return { created, confirmed, superseded, supersessionWithheld: false };
 }

@@ -136,12 +136,49 @@ function buildPrismaWriter(
       });
       return res.count;
     },
-    async supersede(rowId, supersededBy, reason) {
-      const res = await prisma.trialMatch.updateMany({
-        where: { id: rowId, hospitalId: tenant, supersededAt: null },
-        data: { supersededAt: stamp, supersededBy, supersessionReason: reason },
+    /**
+     * AUDIT-230: retire-then-replace, in ONE transaction.
+     *
+     * ORDER. The retire must land BEFORE the insert. While the old row still has `supersededAt IS
+     * NULL`, inserting its replacement puts two rows in the partial unique index's window and the
+     * write is rejected - which is precisely how this defect announced itself, on the first real
+     * supersession the table ever saw.
+     *
+     * WHY A TRANSACTION AND NOT JUST THE RIGHT ORDER. Correct ordering opens a window the wrong
+     * ordering never could: between the retire and the insert, that (patient, trial) pair has ZERO
+     * current rows. A crash there is not hypothetical - this runner is a long-lived Fargate task that
+     * can be killed - and it would leave the pair invisible to every aggregate (`/trials/summary`
+     * silently undercounts, `eligible-patients` silently omits the patient) with the retired row
+     * pointing `supersededBy` at a replacement that does not exist. That is a SILENT wrong number,
+     * which this platform treats as worse than a loud failure. A transaction removes the window
+     * outright; a compensating check would mean writing reconciliation for a state that does not need
+     * to be reachable. Three tiny statements against one tenant's rows - the cost is nil.
+     *
+     * The retire is CONDITIONAL on the row still being current. If another actor retired it first,
+     * `count` is 0 and we insert NOTHING and report 0: inserting a replacement for a row we did not
+     * retire would recreate the two-current-rows state this whole fix is about.
+     */
+    async supersedeThenInsert(rowId, reason, next) {
+      return prisma.$transaction(async (tx) => {
+        const retired = await tx.trialMatch.updateMany({
+          where: { id: rowId, hospitalId: tenant, supersededAt: null },
+          data: { supersededAt: stamp, supersessionReason: reason },
+        });
+        if (retired.count === 0) return 0;
+
+        const inserted = await tx.trialMatch.create({
+          data: {
+            ...next, hospitalId: tenant, criteriaResults: next.criteriaResults as any,
+            buildSha, criteriaVersion: versions.get(next.trialId)!,
+            evaluatedAt: stamp, lastConfirmedAt: stamp, evaluatedBy: REFRESH_ACTOR,
+          } as any,
+        });
+
+        // `supersededBy` can only be set once the replacement has an id. Same transaction, so the
+        // retired row is never observable with a dangling pointer.
+        await tx.trialMatch.update({ where: { id: rowId }, data: { supersededBy: inserted.id } });
+        return 1;
       });
-      return res.count;
     },
   };
 }
