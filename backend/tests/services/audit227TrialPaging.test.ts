@@ -24,20 +24,31 @@ import {
 const ROUTE = fs.readFileSync(path.join(__dirname, '../../src/routes/trials.ts'), 'utf8');
 
 describe('AUDIT-227 (1) source guard: no unbounded patient read remains on the trials route', () => {
-  it('every patient.findMany in the route is BOUNDED (a literal take, or the pageArgs spread that produces one)', () => {
-    // pageArgs() always emits a `take` - proven by the unit tests below - so spreading it is equivalent
-    // evidence of a bounded read. What must never appear again is a call with neither.
+  it('every patient.findMany in the route is BOUNDED (a literal take, or a pageArgs spread)', () => {
+    // TRIALS PR 3 STRENGTHENED this rather than relaxing it. The aggregate paths no longer read
+    // patients AT ALL - they read persisted verdicts - so `prisma.patient.findMany` may legitimately
+    // be absent from this route now. The invariant was never "there is a bounded call", it is "there
+    // is no UNBOUNDED call": vacuous at zero calls, asserted for each if any return.
     const calls = ROUTE.split('prisma.patient.findMany(').slice(1);
+    for (const c of calls) {
+      expect(c.slice(0, 600)).toMatch(/take:|\.\.\.pageArgs\(|\.\.\.matchPageArgs\(/);
+    }
+  });
+
+  it('the match read is bounded too - the pivot MOVED the read, it did not unbound it', () => {
+    const calls = ROUTE.split('prisma.trialMatch.findMany(').slice(1);
     expect(calls.length).toBeGreaterThan(0);
     for (const c of calls) {
-      const head = c.slice(0, 600); // the args object of this call
-      expect(head).toMatch(/take:|\.\.\.pageArgs\(/);
+      // matchPageArgs always emits a `take` (unit-proven in trialsPr3PersistedRead.test.ts). The
+      // `distinct` id query is bounded by the tenant's patient count by construction and loads no
+      // relations - the shape that OOM'd - so it is exempted EXPLICITLY here, never silently.
+      expect(c.slice(0, 400)).toMatch(/take:|\.\.\.matchPageArgs\(|distinct:/);
     }
   });
 
   it('the paged read uses the shared primitives, not a hand-rolled literal (one shape, one place)', () => {
     expect(ROUTE).toMatch(/trialMatchPaging/);
-    expect(ROUTE).toMatch(/pageArgs\(/);
+    expect(ROUTE).toMatch(/matchPageArgs\(/); // PR 3: keyset over persisted rows, still a shared primitive
     expect(ROUTE).toMatch(/resolvePageSize\(/);
   });
 
@@ -45,10 +56,15 @@ describe('AUDIT-227 (1) source guard: no unbounded patient read remains on the t
     expect(ROUTE).toMatch(/resolvePageSize\(req\.query\./);
   });
 
-  it('the summary endpoint walks in batches and never returns patient rows', () => {
+  it('the summary is an indexed READ of current rows and never returns patient rows', () => {
+    // TRIALS PR 3 RETIRED the batched evaluation walk this used to assert. The batch walk was never a
+    // virtue in itself - it was the least-bad way to bound an in-request evaluation costing 451s. The
+    // counts are now a groupBy over persisted verdicts, so asserting SUMMARY_BATCH_SIZE would pin
+    // scaffolding the fix removed. What must survive is the property the walk was protecting: counts
+    // only, scoped to CURRENT rows, no patient identity anywhere on the payload.
     const summary = ROUTE.slice(ROUTE.indexOf("router.get('/summary'"));
-    expect(summary).toMatch(/SUMMARY_BATCH_SIZE/);
-    // counts only: no patient identity fields are placed on the summary payload
+    expect(summary).toMatch(/prisma\.trialMatch\.groupBy/);
+    expect(summary).toMatch(/supersededAt: null/);
     const payloadRegion = summary.slice(0, summary.indexOf('res.json'));
     expect(payloadRegion).not.toMatch(/firstName|lastName|\bmrn\b/);
   });
@@ -183,12 +199,25 @@ describe('AUDIT-227 (2e) summary time budget: a partial is reported, never prese
     expect(SUMMARY_TIME_BUDGET_MS).toBeLessThan(451_143);
   });
 
-  it('the route reports `complete` and stops on the budget rather than hanging', () => {
-    const summary = ROUTE.slice(ROUTE.indexOf("router.get('/summary'"));
-    expect(summary).toMatch(/budgetExhausted\(/);
-    expect(summary).toMatch(/complete = false/);
-    expect(summary).toMatch(/complete\b/);
-    // patientsEvaluated travels with the counts so a partial is interpretable
+  it('SUPERSEDED by TRIALS PR 3: the summary no longer budgets, because it no longer evaluates', () => {
+    // This block used to assert `budgetExhausted(` and `complete = false` on the route. Both are GONE
+    // deliberately - they existed only because the endpoint evaluated the tenant inside the request.
+    // The assertion is INVERTED rather than deleted, so neither can creep back: a budget on an indexed
+    // read would be cargo-cult, and `complete: false` on a population-true count would be a lie in the
+    // honest-sounding direction, which is still a lie.
+    //
+    // The constants themselves stay exported and unit-tested above - they are the AUDIT-227 record of
+    // what the measured 451s walk forced, and deleting that record would erase why this pivot happened.
+    const summary = ROUTE.slice(
+      ROUTE.indexOf("router.get('/summary'"),
+      ROUTE.indexOf("router.get('/:trialId/referrals'"),
+    );
+    expect(summary).not.toMatch(/budgetExhausted/);
+    expect(summary).not.toMatch(/complete:/);
+    expect(summary).not.toMatch(/SUMMARY_BATCH_SIZE/);
+    // What replaces it: population-true counts need a WHEN, not a how-much-of-it.
+    expect(summary).toMatch(/asOf/);
+    // patientsEvaluated survives as the screened DENOMINATOR (now population-true, not a partial).
     expect(summary).toMatch(/patientsEvaluated/);
   });
 });

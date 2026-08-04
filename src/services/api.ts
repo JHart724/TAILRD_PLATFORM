@@ -474,9 +474,43 @@ export interface TrialMatchCandidate {
 }
 
 /**
+ * Why a precomputed figure carries an as-of (TrialMatch identity design 3.6, rulings R2/R3).
+ *
+ * Trial verdicts are computed by an operator-gated refresh run, not per request - a full pass over a
+ * 25,571-patient tenant costs 451 seconds. A number produced that way is only honest if it says WHEN it
+ * was computed and UNDER WHAT, so every trials read carries this envelope and the UI shows it with the
+ * prominence the old sample banner had.
+ *
+ * `staleReasons` names each axis independently rather than collapsing to one boolean, because they mean
+ * different things and a caller should be able to say WHICH:
+ *   never-run - nothing is persisted yet. Counts are NOT zero, they are UNKNOWN; render it that way.
+ *   age       - older than the 36h bound. The refresh is not running (an operational signal).
+ *   build     - computed by a different build than the one serving. A matcher change (cf. AUDIT-226)
+ *               moves verdicts with criteria untouched, and this is the axis that catches it.
+ *   criteria  - the trial's criteria changed since the verdicts were computed. The mirror case.
+ *
+ * Detection is automatic; the refresh is NOT (R3). Nothing here triggers a recompute.
+ */
+export type TrialStaleReason = 'never-run' | 'age' | 'build' | 'criteria';
+
+export interface TrialAsOf {
+  /** OLDEST evaluatedAt in the covered set - an as-of is a promise about the whole set. */
+  evaluatedAt: string | null;
+  lastRunFinishedAt: string | null;
+  runBuildSha: string | null;
+  liveBuildSha: string;
+  stale: boolean;
+  staleReasons: TrialStaleReason[];
+}
+
+/**
  * AUDIT-227: the endpoint is PAGED. It previously returned every tenant patient in one array, which
  * deterministically OOM'd at real tenant scale (25,571 patients; a 3,000-patient probe died exit 137).
  * `pageCounts` is PAGE-LOCAL - never sum pages to get tenant totals, call getTrialsSummary() instead.
+ *
+ * TRIALS PR 3: the page is now a read of PERSISTED verdicts. `criteriaResults` and
+ * `indeterminateSignals` come off the stored row - the same evaluation that produced `matchStatus` -
+ * so the detail always explains the verdict shown beside it. `asOf` says how current that is.
  */
 export interface TrialEligiblePage {
   patients: TrialMatchCandidate[];
@@ -484,6 +518,7 @@ export interface TrialEligiblePage {
   nextCursor: string | null;
   hasMore: boolean;
   pageCounts: Partial<Record<TrialMatchStatus, number>>;
+  asOf: TrialAsOf;
 }
 
 export async function getTrialEligiblePatients(
@@ -512,16 +547,17 @@ export interface TrialSummaryRow {
 
 export interface TrialsSummary {
   trials: TrialSummaryRow[];
+  /** Distinct patients carrying a current verdict - the screened denominator, population-true. */
   patientsEvaluated: number;
   computedInMs: number;
-  /**
-   * FALSE when the server hit its wall-clock budget before walking the whole tenant. The counts then
-   * cover `patientsEvaluated` patients, NOT the tenant. Measured: a complete walk of a 25,571-patient
-   * tenant takes ~451s, past any sane HTTP timeout - so callers MUST label a partial as a sample rather
-   * than present it as a total.
-   */
-  complete: boolean;
+  asOf: TrialAsOf;
 }
+// TRIALS PR 3 removed `complete` from this shape. It existed because the summary used to EVALUATE the
+// tenant inside the request under a 20s budget and returned a truncated, id-ordered sample. That sample
+// was not merely incomplete but NOT REPRESENTATIVE (measured: a 1,200-patient prefix reads HFrEF
+// 5/52/1143 where the population reads 68/24,319/1,184), so no caller could responsibly show it as an
+// executive figure. The counts are now read from persisted verdicts and are population-true, so there is
+// no partial to flag - what needs saying is how CURRENT they are, which `asOf` says.
 
 export async function getTrialsSummary(): Promise<TrialsSummary> {
   return apiFetch<TrialsSummary>('/trials/summary');

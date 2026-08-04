@@ -18,16 +18,34 @@ import { writeAuditLog } from '../middleware/auditLogger';
 import { logger } from '../utils/logger';
 import { buildPatientEvalContext } from '../ingestion/buildPatientEvalContext';
 import { evaluateTrialMatch, TrialCriterion } from '../services/trialMatchService';
+import { criteriaHash } from '../lib/canonicalJson';
+import { resolveBuildSha } from '../scripts/buildSha';
 import {
-  PAGE_SIZE_MAX, SUMMARY_BATCH_SIZE,
-  resolvePageSize, resolveCursor, pageArgs, nextPage, budgetExhausted,
-  emptyCounts, tally, totalEvaluated, MatchCounts,
+  PAGE_SIZE_MAX,
+  resolvePageSize, resolveCursor,
+  emptyCounts, totalEvaluated, MatchCounts, MatchStatus,
 } from '../services/trialMatchPaging';
+import {
+  AsOf, buildAsOf, matchPageArgs, nextMatchPage, ageAt,
+} from '../services/trialMatchReadModel';
+
+/** As-of for a tenant with no visible trials: nothing computed, nothing to claim. */
+function emptyAsOf(liveBuildSha: string): AsOf {
+  return {
+    evaluatedAt: null, lastRunFinishedAt: null, runBuildSha: null,
+    liveBuildSha, stale: true, staleReasons: ['never-run'],
+  };
+}
 
 /**
  * The relation set buildPatientEvalContext needs. One definition, so every read loads the same graph.
  * Annotated with Prisma's own include type: extracting the literal to a const widens `status: 'ACTIVE'`
  * to `string` and loses the enum, which the generated types reject.
+ *
+ * TRIALS PR 3: the two AGGREGATE reads no longer load this graph at all - they read persisted verdicts.
+ * Its one remaining consumer is POST /:trialId/refer, which evaluates ONE patient live by design
+ * (section 3.5(e)). That endpoint previously duplicated this literal inline; it now uses this constant,
+ * so the "one definition" the comment claims is actually true.
  */
 const EVAL_INCLUDE: Prisma.PatientInclude = {
   conditions: { where: { clinicalStatus: { notIn: ['RESOLVED', 'INACTIVE'] } } },
@@ -75,14 +93,60 @@ router.get('/', authenticateToken, requireMFA, authorizeRole(TRIAL_ROLES),
   });
 
 /**
+ * Collect the as-of / staleness envelope for a set of current rows (identity design 3.6, R2/R3).
+ * Shared by both read endpoints so a page and the summary can never disagree about currency.
+ * `matchWhere` scopes it to exactly the rows the response covers.
+ */
+async function readAsOf(
+  matchWhere: Record<string, unknown>,
+  trials: Array<{ id: string; criteria: unknown }>,
+  hospitalId: string,
+): Promise<AsOf> {
+  const [agg, shaGroups, versionGroups, lastRun] = await Promise.all([
+    prisma.trialMatch.aggregate({ where: matchWhere, _min: { evaluatedAt: true } }),
+    prisma.trialMatch.groupBy({ by: ['buildSha'], where: matchWhere }),
+    prisma.trialMatch.groupBy({ by: ['trialId', 'criteriaVersion'], where: matchWhere }),
+    prisma.trialMatchRun.findFirst({
+      where: { hospitalId, outcome: 'COMPLETED' },
+      orderBy: { startedAt: 'desc' },
+    }),
+  ]);
+
+  const storedVersions = new Map<string, (string | null)[]>();
+  for (const g of versionGroups as Array<{ trialId: string; criteriaVersion: string | null }>) {
+    const list = storedVersions.get(g.trialId) ?? [];
+    list.push(g.criteriaVersion);
+    storedVersions.set(g.trialId, list);
+  }
+
+  return buildAsOf({
+    oldestEvaluatedAt: agg._min.evaluatedAt ?? null,
+    lastRun: lastRun ? { finishedAt: lastRun.finishedAt, buildSha: lastRun.buildSha } : null,
+    // A NULL buildSha (a row written before provenance existed) is normalized to '' so it can never
+    // accidentally equal the live sha and wave itself through the divergence check.
+    storedBuildShas: (shaGroups as Array<{ buildSha: string | null }>).map(g => g.buildSha ?? ''),
+    liveBuildSha: resolveBuildSha(),
+    storedCriteriaVersions: storedVersions,
+    liveCriteriaVersions: new Map(trials.map(t => [t.id, criteriaHash(t.criteria)])),
+    nowMs: Date.now(),
+  });
+}
+
+/**
  * GET /api/trials/summary
- * AUDIT-227: COUNTS ONLY, per trial, across all three match states. This exists so the Executive and
- * Service Line views never need patient rows to render an aggregate - the shape that made the unbounded
- * read tempting in the first place.
+ * COUNTS ONLY, per trial, across all three match states, for the Executive and Service Line views.
  *
- * Walks the tenant's patients in SUMMARY_BATCH_SIZE cursor batches, evaluating every visible trial per
- * batch so the relation graph is loaded ONCE per patient rather than once per trial. Nothing but tallies
- * is retained: no patient row, name, or MRN ever enters the payload or the logs.
+ * TRIALS PR 3 (identity design 3.5(e)): this is now an INDEXED READ of persisted verdicts, not an
+ * evaluation. It was a budgeted walk that evaluated the tenant inside the request, because a full pass
+ * measured 451 seconds; it therefore returned a truncated id-ordered sample and honestly said so. The
+ * problem was not the honesty, it was the number: measured, a 1,200-patient prefix reads HFrEF
+ * 5/52/1143 where the population reads 68/24,319/1,184. A sample that is not representative cannot be
+ * an executive figure at all.
+ *
+ * So the counts come from `groupBy` over current rows (`supersededAt IS NULL`), served by the existing
+ * `(hospitalId, trialId, status)` index. Population-true, no budget, no `complete: false`, no sampling.
+ * What replaces the sample banner is the as-of envelope: a precomputed number is honest only if it says
+ * when it was computed and under what build and criteria.
  *
  * REGISTERED BEFORE '/:trialId/...' deliberately - Express matches in order, and '/summary' would
  * otherwise be captured as a trialId.
@@ -98,41 +162,36 @@ router.get('/summary', authenticateToken, requireMFA, authorizeRole(TRIAL_ROLES)
         orderBy: { createdAt: 'asc' },
       });
       if (trials.length === 0) {
-        return res.json(ok({ trials: [], patientsEvaluated: 0, computedInMs: Date.now() - startedAt, complete: true }));
+        return res.json(ok({
+          trials: [], patientsEvaluated: 0, computedInMs: Date.now() - startedAt,
+          asOf: emptyAsOf(resolveBuildSha()),
+        }));
       }
 
+      // Tenant-scoped and current-only. `supersededAt: null` is the whole point of the partial unique
+      // index: exactly one row per (patient, trial, tenant) is current, so this groupBy cannot
+      // double-count a patient whose verdict has flipped - the superseded history stays out of it.
+      const matchWhere = { hospitalId, supersededAt: null };
+
+      const [statusGroups, patientsEvaluated, asOf] = await Promise.all([
+        prisma.trialMatch.groupBy({
+          by: ['trialId', 'status'],
+          where: matchWhere,
+          _count: { _all: true },
+        }),
+        // Distinct patients carrying a current verdict - the screened denominator. Derived from the
+        // persisted set rather than from a live patient count, so the denominator always describes the
+        // same population as the numerators.
+        prisma.trialMatch.findMany({
+          where: matchWhere, distinct: ['patientId'], select: { patientId: true },
+        }).then(rows => rows.length),
+        readAsOf(matchWhere, trials, hospitalId),
+      ]);
+
       const counts = new Map<string, MatchCounts>(trials.map(t => [t.id, emptyCounts()]));
-      const criteriaByTrial = new Map<string, TrialCriterion[]>(
-        trials.map(t => [t.id, t.criteria as unknown as TrialCriterion[]]),
-      );
-
-      let cursor: string | undefined;
-      let patientsEvaluated = 0;
-      const now = Date.now();
-      // MEASURED: a complete walk of this tenant takes 451s (25,571 patients, 17.64 ms each) - past any
-      // sane HTTP timeout. The walk is budgeted and reports what it covered; `complete` says which.
-      let complete = true;
-
-      for (;;) {
-        if (budgetExhausted(startedAt, Date.now())) { complete = false; break; }
-
-        const batch = await prisma.patient.findMany({
-          where: { hospitalId, isActive: true },
-          include: EVAL_INCLUDE,
-          ...pageArgs(SUMMARY_BATCH_SIZE, cursor),
-        });
-        if (batch.length === 0) break;
-
-        for (const p of batch as any[]) {
-          const ctx = buildPatientEvalContext(p, now);
-          for (const t of trials) {
-            const m = evaluateTrialMatch({ id: t.id, criteria: criteriaByTrial.get(t.id)! }, ctx);
-            tally(counts.get(t.id)!, m.status);
-          }
-        }
-        patientsEvaluated += batch.length;
-        cursor = batch[batch.length - 1].id;
-        if (batch.length < SUMMARY_BATCH_SIZE) break;
+      for (const g of statusGroups as Array<{ trialId: string; status: MatchStatus; _count: { _all: number } }>) {
+        const c = counts.get(g.trialId);
+        if (c) c[g.status] = g._count._all;
       }
 
       const payload = trials.map(t => {
@@ -151,18 +210,17 @@ router.get('/summary', authenticateToken, requireMFA, authorizeRole(TRIAL_ROLES)
       });
 
       const computedInMs = Date.now() - startedAt;
-      logger.info('Trial summary computed', {
-        hospitalId, trials: trials.length, patientsEvaluated, computedInMs, complete,
+      logger.info('Trial summary read', {
+        hospitalId, trials: trials.length, patientsEvaluated, computedInMs,
+        stale: asOf.stale, staleReasons: asOf.staleReasons,
       });
-      // `complete: false` means the counts cover patientsEvaluated of the tenant, NOT the whole tenant.
-      // The client must label it a sample - a partial presented as a total is the dishonest failure here.
-      res.json(ok({ trials: payload, patientsEvaluated, computedInMs, complete }));
+      res.json(ok({ trials: payload, patientsEvaluated, computedInMs, asOf }));
     } catch (error) {
       logger.error('Trial summary failed', {
         hospitalId: req.user?.hospitalId,
         error: error instanceof Error ? error.message : String(error),
       });
-      res.status(500).json(fail('Failed to compute trial summary'));
+      res.status(500).json(fail('Failed to read trial summary'));
     }
   });
 
@@ -218,10 +276,27 @@ router.get('/:trialId/referrals', authenticateToken, requireMFA, authorizeRole(T
 
 /**
  * GET /api/trials/:trialId/eligible-patients
- * Run the honest matcher over the tenant's active patients for the given trial. Returns each patient
- * enriched with matchStatus (ELIGIBLE|INELIGIBLE|INDETERMINATE) + per-criterion results + the named
- * unthreaded signals. INDETERMINATE patients are RETURNED (not filtered) - they are the "one test away"
- * worklist and dropping them would recreate the assert-eligibility-hide-the-unknown defect AUDIT-148 fixes.
+ * One page of the tenant's patients for a trial, each carrying matchStatus
+ * (ELIGIBLE|INELIGIBLE|INDETERMINATE) + per-criterion results + the named unthreaded signals.
+ * INDETERMINATE patients are RETURNED (not filtered) - they are the "one test away" worklist, and
+ * dropping them would recreate the assert-eligibility-hide-the-unknown defect AUDIT-148 fixes.
+ *
+ * TRIALS PR 3 (identity design 3.5(e)): the page is now a READ of persisted verdicts rather than a
+ * per-request evaluation. AUDIT-227 made the page bounded; this makes it cheap. The four-relation graph
+ * (`EVAL_INCLUDE`) is gone from this path entirely - it now loads only the identity fields it renders.
+ *
+ * WHERE criteriaResults / indeterminateSignals COME FROM: **the stored row**, not a re-evaluation.
+ * They are persisted columns (`TrialMatch.criteriaResults` Json, `indeterminateSignals` String[]),
+ * written by the same `evaluateTrialMatch` call that produced `status`. Reading them back is the only
+ * choice that keeps the row SELF-CONSISTENT: re-evaluating the page for detail while the count came
+ * from the stored status could show a patient counted ELIGIBLE whose displayed criteria say otherwise,
+ * at exactly the moment the two disagree - which is the moment a coordinator most needs them not to.
+ * The detail and the verdict must come from the same evaluation or they are not evidence for it. If the
+ * stored verdict is stale, the honest answer is to say so (the as-of envelope does), not to silently
+ * mix a fresh detail into a stale count.
+ *
+ * Single-patient real-time answers keep evaluating live - see POST /:trialId/refer. The rule from the
+ * design: aggregates read persisted verdicts, single-patient decisions evaluate live.
  */
 router.get('/:trialId/eligible-patients', authenticateToken, requireMFA, authorizeRole(TRIAL_ROLES),
   async (req: AuthenticatedRequest, res: Response) => {
@@ -236,55 +311,64 @@ router.get('/:trialId/eligible-patients', authenticateToken, requireMFA, authori
         return res.status(404).json(fail('Trial not found'));
       }
 
-      // AUDIT-227: ONE PAGE of the tenant's active patients, never the whole set. The prior shape loaded
-      // every patient with all four relations and mapped the matcher over the array in memory - a
-      // 3,000-patient probe with that graph died exit 137 (OOM) at production task size, and this tenant
-      // holds 25,571. Page size is CLAMPED (resolvePageSize), so a caller cannot request its way back to
-      // the unbounded read. Cursor shape mirrors gapDetectionRunner's proven id-cursor batch.
+      // Page size stays CLAMPED (resolvePageSize) - a caller cannot request its way back to an
+      // unbounded read, and that cap remains the actual defense even though the page is now cheap.
       const pageSize = resolvePageSize(req.query.pageSize);
       const cursor = resolveCursor(req.query.cursor);
-      const patients = await prisma.patient.findMany({
-        where: { hospitalId, isActive: true },
-        include: EVAL_INCLUDE,
-        ...pageArgs(pageSize, cursor),
+
+      // Current rows only. Ordered by patientId, which preserves the ordering the evaluating version
+      // had, so AUDIT-227's live-proven property (strictly ascending, zero duplicates across page
+      // boundaries) is still literally true here. The cursor stays opaque to the client.
+      const where = { hospitalId, trialId, supersededAt: null };
+      const rows = await prisma.trialMatch.findMany({
+        ...matchPageArgs(pageSize, cursor),
+        where: { ...where, ...(cursor ? { patientId: { gt: cursor } } : {}) },
+        select: {
+          patientId: true, status: true, criteriaResults: true, indeterminateSignals: true,
+          evaluatedAt: true,
+          patient: { select: { firstName: true, lastName: true, mrn: true, dateOfBirth: true, gender: true } },
+        },
       });
 
       const now = Date.now();
-      const criteria = trial.criteria as unknown as TrialCriterion[];
-      const results = patients.map((p: any) => {
-        const ctx = buildPatientEvalContext(p, now);
-        const match = evaluateTrialMatch({ id: trial.id, criteria }, ctx);
-        return {
-          id: p.id,
-          name: `${p.firstName} ${p.lastName}`,
-          mrn: p.mrn,
-          age: ctx.age,
-          gender: ctx.gender,
-          matchStatus: match.status,
-          criteriaResults: match.criteriaResults,
-          indeterminateSignals: match.indeterminateSignals,
-        };
-      });
+      const results = (rows as any[]).map(r => ({
+        // `id` is the PATIENT id, not the match row id - the CareTeam view keys expansion on it and
+        // POSTs it to /refer. Changing it to the match id would silently break the referral flow.
+        id: r.patientId,
+        name: `${r.patient.firstName} ${r.patient.lastName}`,
+        mrn: r.patient.mrn,
+        age: ageAt(r.patient.dateOfBirth, now),
+        gender: r.patient.gender ?? undefined,
+        matchStatus: r.status,
+        criteriaResults: r.criteriaResults,
+        indeterminateSignals: r.indeterminateSignals,
+      }));
 
       // Log counts only - never PHI (patient names/MRNs stay out of logs).
       const counts = results.reduce((acc: Record<string, number>, r) => {
         acc[r.matchStatus] = (acc[r.matchStatus] ?? 0) + 1; return acc;
       }, {});
-      logger.info('Trial eligibility evaluated (page)', {
-        hospitalId, trialId, evaluated: results.length, pageSize, hasCursor: Boolean(cursor), counts,
+
+      // The as-of envelope is scoped to THIS TRIAL's current rows, so a page says how current the
+      // verdicts it is showing are - not how current the tenant is on average.
+      const asOf = await readAsOf(where, [{ id: trial.id, criteria: trial.criteria }], hospitalId);
+
+      logger.info('Trial eligibility page read', {
+        hospitalId, trialId, returned: results.length, pageSize, hasCursor: Boolean(cursor), counts,
+        stale: asOf.stale, staleReasons: asOf.staleReasons,
       });
 
-      // AUDIT-227: the payload is now an ENVELOPE, not a bare array. The page's counts are page-local by
+      // AUDIT-227: the payload is an ENVELOPE, not a bare array. The page's counts are page-local by
       // construction - a client must call GET /trials/summary for tenant-wide totals rather than summing
       // pages, which would only ever be right after walking every page.
-      const { nextCursor, hasMore } = nextPage(results, pageSize);
-      res.json(ok({ patients: results, pageSize, nextCursor, hasMore, pageCounts: counts }));
+      const { nextCursor, hasMore } = nextMatchPage(rows as Array<{ patientId: string }>, pageSize);
+      res.json(ok({ patients: results, pageSize, nextCursor, hasMore, pageCounts: counts, asOf }));
     } catch (error) {
-      logger.error('Trial eligibility match failed', {
+      logger.error('Trial eligibility page failed', {
         hospitalId: req.user?.hospitalId, trialId: req.params.trialId,
         error: error instanceof Error ? error.message : String(error),
       });
-      res.status(500).json(fail('Failed to evaluate trial eligibility'));
+      res.status(500).json(fail('Failed to read trial eligibility'));
     }
   });
 
@@ -329,12 +413,7 @@ router.post('/:trialId/refer', authenticateToken, requireMFA, authorizeRole(TRIA
       // Patient must belong to this tenant; a cross-tenant patient is unreachable -> 404 (no existence leak).
       const patient = await prisma.patient.findFirst({
         where: { id: patientId, hospitalId },
-        include: {
-          conditions: { where: { clinicalStatus: { notIn: ['RESOLVED', 'INACTIVE'] } } },
-          medications: { where: { status: 'ACTIVE' } },
-          observations: { orderBy: { observedDateTime: 'desc' } },
-          procedures: true,
-        },
+        include: EVAL_INCLUDE,
       });
       if (!patient) {
         return res.status(404).json(fail('Patient not found'));

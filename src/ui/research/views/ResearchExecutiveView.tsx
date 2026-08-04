@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { FileText, Beaker, TrendingUp, Clock, CheckCircle, Users, FlaskConical, AlertTriangle, HelpCircle } from 'lucide-react';
 import { getTrialsSummary } from '../../../services/api';
 import type { TrialsSummary } from '../../../services/api';
+import { TrialAsOfIndicator } from '../components/TrialAsOfIndicator';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
 // -- Registry data: STILL MOCK, deliberately -------------------------------
@@ -257,7 +258,7 @@ const ResearchExecutiveView: React.FC = () => {
         {/* KPI Row - REAL counts from /trials/summary; needs-data cards marked, never invented */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {[
-            { label: summary && !summary.complete ? 'Patients Screened (sample)' : 'Patients Screened', value: patientsScreened, icon: Users, color: 'border-l-[#2E3440]' },
+            { label: 'Patients Screened', value: patientsScreened, icon: Users, color: 'border-l-[#2E3440]' },
             { label: 'Eligible Identified', value: eligibleIdentified, icon: CheckCircle, color: 'border-l-[#2C4A60]' },
             { label: 'Indeterminate (one signal away)', value: indeterminateTotal, icon: HelpCircle, color: 'border-l-blue-500' },
             { label: 'Active Trials', value: activeTrials, icon: FlaskConical, color: 'border-l-[#6B7280]' },
@@ -277,16 +278,11 @@ const ResearchExecutiveView: React.FC = () => {
           ))}
         </div>
 
-        {/* AUDIT-227: a budget-truncated summary is labelled a SAMPLE, never presented as a total. */}
-        {!summaryLoading && !summaryError && summary && !summary.complete && (
-          <div className="flex items-start gap-2 text-xs text-titanium-600 bg-blue-50 border border-blue-200 rounded-xl p-3 mb-4">
-            <HelpCircle className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
-            <span>
-              Counts cover a sample of <strong>{summary.patientsEvaluated.toLocaleString()}</strong> patients, not the
-              full population - the server stopped at its time budget. Treat these as indicative, not as portfolio
-              totals.
-            </span>
-          </div>
+        {/* TRIALS PR 3: the sample banner RETIRES. These counts are population-true reads of persisted
+            verdicts, so there is no partial to label. What replaces it is the as-of statement - a
+            precomputed number must say when it was computed and, on divergence, why it may be stale. */}
+        {!summaryLoading && !summaryError && summary && (
+          <TrialAsOfIndicator asOf={summary.asOf} className="mb-4" />
         )}
 
         {summaryError && (

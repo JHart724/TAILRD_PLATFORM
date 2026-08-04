@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { FileText, Beaker, AlertTriangle, Clock, CheckCircle, Filter, Users, HelpCircle, XCircle, RefreshCw } from 'lucide-react';
 import { getTrials, getTrialEligiblePatients } from '../../../services/api';
-import type { Trial, TrialMatchCandidate, TrialMatchStatus } from '../../../services/api';
+import { TrialAsOfIndicator } from '../components/TrialAsOfIndicator';
+import type { Trial, TrialMatchCandidate, TrialMatchStatus, TrialAsOf } from '../../../services/api';
 
 // -- Registry Abstraction Queue Data -----------------------------------------
 //
@@ -119,6 +120,10 @@ const ResearchCareTeamView: React.FC = () => {
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
+  // TRIALS PR 3: the page is a read of PERSISTED verdicts, so it carries an as-of. Captured from the
+  // FIRST page only - later pages describe the same run, and re-setting it on each 'Load more' would
+  // make the indicator flicker without ever saying anything different.
+  const [asOf, setAsOf] = useState<TrialAsOf | null>(null);
 
   const loadTrials = useCallback(async () => {
     setTrialsLoading(true);
@@ -149,7 +154,7 @@ const ResearchCareTeamView: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!selectedTrialId) { setCandidates([]); setNextCursor(null); setHasMore(false); return; }
+    if (!selectedTrialId) { setCandidates([]); setNextCursor(null); setHasMore(false); setAsOf(null); return; }
     let cancelled = false;
     setCandidatesLoading(true);
     setTrialError(null);
@@ -160,6 +165,7 @@ const ResearchCareTeamView: React.FC = () => {
         setCandidates(page.patients);
         setNextCursor(page.nextCursor);
         setHasMore(page.hasMore);
+        setAsOf(page.asOf);
       })
       .catch(e => { if (!cancelled) setTrialError(e instanceof Error ? e.message : 'Could not evaluate eligibility'); })
       .finally(() => { if (!cancelled) setCandidatesLoading(false); });
@@ -301,9 +307,10 @@ const ResearchCareTeamView: React.FC = () => {
                 <h3 className="text-base font-semibold text-titanium-900">Trial Eligibility</h3>
                 <p className="text-sm text-titanium-500">
                   {candidatesLoading
-                    ? 'Evaluating eligibility...'
+                    ? 'Loading eligibility...'
                     : `${matchCounts.ELIGIBLE} eligible \u00b7 ${matchCounts.INDETERMINATE} indeterminate \u00b7 ${matchCounts.INELIGIBLE} ineligible${hasMore ? ' (loaded so far)' : ''}`}
                 </p>
+                {!candidatesLoading && asOf && <TrialAsOfIndicator asOf={asOf} className="mt-2" />}
               </div>
             </div>
             <button
