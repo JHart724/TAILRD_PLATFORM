@@ -57,6 +57,12 @@ test and every review. Hardening is where they get found deliberately instead of
   repo-root `*.md` path is read by anything under `backend/tests/**` while absent from the
   CLAUDE.md section 19.4 snapshot list. The list is hand-maintained and has now demonstrably
   rotted; its own "non-exhaustive, may rot" caveat is an admission, not a control.
+- **Stale canonical-pipeline path (recorded under AUDIT-229)** -
+  `backend/scripts/auditCanonical/parseExistingAddendum.ts:46` maps PV to
+  `docs/audit/PHASE_0B_PV_AUDIT_REPORT_ADDENDUM.md`, which does not exist on disk; the real file
+  is `PHASE_0B_PV_AUDIT_ADDENDUM.md`. The pipeline runs clean today, which is the concerning part:
+  a path that resolves to nothing is not failing loudly. Diagnose whether the PV branch is dead or
+  silently no-op before changing it - fixing the string without knowing which would be a guess.
 
 ### Phase 3 - gap and function growth
 
