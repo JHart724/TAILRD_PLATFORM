@@ -23,10 +23,24 @@ below, this section wins; sections 1-6 remain authoritative for content, scope, 
 
 Finish what is already specified before adding anything that is not.
 
-1. **Trials module completion.** The trials module is mid-arc, not done: the honest matcher, the paged
-   endpoints, and the TrialMatch identity/persistence spine have landed (AUDIT-148 Slices 1-3,
-   AUDIT-201/226/227/228), and the remaining work is the completion of that specified scope - not new
-   surface.
+1. **Trials module - FUNCTIONALLY COMPLETE 2026-08-04.** The specified scope is delivered and
+   live-proven on task-def `:422`: the honest three-state matcher (AUDIT-201/226), identity-keyed
+   persisted verdicts with content-hash provenance and version-and-supersede semantics under a partial
+   unique index (#522), a refresh runner proven idempotent at population scale (AUDIT-228, #524),
+   population-true endpoints reading persisted verdicts with as-of and three-axis staleness surfacing
+   (#526), and three views on real data with every unbuildable element explicitly marked. The live
+   proof: `/trials/summary` returned the persisted distribution EXACTLY in 915ms with no `complete`
+   flag (against a 23.5s partial before), `staleReasons` read `["build"]` unprompted, the AUDIT-227
+   ordering property survived the pivot (300 ids, 300 unique, strictly ascending), and the referral
+   path was verified live from the deployed artifact with `route_has_any_trialMatch_write` false.
+
+   **What is NOT claimed, so this line cannot be misread as "the module is finished":** the registry
+   sections stay marked needs-data (`registry_cases` holds zero rows in every tenant), as do the
+   ServiceLine curated-prose fields and the inert industry filter. **AUDIT-148 itself remains OPEN** -
+   its core was never "build trial matching" but the free-tier "requires Premium" framing, which is
+   still live verbatim at the cited lines and reachable via `FreeTierDashboard`. That is a scoped UI +
+   commercial-claim pass, and one part of it (whether the trial-matching Premium line is now honest)
+   is an operator commercial decision, not an agent one.
 2. **Registry abstraction, GATED on the operator-side registry data dictionaries.** This is
    operator-side-blocked by construction (CLAUDE.md section 12 off-repo discipline): the abstraction
    cannot be honestly scoped until the dictionaries exist, and scoping it earlier would mean inventing
@@ -63,6 +77,14 @@ test and every review. Hardening is where they get found deliberately instead of
   is `PHASE_0B_PV_AUDIT_ADDENDUM.md`. The pipeline runs clean today, which is the concerning part:
   a path that resolves to nothing is not failing loudly. Diagnose whether the PV branch is dead or
   silently no-op before changing it - fixing the string without knowing which would be a guess.
+- **`/trials/summary` screened-denominator cost (measured, not speculative)** - the endpoint spends
+  most of its 915ms on a `findMany({ distinct: ['patientId'] })` that materializes 25,571 ids only to
+  take their length. A `groupBy(['patientId'])` count, or deriving the denominator from the per-trial
+  status totals, would avoid the scan. 915ms is ACCEPTABLE and this is not a finding - it is a known
+  cost recorded while it was cheap to measure, so a later reader does not have to rediscover where the
+  time goes. Do not "fix" it without re-measuring first: the denominator must keep describing the same
+  population as the numerators, which is why it is derived from the persisted set rather than from a
+  live patient count.
 
 ### Phase 3 - gap and function growth
 
