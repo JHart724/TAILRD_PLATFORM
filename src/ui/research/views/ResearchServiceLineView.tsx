@@ -3,6 +3,7 @@ import { FileText, Search, CheckCircle, AlertTriangle, ExternalLink, Shield, Fla
 import { PLATFORM_TOTALS } from '../../../data/platformTotals';
 import { getTrials, getTrialsSummary, getTrialReferrals } from '../../../services/api';
 import type { TrialsSummary, TrialReferralRow } from '../../../services/api';
+import { TrialAsOfIndicator } from '../components/TrialAsOfIndicator';
 
 // -- Types ---------------------------------------------------
 
@@ -986,6 +987,13 @@ const ResearchServiceLineView: React.FC = () => {
               )}
             </div>
           </div>
+
+          {/* TRIALS PR 3: per-trial ELIGIBLE counts are population-true reads of persisted verdicts,
+              so they carry the as-of statement rather than a sample caveat. Same component, same
+              prominence, on every surface that shows these numbers. */}
+          {!catalogLoading && !catalogErr && trialSummary && (
+            <TrialAsOfIndicator asOf={trialSummary.asOf} />
+          )}
 
           {/* ── Two-panel layout ────────────────────────────── */}
           <div className="grid grid-cols-2 gap-4">
