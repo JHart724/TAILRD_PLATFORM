@@ -58,7 +58,7 @@ function markers(): Map<string, string> {
   const out = new Map<string, string>();
   for (const m of md.matchAll(MARKER)) {
     const [, key, value] = m;
-    if (out.has(key)) throw new Error(`AUDIT-232: duplicate @checked key '${key}' in PATH_TO_ROBUST.md`);
+    if (out.has(key)) throw new Error(`PATH_TO_ROBUST figure binding: duplicate @checked key '${key}' in PATH_TO_ROBUST.md`);
     out.set(key, value.trim());
   }
   return out;
@@ -68,12 +68,12 @@ function markers(): Map<string, string> {
 function synthesisTotals() {
   const md = fs.readFileSync(SYNTHESIS, 'utf-8');
   const row = md.split(/\r?\n/).find(l => /^\|\s*\*\*TOTAL\*\*/.test(l));
-  if (!row) throw new Error('AUDIT-232: synthesis TOTAL row not found - has renderSynthesis changed shape?');
+  if (!row) throw new Error('PATH_TO_ROBUST figure binding: synthesis TOTAL row not found - has renderSynthesis changed shape?');
   const cells = row.split('|').map(c => c.replace(/\*/g, '').trim()).filter(Boolean);
   // cells: TOTAL, spec, DET_OK, PARTIAL, SPEC_ONLY, "312/603 (51.7%)", ...
   const [, spec, detOk, partial, specOnly, anyCell] = cells;
   const m = /^(\d+)\/(\d+)\s*\(([\d.]+)%\)$/.exec(anyCell);
-  if (!m) throw new Error(`AUDIT-232: could not parse the synthesis any-coverage cell '${anyCell}'`);
+  if (!m) throw new Error(`PATH_TO_ROBUST figure binding: could not parse the synthesis any-coverage cell '${anyCell}'`);
   return {
     spec, detOk, partial, specOnly,
     anyRatio: `${m[1]}/${m[2]}`,
@@ -85,10 +85,10 @@ function synthesisTotals() {
 function synthesisPerModule(mod: string): string {
   const md = fs.readFileSync(SYNTHESIS, 'utf-8');
   const row = md.split(/\r?\n/).find(l => new RegExp(`^\\|\\s*${mod}\\s*\\|`).test(l));
-  if (!row) throw new Error(`AUDIT-232: synthesis row for module ${mod} not found`);
+  if (!row) throw new Error(`PATH_TO_ROBUST figure binding: synthesis row for module ${mod} not found`);
   const cells = row.split('|').map(c => c.replace(/\*/g, '').trim()).filter(Boolean);
   const m = /^(\d+\/\d+)/.exec(cells[5] ?? '');
-  if (!m) throw new Error(`AUDIT-232: could not parse ${mod} any-coverage cell '${cells[5]}'`);
+  if (!m) throw new Error(`PATH_TO_ROBUST figure binding: could not parse ${mod} any-coverage cell '${cells[5]}'`);
   return m[1];
 }
 
@@ -100,7 +100,7 @@ function gapsPushCount(): number {
 function lastKnownGoodTaskDef(): string {
   const md = fs.readFileSync(CLAUDE_MD, 'utf-8');
   const m = /\*\*Last known working task definition:\*\*\s*`tailrd-backend:(\d+)`/.exec(md);
-  if (!m) throw new Error('AUDIT-232: CLAUDE.md section 9 task-def pointer not found');
+  if (!m) throw new Error('PATH_TO_ROBUST figure binding: CLAUDE.md section 9 task-def pointer not found');
   return m[1];
 }
 
