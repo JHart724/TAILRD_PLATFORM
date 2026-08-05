@@ -125,8 +125,7 @@ export const GlobalSearch: React.FC = () => {
  electrophysiology: '/electrophysiology',
  peripheralVascular: '/peripheral-vascular',
  valvularDisease: '/valvular',
- coronaryIntervention: '/coronary',
- revenueCycle: '/revenue-cycle'
+ coronaryIntervention: '/coronary'
  };
 
  const basePath = moduleRoutes[result.module] || '/admin';
@@ -165,8 +164,7 @@ export const GlobalSearch: React.FC = () => {
  electrophysiology: semantic['module.ep'],
  peripheralVascular: semantic['module.vascular'],
  valvularDisease: semantic['module.valvular'],
- coronaryIntervention: semantic['module.coronary'],
- revenueCycle: semantic['module.revenue']
+ coronaryIntervention: semantic['module.coronary']
  };
  return colors[module] || semantic['chart.secondary'];
   };
