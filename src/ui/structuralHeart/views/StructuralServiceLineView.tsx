@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Heart, Users, Calendar, Shield, Gauge, Activity, Target, BarChart3, FileText, TrendingUp, Search } from 'lucide-react';
+import PendingRealSourceNote from '../../../components/shared/PendingRealSourceNote';
 
 // Import Structural Heart components
 import STSRiskCalculator from '../components/STSRiskCalculator';
@@ -277,6 +278,10 @@ const StructuralServiceLineView: React.FC = () => {
         return (
           <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-8">
             <h3 className="text-2xl font-bold text-titanium-900 mb-6">Clinical Outcomes Tracking</h3>
+            <PendingRealSourceNote
+              sources="STS/ACC TVT Registry submissions"
+              detail="Rates and comparison thresholds below are static demonstration values. The platform holds no registry feed today, so nothing here reflects submitted performance."
+            />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 { metric: '30-Day Mortality', value: '1.8%', benchmark: '2.5%', trend: 'down' },
@@ -301,6 +306,10 @@ const StructuralServiceLineView: React.FC = () => {
                 <Target className="w-8 h-8 text-arterial-600" />
                 Quality Metrics & Benchmarks
               </h3>
+              <PendingRealSourceNote
+                sources="STS/ACC TVT Registry submissions"
+                detail="Rates, thresholds and the percentile ranks below are static demonstration values. No percentile shown here was computed against a registry cohort."
+              />
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 {[
                   { metric: '30-Day Mortality', value: '1.8%', benchmark: '<2.5%', met: true },

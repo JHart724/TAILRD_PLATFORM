@@ -14,6 +14,7 @@ import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNet
 import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
 import CrossReferralEngine from '../../../components/crossReferral/CrossReferralEngine';
 import ServiceLineKPIBanner from '../../../components/shared/ServiceLineKPIBanner';
+import PendingRealSourceNote from '../../../components/shared/PendingRealSourceNote';
 // Relocated from the CAD Executive tier (AUDIT-304 IA convergence): care-team action
 // telemetry and worsening-population trajectory are Service Line content, not exec KPIs.
 import GapResponseRateCard from '../../../components/shared/GapResponseRateCard';
@@ -532,6 +533,16 @@ const CoronaryServiceLineView: React.FC = () => {
  <TrendingUp className="w-8 h-8 text-teal-700" />
  Procedural Outcomes Dashboard
  </h3>
+
+ {/* AUDIT-233 pending-real-source marker. Operator ruling 2026-08-05: static benchmarks on the
+  Service Line tier are MARKED, not removed - unlike the freemium surface, the capability to
+  compute these from a customer's own registry submissions is intended, so a marker is honest
+  and a removal would delete a real target. The rates and comparison thresholds below are
+  static demonstration values; none is read from CathPCI, STS or any registry feed. */}
+ <PendingRealSourceNote
+   sources="CathPCI, STS and ACC-NCDR submissions"
+   detail="Rates and thresholds below are static demonstration values. The platform holds no registry feed today, so nothing here reflects submitted performance."
+ />
 
  {/* Key Quality Metrics */}
  <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">

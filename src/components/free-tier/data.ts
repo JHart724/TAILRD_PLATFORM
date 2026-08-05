@@ -19,6 +19,7 @@ import type {
   RegistryEligibility,
   ModuleDetailData,
 } from './types';
+import { PLATFORM_TOTALS } from '../../data/platformTotals';
 
 // ---------------------------------------------------------------------------
 // 1. KPI Cards
@@ -505,14 +506,15 @@ export const DATA_SOURCES: DataSourceInfo[] = [
 
 // ---------------------------------------------------------------------------
 // 11. Margin Opportunities
+//
+// DEMO CONSTANTS. These are illustrative service-line margin scenarios for the freemium
+// demonstration, not measured results for any institution. `PCI Supply Chain Optimization` was
+// REMOVED 2026-08-05 (AUDIT-233): supply-chain cost structure is not a therapy-gap signal, the
+// platform ingests no purchasing or contract data, and there is no source - federal or otherwise -
+// from which that margin delta could ever be derived. The two that remain are throughput and
+// site-of-service scenarios, which ARE expressible from the encounter data the platform holds.
 // ---------------------------------------------------------------------------
 export const MARGIN_OPPORTUNITIES: MarginOpportunity[] = [
-  {
-    title: 'PCI Supply Chain Optimization',
-    currentMargin: 16.8,
-    targetMargin: 20.5,
-    potentialUplift: 1400000,
-  },
   {
     title: 'EP Lab Throughput Improvement',
     currentMargin: 22.1,
@@ -530,41 +532,30 @@ export const MARGIN_OPPORTUNITIES: MarginOpportunity[] = [
 // ---------------------------------------------------------------------------
 // 12. Population Stats
 // ---------------------------------------------------------------------------
-export const CLINICAL_IMPACT: PopulationStat[] = [
-  {
-    label: 'Lives Impacted',
-    stateAValue: 12480,
-    stateBValue: 13250,
-    unit: 'number',
-    icon: 'HeartPulse',
-    trend: { direction: 'up', value: '+6.2%' },
-  },
-  {
-    label: 'Complications Avoided',
-    stateAValue: 340,
-    stateBValue: 412,
-    unit: 'number',
-    icon: 'ShieldCheck',
-    trend: { direction: 'up', value: '+21.2%' },
-  },
-  {
-    label: 'Mortality Reduction',
-    stateAValue: 0.6,
-    stateBValue: 1.0,
-    unit: 'percent',
-    icon: 'TrendingDown',
-    trend: { direction: 'up', value: '+0.4pts' },
-  },
-  {
-    label: 'Readmissions Prevented',
-    stateAValue: 185,
-    stateBValue: 248,
-    unit: 'number',
-    icon: 'ArrowDownCircle',
-    trend: { direction: 'up', value: '+34.1%' },
-  },
-];
+// CLINICAL_IMPACT was REMOVED 2026-08-05 (AUDIT-233).
+//
+// It carried `Lives Impacted` 12,480 -> 13,250, `Complications Avoided` 340 -> 412,
+// `Mortality Reduction` 0.6% -> 1.0% and `Readmissions Prevented` 185 -> 248, rendered as a
+// before/after pair keyed on whether the visitor had uploaded a file. That is an ATTRIBUTED
+// OUTCOME claim: it asserts that using this product saved lives, avoided complications and reduced
+// mortality. No such measurement exists. The platform has never been evaluated against a control,
+// and an outcome attribution is not something a label can rescue - which is why this is a REMOVE
+// and not a relabel, per the AUDIT-232 rule that marking a panel implies the capability is real
+// and merely paywalled.
+//
+// It also carried the surface's worst internal contradiction: `Lives Impacted` 12,480 sat on the
+// same page as the header's 43,841 patients with identified care gaps. Removing it resolves that
+// contradiction at the source rather than by picking a new number.
 
+// DEMO CONSTANTS, reconciled 2026-08-05 (AUDIT-233) against the surface's single canonical
+// denominator, `PLATFORM_TOTALS.totalPatients` (43,841 - the only figure here computed from data
+// rather than typed). THE RULE: every patient count on this surface must be either (a) derived
+// from that total, (b) a strictly LARGER catchment figure, or (c) an explicitly-scoped subset.
+// `Population Served` 285,000 is case (b), the catchment. `Chronic Disease Managed` was 8,920 -
+// case (c) with nothing scoping it, and read as FEWER chronically-managed patients than patients
+// with identified gaps, which is impossible. It is now DERIVED from the same total, so it cannot
+// drift out of agreement again. This is the same defect class as the removed CLINICAL_IMPACT
+// 12,480, swept per section 20 rather than fixed one instance at a time.
 export const POPULATION_HEALTH: PopulationStat[] = [
   {
     label: 'Population Served',
@@ -591,12 +582,11 @@ export const POPULATION_HEALTH: PopulationStat[] = [
     trend: { direction: 'up', value: '+5.7pts' },
   },
   {
-    label: 'Chronic Disease Managed',
-    stateAValue: 8920,
-    stateBValue: 9680,
+    label: 'CV Patients With Identified Gaps',
+    stateAValue: PLATFORM_TOTALS.totalPatients,
+    stateBValue: PLATFORM_TOTALS.totalPatients,
     unit: 'number',
     icon: 'Clipboard',
-    trend: { direction: 'up', value: '+8.5%' },
   },
 ];
 

@@ -37,7 +37,7 @@ const SuperAdminLogin = lazy(() => import("./ui/auth/SuperAdminLogin"));
 const SuperAdminConsole = lazy(() => import("./ui/admin/SuperAdminConsole"));
 const SuperAdminDashboard = lazy(() => import("./ui/admin/SuperAdminDashboard"));
 const GodView = lazy(() => import("./ui/admin/GodView/GodView"));
-const FreeTierDashboard = lazy(() => import("./components/free-tier/FreeTierDashboard"));
+const ServiceLineFreemium = lazy(() => import("./components/free-tier/ServiceLineFreemium"));
 
 // Scroll to top on route change
 function ScrollToTop() {
@@ -751,7 +751,7 @@ export default function App(): JSX.Element {
  } />
  <Route path="/service-line" element={
  <ProtectedRoute>
- <AppShell><FreeTierDashboard /></AppShell>
+ <AppShell><ServiceLineFreemium /></AppShell>
  </ProtectedRoute>
  } />
  <Route path="/patients" element={

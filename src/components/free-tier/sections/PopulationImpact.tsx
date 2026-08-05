@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Heart,
   Users,
   HeartPulse,
   ShieldCheck,
@@ -19,7 +18,6 @@ import { PopulationStat } from '../types';
 
 interface PopulationImpactProps {
   hasUploadedFiles: boolean;
-  clinicalImpact: PopulationStat[];
   populationHealth: PopulationStat[];
 }
 
@@ -92,58 +90,38 @@ const StatRow: React.FC<{
   );
 };
 
+/**
+ * AUDIT-233: the left-hand `Clinical Impact` column was REMOVED with its data. It rendered Lives
+ * Impacted / Complications Avoided / Mortality Reduction / Readmissions Prevented as a before-and-
+ * after pair - an attributed clinical-outcome claim this platform has never measured. See the
+ * removal note in `../data.ts`. What remains is the population denominator, which IS derivable.
+ */
 const PopulationImpact: React.FC<PopulationImpactProps> = ({
   hasUploadedFiles,
-  clinicalImpact,
   populationHealth,
 }) => {
   return (
     <SectionCard
-      title="Population & Clinical Impact"
-      subtitle="Estimated Community Health Outcomes"
+      title="Population Health"
+      subtitle="Demo dataset - counts, not outcomes"
       headerRight={
         <Badge variant={hasUploadedFiles ? 'verified' : 'estimate'} />
       }
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Left column: Clinical Impact */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <Heart className="w-5 h-5 text-arterial-600" />
-            <span className="text-base font-body font-semibold text-titanium-800">
-              Clinical Impact
-            </span>
-          </div>
-          <div className="space-y-3">
-            {clinicalImpact.map((stat, index) => (
-              <StatRow
-                key={stat.label}
-                stat={stat}
-                hasUploadedFiles={hasUploadedFiles}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Right column: Population Health */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <Users className="w-5 h-5 text-chrome-600" />
-            <span className="text-base font-body font-semibold text-titanium-800">
-              Population Health
-            </span>
-          </div>
-          <div className="space-y-3">
-            {populationHealth.map((stat, index) => (
-              <StatRow
-                key={stat.label}
-                stat={stat}
-                hasUploadedFiles={hasUploadedFiles}
-              />
-            ))}
-          </div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {populationHealth.map((stat) => (
+          <StatRow
+            key={stat.label}
+            stat={stat}
+            hasUploadedFiles={hasUploadedFiles}
+          />
+        ))}
       </div>
+      <p className="text-xs text-titanium-500 mt-4">
+        "CV Patients With Identified Gaps" is computed from the same six module gap arrays as the
+        header total, so the two cannot disagree. "Population Served" is the demo catchment and is
+        deliberately larger. Neither figure is a measured outcome.
+      </p>
     </SectionCard>
   );
 };

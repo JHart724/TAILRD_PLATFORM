@@ -11,7 +11,7 @@
 
 ---
 
-## 0. Operator phase-sequencing directive (recorded 2026-08-04) - READ BEFORE SECTIONS 1-9
+## 0. Operator phase-sequencing directive (recorded 2026-08-04) - READ BEFORE SECTIONS 1-10
 
 This section is an OPERATOR RULING on ordering, recorded canonically here so future sessions inherit it
 rather than re-deriving it or drifting off it. Where it conflicts with the sequencing implied anywhere
@@ -180,6 +180,43 @@ The platform is **8 modules**, not 6:
 
   **[CORRECTION 2026-08-05 - THE MOST MISLEADING LINE IN THIS DOCUMENT AS WRITTEN. The flat-zero description is HISTORY (true at v3.1 authoring, 2026-07-01) and is retained as such, but a reader arriving cold would conclude the trials backend does not exist. It does, and it is live-proven on task-def `:425`: `ClinicalTrial` + `TrialMatch` + `TrialMatchRun` schema with a partial unique index, the honest three-state matcher `evaluateTrialMatch`, identity-keyed persisted verdicts with content-hash provenance and version-and-supersede semantics, a refresh runner proven idempotent at population scale, and population-true read endpoints with as-of + three-axis staleness. All three `src/ui/research/` views call the real API. See section 0 Phase 1 item 1, which this line contradicted. WHAT REMAINS UNBUILT on this module is the REGISTRY half - `registry_cases` holds zero rows in every tenant and the five endpoints have no view caller - which is why AUDIT-148 stays OPEN, narrowed by the 2026-08-05 operator ruling to that half alone.]**
 
+  **[GAP CLOSED 2026-08-05 (AUDIT-233) - THE SERVICE-LINE SURFACES ARE NOW ENUMERATED WITH REAL PATHS,
+  AND THE ANSWER IS THAT THERE ARE TWO OF THEM.]** The correction above deliberately refused to guess a
+  path, which was right; this entry supplies the paths from evidence rather than inference. An audit
+  located both surfaces, and an operator ruling on 2026-08-05 settled the relationship: **the dual track
+  IS the architecture. Both stay. Neither supersedes the other.**
+
+  1. **The freemium marketing surface** - `src/components/free-tier/ServiceLineFreemium.tsx` plus 27
+     files under `src/components/free-tier/`, routed at `/service-line` in `src/App.tsx`. Prospect-facing,
+     unauthenticated, built on labelled demo constants. **This file was named `FreeTierDashboard.tsx`
+     until 2026-08-05** - it named its TIER, not its SURFACE, so a repo search for "service line" missed
+     it (the name says free-tier) and a search for the freemium surface missed it too (the route says
+     service-line). Three consecutive audit passes failed to find it, and one reported "zero matches
+     anywhere in this repo" for content that was sitting inside it. Renamed under AUDIT-235; the header
+     comment on the file states what it is so the misdirection cannot recur.
+  2. **The in-suite Service Line view tier** - `src/ui/<module>/views/*ServiceLineView.tsx`, one per
+     clinical module (`CoronaryServiceLineView`, `EPServiceLineView`, `StructuralServiceLineView`,
+     `ValvularServiceLineView`, `PeripheralServiceLineView`, `heartFailure/views/ServiceLineView`), plus
+     `src/ui/research/views/ResearchServiceLineView.tsx` on the 8th module. Authenticated, inside the
+     suite, for a director looking at their own population.
+
+  **WHAT THIS DOES NOT RESOLVE, stated so the next reader does not over-read it.** There is still no
+  standalone 7th-module DIRECTORY, and this entry does not invent one. The AUDIT-140/143/145/146 family
+  remains the scope; AUDIT-145 remains OPEN at HIGH. What changed is that "where is the service-line
+  surface" is answered with two verified paths instead of one wrong one.
+
+  **A REACHABILITY FINDING SURFACED WHILE ENUMERATING THESE, recorded and NOT acted on.** The per-module
+  `src/ui/<module>/config/serviceLineConfig.tsx` files export `tabContent` component maps typed against
+  `ServiceLineViewConfig`, and `src/components/shared/BaseServiceLineView.tsx` is the component that
+  would render them - but `<BaseServiceLineView` appears in **zero** JSX in this repo, and no view reads
+  `.tabContent` from a service-line config. The six views each render their own tabs directly; EP and PV
+  import their config only for `exportData`. So the quality-measure tables inside those configs - 27
+  measures across CAD, EP and PV, quoting rates against CathPCI, STS, SVS-VQI, NCDR LAAO and PINNACLE
+  thresholds - **do not render anywhere.** That is the same shape as the AUDIT-232 revenue-cycle surface:
+  unreachable code carrying unsourced clinical claims. It is filed as AUDIT-234 for an operator ruling
+  and deliberately left in place, because removal is an operator call and the last time this shape was
+  found the ruling took a full turn to establish.
+
 ### 1.4 Current forward path (the decided step-by-step order)
 
 Threading is the next node because the ingestion foundation and the honesty sweep are done; the highest-leverage remaining move is to raise the SIGNAL the engine sees. **[CORRECTION 2026-08-05: "next node" is SUPERSEDED TWICE. Threading closed substrate-exhausted at Tranche 3 (the closure record below), the spine then advanced to and COMPLETED the trials backend, and section 0 now governs sequencing: the open node is Phase 2 hardening. Retained because the threading rationale below is still the correct account of WHY it was next at the time.]** **The threading workstream serves THREE consumers and is threaded ONCE for all three** (do not thread three times):
@@ -311,7 +348,7 @@ one (trials) is complete on its specified scope and one (VBC) is ~109 lines.
 *Does not measure:* per-module DEPTH - VHD at 25.7% coverage and HF at 69.0% both count as one
 delivered module - nor the registry half of the 8th module.
 
-**4. Open findings.** <!--@checked register.open2-->89<!--/@checked--> open (0 CRITICAL / <!--@checked register.high2-->18<!--/@checked--> HIGH / <!--@checked register.medium2-->40<!--/@checked--> MEDIUM / <!--@checked register.low2-->29<!--/@checked--> LOW / <!--@checked register.info2-->2<!--/@checked--> INFO), script-derived.
+**4. Open findings.** <!--@checked register.open2-->90<!--/@checked--> open (0 CRITICAL / <!--@checked register.high2-->18<!--/@checked--> HIGH / <!--@checked register.medium2-->40<!--/@checked--> MEDIUM / <!--@checked register.low2-->30<!--/@checked--> LOW / <!--@checked register.info2-->2<!--/@checked--> INFO), script-derived.
 *Does not measure:* unknown defects, effort per finding, or the ~30 explicitly deferred as
 never-blocking. **Read the TREND, not the level:** across the 2026-08 arc the register went 87 -> 89
 while six findings were resolved and eight filed. The register grew while the platform improved,
@@ -358,3 +395,70 @@ the reminder.
 **Sources bound today:** the cross-module synthesis TOTAL row (coverage totals, split, per-module),
 `gapRuleEngine.ts` (`gaps.push` count), `registerOpenCount.ts` (register total + severity split), and
 CLAUDE.md section 9 (last-known-good task-def).
+
+## 10. Federal-free sourcing - the Phase 3 path for market and physician-variance claims (recorded 2026-08-05)
+
+**Status: PLAN ONLY. Nothing in this section is built.** It is recorded here, in the canonical
+authority, because the alternative to recording it is what the Service Line audit actually found: panels
+that assert market share, referral leakage and physician performance with no source behind them and no
+stated path to one. A sourcing plan on the record converts "we made this up" into "we have not built
+this yet", which is a different and honest statement.
+
+**Standing operator ruling (2026-08-05), recorded because it bounds every option below.** Expensive
+commercial data vendors are **OUT OF SCOPE** - Definitive Healthcare, Trilliant, Clarify, Sg2/Vizient,
+IQVIA, LexisNexis and similar. Do not propose them. The path must be federal, free, and
+publicly-redistributable. American Hospital Directory remains in scope. This is why the section is
+titled federal-FREE and not merely "sourcing".
+
+**Phase placement.** This is **Phase 3** (gap and function growth) per section 0, NOT Phase 2. The
+editorial repair that removed and relabelled the unsourced claims was Phase 2 work and is done
+(AUDIT-233). Building the pipeline that would let those panels return with real numbers is new function
+and waits its turn. Recording the plan now is not a licence to start it.
+
+### 10.1 What each removed or relabelled claim would need
+
+| Claim | Verdict 2026-08-05 | Federal source that could support it | What that source cannot do |
+|---|---|---|---|
+| Referral leakage ($3.8M) | RELABEL - Medicare-derived estimate, freemium only | Medicare FFS claims: beneficiary-to-PCP attribution vs performing facility, divergence inside a ZIP cluster = leaked case | Medicare FFS is roughly a third of a typical CV panel. Commercial and Medicare Advantage volume is invisible, so the figure is a lower bound scaled by assumption |
+| Market share / competitor position | RELABEL - Medicare-derived estimate, freemium only | CMS Provider Utilization and Payment PUFs (per-facility procedure counts) + NPPES (facility identity) | Medicare volume only. Diverges from all-payer share wherever a competitor's case mix skews commercial |
+| Physician performance variance ("2.4x gap", "47 physicians", five fabricated named physicians with quality scores) | REMOVE NOW, ENTIRELY - panel DELETED; any successor is new Phase 3 work, never a marked revival of this one | Medicare Physician & Other Practitioners PUF (per-provider utilisation, per-provider beneficiary counts) | Publishes UTILISATION, not guideline adherence. A variance computed from it is a volume/practice-pattern variance, and must never be labelled a quality or coaching signal |
+| Attributed clinical outcomes (lives impacted, mortality reduction) | REMOVE - no path at any label | **NONE.** This is an efficacy claim about the product | Would require a controlled evaluation of TAILRD itself. No public dataset can substitute |
+| Pipeline velocity (18 months vs 6 months, x7 instances, plus a "Revenue Acceleration" dollar figure in six of them) | REMOVE - no path at any label | **NONE.** Same class: a product-efficacy claim | Same |
+| PCI supply chain margin | REMOVE - no path at any label | **NONE.** Purchasing and contract data is not federal and not ingested | Same |
+| Registry quality benchmarks (CathPCI, STS, TVT, SVS-VQI) | MARK pending-real-source, in-suite tier | The CUSTOMER'S OWN registry submissions - they already hold this data | Not a federal-sourcing problem at all. This is a WIRING problem, which is exactly why these are marked rather than removed |
+
+**The line that runs through that table, and the rule it encodes.** A claim gets relabelled when a real
+source exists and we simply have not connected it. A claim gets REMOVED when no source can ever produce
+it - because per the AUDIT-232 removal rule, marking a panel "unavailable" asserts the capability is
+real and merely paywalled. Marking an unsourceable claim is a second dishonesty layered on the first.
+
+**RULING RECORDED 2026-08-05 on the physician-variance row, because the wording matters and the first
+reading of it got this wrong.** "The panel may survive as a marked future Medicare-PUF-sourced version"
+does NOT mean the existing panel stays on screen wearing a marker. It means: the panel is deleted now,
+and a *different* panel - built from the PUF, labelled a utilisation variance rather than a quality or
+coaching signal - may be authored in Phase 3. The distinction is load-bearing because the deleted panel
+contained five FABRICATED NAMED PHYSICIANS with quality scores (`Dr. A. Marchetti` 91% / 9.8% / 3.9d /
+96 through `Dr. T. Nguyen` 48% / 19.2% / 7.1d / 61), CSS-blurred but present in source and in the DOM.
+That is the same class as the fabricated patients removed under AUDIT-232 - invented attribution about
+identifiable-shaped people - and a blur is a style, not a redaction. A "marked" version of that panel
+would still be shipping invented physicians.
+
+### 10.2 What building it would actually involve
+
+Recorded at the level of honesty section 3 requires - a shape, not a commitment:
+
+1. **Acquisition.** CMS PUFs and the Medicare Physician PUF are annual CSV/flat-file releases, hundreds
+   of MB, downloaded rather than queried. They need a versioned local store with the vintage recorded,
+   because "Medicare 2023" and "Medicare 2024" give different answers and a figure that does not carry
+   its vintage is the same silent-staleness defect section 9 exists to prevent.
+2. **Geography.** Every claim above is scoped to a service area. That requires a ZIP-to-catchment
+   definition per tenant, which the platform does not have today and which is a customer input, not a
+   derivation.
+3. **Attribution.** The leakage method depends on beneficiary-to-provider attribution, which is a
+   modelling choice with published alternatives, not a lookup. The chosen method has to be stated in the
+   UI, not just in code.
+4. **Honesty surface.** Every resulting figure carries a Medicare-only caveat AT THE POINT OF DISPLAY.
+   The freemium relabels landed in AUDIT-233 already state their derivation and their limits in the UI;
+   that wording is the template, and it is deliberately unflattering.
+
+**Estimate: none given.** Per the section 3 discipline, an unscoped Phase 3 item does not get a number.

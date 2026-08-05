@@ -14,15 +14,29 @@ const PremiumUnlock: React.FC = () => {
       title: 'Patient-Level AI',
       description: `See the ${formatPatients(PLATFORM_TOTALS.modules.hf.patients)} patients behind every gap by name, risk score, PCP, and last contact date`,
     },
-    {
-      icon: BarChart3,
-      title: 'Physician Coaching',
-      description: 'Close the 2.4× performance gap — identify which of your 47 physicians need support and generate coaching plans',
-    },
+    // 'Physician Coaching' was REMOVED 2026-08-05 (AUDIT-233). It read: "Close the 2.4x
+    // performance gap - identify which of your 47 physicians need support and generate coaching
+    // plans." Three separate unsourceable claims in one sentence: a measured 2.4x variance the
+    // platform has never computed, a specific headcount for a prospect whose roster we do not
+    // have, and an implied capability to judge which named clinicians are underperforming.
+    //
+    // OPERATOR RULING 2026-08-05, FINAL (this SUPERSEDES the first reading of the same ruling,
+    // under which only this advert was removed and the panel itself was left rendering): the
+    // panel `PhysicianVarianceTeaser.tsx` is REMOVED NOW, ENTIRELY, and is DELETED from the repo -
+    // decisively, because its five blurred rows were FABRICATED NAMED PHYSICIANS with quality
+    // scores, the same class as the fabricated patients removed under AUDIT-232: invented
+    // attribution about identifiable-shaped people, where a CSS blur is a style and not a
+    // redaction. The Medicare-PUF-sourced successor lives in `docs/PATH_TO_ROBUST.md` section 10
+    // as a PHASE 3 plan, not on the screen as a locked panel, because a locked panel asserts the
+    // capability is real and merely paywalled (the AUDIT-232 removal rule).
+    //
+    // Removing this advert while leaving the panel is exactly what the first pass did, and it is
+    // why the branch was held at the PR gate rather than shipped: an honesty pass that deletes the
+    // sentence describing a claim and leaves the claim rendering is not an honesty pass.
     {
       icon: Shield,
       title: 'Market Recapture',
-      description: 'Recover the $3.8M in annual revenue lost to competitor health systems in your catchment area',
+      description: 'Size the revenue estimated to leave your catchment for competing systems - a Medicare-derived estimate today, verifiable against your own referral data on Premium',
     },
   ];
 
