@@ -1,5 +1,8 @@
 # TAILRD Heart Platform — Phase 4 Backlog
 
+> **AUDIT-236 (2026-08-05):** the literal demo password formerly printed in this document was replaced with `<SEED_DEMO_PASSWORD>`. Seeding now requires the operator to supply that value per run (`backend/src/lib/requiredSecret.ts`); there is no default. The literal remains in public git history - see the AUDIT-236 register entry for the honest exposure statement.
+
+
 **Created:** 2026-04-10
 **Baseline:** `tailrd-backend:26` (Sprint A complete)
 **Source:** Built from live codebase audit, `docs/PHASE_4_READINESS_AUDIT.md`, and git history through commit `f51dcae`.
@@ -398,7 +401,7 @@ CONTEXT
 BEFORE YOU TOUCH CODE
 1. Verify production still green:
    curl -s https://api.tailrd-heart.com/health | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['status'])"
-   curl -s -X POST https://api.tailrd-heart.com/api/auth/login -H "Content-Type: application/json" -d '{"email":"admin@stmarys.org","password":"demo123"}' | python3 -c "import sys,json; print(json.load(sys.stdin).get('success'))"
+   curl -s -X POST https://api.tailrd-heart.com/api/auth/login -H "Content-Type: application/json" -d '{"email":"admin@stmarys.org","password":"<SEED_DEMO_PASSWORD>"}' | python3 -c "import sys,json; print(json.load(sys.stdin).get('success'))"
 2. Run the 3-check pre-push gate from CLAUDE.md §18. Must be clean
    before you start.
 3. Confirm with Jonathan which Sprint B track to execute first.

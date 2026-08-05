@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import prisma from '../src/lib/prisma';
+import { requiredSecret } from '../src/lib/requiredSecret';
 import { CURATED_TRIALS } from '../src/services/trialSeed'; // AUDIT-148 Slice 1
 
 async function main() {
@@ -73,8 +74,16 @@ async function main() {
 
   console.log('✅ Created hospitals:', { demoHospital1: demoHospital1.id, demoHospital2: demoHospital2.id });
 
-  // Hash password for demo users
-  const hashedPassword = await bcrypt.hash('demo123', 12);
+  // Demo-user password. Operator-supplied per run; there is NO default and no fallback.
+  // This line read `bcrypt.hash('demo123', 12)` until 2026-08-05 (AUDIT-236) - a working
+  // login credential committed to a PUBLIC repository, present in history since 2025-11-10.
+  const hashedPassword = await bcrypt.hash(
+    requiredSecret(
+      'SEED_DEMO_PASSWORD',
+      'Seeds admin@ / cardio@ / quality@demo.tailrd-heart.com on hosp-001.',
+    ),
+    12,
+  );
 
   // Create demo users
   const sarahJohnson = await prisma.user.upsert({
@@ -621,10 +630,12 @@ async function main() {
   console.log(`AUDIT-148: seeded ${CURATED_TRIALS.length} curated clinical trials (global catalog)`);
 
   console.log('Database seeded successfully!');
-  console.log('\nDemo Users Created:');
-  console.log('1. admin@demo.tailrd-heart.com (Hospital Admin) - Password: demo123');
-  console.log('2. cardio@demo.tailrd-heart.com (Physician) - Password: demo123');
-  console.log('3. quality@demo.tailrd-heart.com (Quality Director) - Password: demo123');
+  // AUDIT-236: these three lines echoed the password to stdout, which lands in CI logs, shell
+  // history and screen shares. The accounts are named; the credential is the operator's own.
+  console.log('\nDemo Users Created (password = the SEED_DEMO_PASSWORD you supplied):');
+  console.log('1. admin@demo.tailrd-heart.com (Hospital Admin)');
+  console.log('2. cardio@demo.tailrd-heart.com (Physician)');
+  console.log('3. quality@demo.tailrd-heart.com (Quality Director)');
   console.log('\nHospitals Created:');
   console.log('1. TAILRD Demo Hospital (485K patients)');
   console.log('2. TAILRD Demo Hospital 2 (180K patients)');

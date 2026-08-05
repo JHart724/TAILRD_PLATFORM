@@ -1,5 +1,8 @@
 # 🛠️ TAILRD Platform Admin Guide
 
+> **AUDIT-236 (2026-08-05):** the literal demo password formerly printed in this document was replaced with `<SEED_DEMO_PASSWORD>`. Seeding now requires the operator to supply that value per run (`backend/src/lib/requiredSecret.ts`); there is no default. The literal remains in public git history - see the AUDIT-236 register entry for the honest exposure statement.
+
+
 ## 🔑 Super Admin Access
 
 ### **Login Credentials**
@@ -318,7 +321,7 @@ curl -X POST http://localhost:3001/api/admin/hospitals/hosp-004/users \
 # Try to access hospital data with regular user token
 HOSPITAL_ADMIN_TOKEN=$(curl -s -X POST http://localhost:3001/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email": "admin@stmarys.org", "password": "demo123"}' | \
+  -d '{"email": "admin@stmarys.org", "password": "<SEED_DEMO_PASSWORD>"}' | \
   jq -r '.data.token')
 
 # This should work (own hospital)
