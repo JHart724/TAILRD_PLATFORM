@@ -106,6 +106,30 @@ test and every review. Hardening is where they get found deliberately instead of
   is `PHASE_0B_PV_AUDIT_ADDENDUM.md`. The pipeline runs clean today, which is the concerning part:
   a path that resolves to nothing is not failing loudly. Diagnose whether the PV branch is dead or
   silently no-op before changing it - fixing the string without knowing which would be a guess.
+- **BUILD_STATE register-figure mirror binding (follow-up 1 of 3 from the 2026-08-05 figure-binding pass, PR #532)** -
+  `BUILD_STATE.md` line 11 mirrors the LIVE register count and severity split (`Open register: 89 (0
+  CRITICAL / 18 HIGH / 40 MEDIUM / 29 LOW / 2 INFO)`) with nothing binding it to `registerOpenCount.ts`.
+  It is the same source as the plan's now-bound figure but a DIFFERENT assertion, so the
+  `pathToRobustFigures` test does not cover it. Bind it the same way (marked span + required key).
+  Note the discrimination that matters: BUILD_STATE's OTHER numeric figures (`324/603`, `211/603`,
+  `gaps.push 394/367`, `task-def :190`) sit inside DATED MILESTONE rows and must stay unbound - binding
+  them would rewrite history, which is the failure the opt-in marker exists to prevent.
+- **CLAUDE.md section 9 -> PRODUCTION_READINESS mirror-consistency check (follow-up 2 of 3, named
+  2026-08-05)** - both documents carry the last-known-good task-def pointer and are required to agree;
+  they are hand-synced today. **LAG-TOLERANCE IS A HARD REQUIREMENT, recorded here so the next session
+  does not discover it by breaking CI:** section 9 DELIBERATELY LAGS live ECS. Docs-only auto-deploys
+  ride in arrears by convention, so at the moment of writing `:427` is live while section 9 correctly
+  records `:425` as last-known-GOOD. The check must therefore assert **mirror agreement between the two
+  documents**, NOT equality with the live ECS revision. An `assertEquals(section9, liveEcs)` would fail
+  on every docs deploy and be disabled within a week, which is worse than no check.
+- **CLAUDE.md section 8 "263 runtime `gaps.push`" disambiguation (follow-up 3 of 3, named 2026-08-05)**
+  - **AMBIGUOUS, NOT RULED.** The live engine count is 370. Section 8 reads "the 263 runtime `gaps.push`
+  reconciliation ... tracked canonically in `AUDIT_FINDINGS_REGISTER.md`". **Reading A (likely):** 263
+  names a historical reconciliation ARTIFACT by its figure - a proper noun, correct as history, and
+  binding it would be the milestone-rewriting error above. **Reading B:** it is a stale live count that
+  should read 370. The two readings imply opposite actions, which is why this is filed as a question and
+  not as a fix. Resolve by reading the register's reconciliation entry, then either annotate section 8
+  to say which it is, or correct it - do not guess.
 - **`/trials/summary` screened-denominator cost (measured, not speculative)** - the endpoint spends
   most of its 915ms on a `findMany({ distinct: ['patientId'] })` that materializes 25,571 ids only to
   take their length. A `groupBy(['patientId'])` count, or deriving the denominator from the per-trial
