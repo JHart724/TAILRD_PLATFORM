@@ -1,5 +1,8 @@
 # 🏥 Multi-Tenant Platform Testing Guide
 
+> **AUDIT-236 (2026-08-05):** the literal demo password formerly printed in this document was replaced with `<SEED_DEMO_PASSWORD>`. Seeding now requires the operator to supply that value per run (`backend/src/lib/requiredSecret.ts`); there is no default. The literal remains in public git history - see the AUDIT-236 register entry for the honest exposure statement.
+
+
 ## Overview
 The TAILRD Platform is now a **multi-tenant SaaS** where each hospital has isolated data and role-based access control.
 
@@ -13,13 +16,13 @@ The TAILRD Platform is now a **multi-tenant SaaS** where each hospital has isola
 **Users:**
 1. **Sarah Johnson** - Chief Medical Officer
    - Email: `admin@stmarys.org`
-   - Password: `demo123`
+   - Password: `<SEED_DEMO_PASSWORD>`
    - Role: `hospital-admin`
    - Access: All modules, all views, all actions
 
 2. **Dr. Michael Chen** - Interventional Cardiologist  
    - Email: `cardio@stmarys.org`
-   - Password: `demo123`
+   - Password: `<SEED_DEMO_PASSWORD>`
    - Role: `physician`
    - Access: Heart Failure, Structural Heart, Coronary only
 
@@ -31,7 +34,7 @@ The TAILRD Platform is now a **multi-tenant SaaS** where each hospital has isola
 **Users:**
 1. **Lisa Rodriguez** - Quality Director
    - Email: `admin@community.org`
-   - Password: `demo123`  
+   - Password: `<SEED_DEMO_PASSWORD>`  
    - Role: `quality-director`
    - Access: Executive + Service Line views only (no PHI access)
 
@@ -52,7 +55,7 @@ curl -X POST http://localhost:3001/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "admin@stmarys.org",
-    "password": "demo123"
+    "password": "<SEED_DEMO_PASSWORD>"
   }'
 ```
 
@@ -62,7 +65,7 @@ curl -X POST http://localhost:3001/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "cardio@stmarys.org", 
-    "password": "demo123"
+    "password": "<SEED_DEMO_PASSWORD>"
   }'
 ```
 
@@ -72,7 +75,7 @@ curl -X POST http://localhost:3001/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "admin@community.org",
-    "password": "demo123"
+    "password": "<SEED_DEMO_PASSWORD>"
   }'
 ```
 
@@ -138,7 +141,7 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 # Login as St. Mary's user
 TOKEN1=$(curl -s -X POST http://localhost:3001/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email": "admin@stmarys.org", "password": "demo123"}' | \
+  -d '{"email": "admin@stmarys.org", "password": "<SEED_DEMO_PASSWORD>"}' | \
   jq -r '.data.token')
 
 # Try to access Community Hospital data (should fail)
@@ -151,7 +154,7 @@ curl -H "Authorization: Bearer $TOKEN1" \
 # Login as limited physician
 TOKEN2=$(curl -s -X POST http://localhost:3001/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email": "cardio@stmarys.org", "password": "demo123"}' | \
+  -d '{"email": "cardio@stmarys.org", "password": "<SEED_DEMO_PASSWORD>"}' | \
   jq -r '.data.token')
 
 # Check which modules they can access
@@ -164,7 +167,7 @@ curl -H "Authorization: Bearer $TOKEN2" \
 # Login as Quality Director (no PHI access)
 TOKEN3=$(curl -s -X POST http://localhost:3001/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email": "admin@community.org", "password": "demo123"}' | \
+  -d '{"email": "admin@community.org", "password": "<SEED_DEMO_PASSWORD>"}' | \
   jq -r '.data.token')
 
 # Verify their permissions

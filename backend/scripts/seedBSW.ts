@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import prisma from '../src/lib/prisma';
+import { requiredSecret } from '../src/lib/requiredSecret';
 
 async function seedBSW() {
   console.log('🏥 Creating BSW hospital...');
@@ -34,7 +35,14 @@ async function seedBSW() {
   console.log('✅ Hospital created:', hospital.name);
 
   const salt = await bcrypt.genSalt(12);
-  const demoPassword = process.env.DEMO_PASSWORD || 'Bsw2026!Tailrd';
+  // AUDIT-236: this read `process.env.DEMO_PASSWORD || 'Bsw2026!Tailrd'`. The env read made it
+  // LOOK remediated - `docs/PLATFORM_AUDIT_2026_04.md:119` marks P2-AUTH-2 `[x]` complete on the
+  // strength of it - but a fallback that works IS a credential, and this one shipped in a public
+  // repo. No fallback now: unset means the script refuses to run.
+  const demoPassword = requiredSecret(
+    'DEMO_PASSWORD',
+    'Seeds the four bsw-*@tailrd.demo accounts.',
+  );
   const hash = await bcrypt.hash(demoPassword, salt);
 
   const users = [
