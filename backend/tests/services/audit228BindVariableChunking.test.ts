@@ -47,8 +47,14 @@ function recordingWriter(overrides: Partial<TrialMatchWriter> = {}) {
       confirmCalls.push([...ids]);
       return ids.length;
     },
-    async supersede(rowId, supersededBy, reason) {
-      superseded.push({ rowId, supersededBy, reason });
+    // AUDIT-230: was `supersede(rowId, supersededBy, reason)` called AFTER a separate `create`.
+    // That shape let the caller pick the order and it picked wrong - the replacement was inserted
+    // while the row it replaced was still current, which the partial unique index rejects. The
+    // interface now exposes ONE ordered operation, so the wrong order is unrepresentable here.
+    async supersedeThenInsert(rowId, reason, next) {
+      const id = `new-${++nextId}`;
+      superseded.push({ rowId, supersededBy: id, reason });
+      created.push(next);
       return 1;
     },
     ...overrides,
@@ -192,7 +198,7 @@ describe('AUDIT-228 tally aggregation across chunks', () => {
     // supersede-then-insert is counted under `superseded`, not double-counted here - that is the
     // pre-existing tally semantic and this pins it so the refactor did not quietly change it.
     expect(out).toEqual({ created: 2, confirmed: 7_500, superseded: 1, supersessionWithheld: false });
-    // 3 inserts actually happen: 2 plain creates + 1 supersede-then-insert, linked to the row it replaced.
+    // 3 inserts actually happen: 2 plain creates + 1 inside the atomic supersede-then-insert.
     expect(created).toHaveLength(3);
     expect(superseded).toEqual([{ rowId: 'old-1', supersededBy: 'new-3', reason: 'clock' }]);
   });
