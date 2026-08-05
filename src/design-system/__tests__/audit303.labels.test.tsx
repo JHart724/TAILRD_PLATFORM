@@ -216,8 +216,11 @@ describe('AUDIT-303 Real-time extension - asserted-at-source (charts / views / p
       'Structural heart program analytics with risk stratification and outcomes tracking', 'Real-time structural heart program analytics'],
     ['PV PADReportingSystem', '../../ui/peripheralVascular/components/PADReportingSystem.tsx',
       'Limb preservation outcomes', 'Real-time limb preservation outcomes'],
-    ['RC RCOperationsView', '../../ui/revenueCycle/views/RCOperationsView.tsx',
-      'Workflow status and bottlenecks', 'Real-time workflow status and bottlenecks'],
+    // RC RCOperationsView case REMOVED 2026-08-05 with the revenue-cycle surface (AUDIT-232):
+    // the file it asserted against no longer exists, so the assertion had to go WITH its file
+    // rather than be left to fail. The other five real-time-class cases are untouched, and
+    // DRGOptimizationAlert - which SURVIVES the removal (4 non-RC consumers) - keeps its case
+    // directly below, so the shared component remains covered by this suite.
     ['CAD CoronaryCareTeamView', '../../ui/coronaryIntervention/views/CoronaryCareTeamView.tsx',
       'Procedure checklist and monitoring for high-risk PCI cases', 'Real-time procedure checklist'],
     ['DRGOptimizationAlert', '../../components/shared/DRGOptimizationAlert.tsx',

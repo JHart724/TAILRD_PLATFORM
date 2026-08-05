@@ -64,8 +64,7 @@ router.get('/overview', async (req: AuthenticatedRequest, res) => {
       'electrophysiology', 
       'peripheralVascular',
       'valvularDisease',
-      'coronaryIntervention',
-      'revenueCycle'
+      'coronaryIntervention'
     ];
     
     const summaries = await Promise.all(
@@ -179,7 +178,7 @@ router.get('/module-health/:moduleName', async (req, res) => {
     const { moduleName } = req.params;
     const validModules = [
       'heartFailure', 'structuralHeart', 'electrophysiology', 
-      'peripheralVascular', 'valvularDisease', 'coronaryIntervention', 'revenueCycle'
+      'peripheralVascular', 'valvularDisease', 'coronaryIntervention'
     ];
     
     if (!validModules.includes(moduleName)) {

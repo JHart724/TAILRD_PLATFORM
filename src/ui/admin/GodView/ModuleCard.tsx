@@ -77,13 +77,6 @@ const moduleConfig = {
  path: '/coronary',
  description: 'PCI optimization and stent management',
  color: 'module.coronary'
-  },
-  revenueCycle: { 
- name: 'Revenue Cycle', 
- icon: DollarSign, 
- path: '/revenue-cycle',
- description: 'CDI and documentation optimization',
- color: 'module.revenue'
   }
 };
 
