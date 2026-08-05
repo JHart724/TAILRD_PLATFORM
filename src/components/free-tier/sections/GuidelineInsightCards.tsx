@@ -113,14 +113,20 @@ const carmonaGradient: React.CSSProperties = {
   background: 'linear-gradient(145deg, #1A3B5C, #2C4A60, #1A3B5C)',
 };
 
-const AIPoweredBadge: React.FC = () => (
+/**
+ * AUDIT-233: renamed from `AIPoweredBadge`. The rendered TEXT was corrected to 'Guideline-Based'
+ * under AUDIT-303 (PR #427) and is enforced by `audit303.labels.test.tsx`, but the SYMBOL kept the
+ * old claim - so a grep for AI framing still hit here, and a future edit could have restored the
+ * label from the component name.
+ */
+const GuidelineBasedBadge: React.FC = () => (
   <span className="bg-slate-100 text-slate-700 text-xs font-medium px-2 py-0.5 rounded-full flex items-center gap-1">
     <Sparkles className="w-3 h-3" />
     Guideline-Based
   </span>
 );
 
-const AIInsightCards: React.FC = () => {
+const GuidelineInsightCards: React.FC = () => {
   const [activeLockedCard, setActiveLockedCard] = useState<string | null>(null);
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
 
@@ -128,7 +134,7 @@ const AIInsightCards: React.FC = () => {
     <SectionCard
       title="Guideline-Based Insights"
       subtitle="Guideline-based analysis of your population - Patient details require Premium"
-      headerRight={<AIPoweredBadge />}
+      headerRight={<GuidelineBasedBadge />}
     >
       {/* Section-level summary */}
       <div className="bg-chrome-50 border border-chrome-100 rounded-xl px-4 py-3 mb-4 flex items-center justify-between">
@@ -255,4 +261,4 @@ const AIInsightCards: React.FC = () => {
   );
 };
 
-export default AIInsightCards;
+export default GuidelineInsightCards;

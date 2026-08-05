@@ -11,7 +11,12 @@ interface LockedOverlayProps {
 const LockedOverlay: React.FC<LockedOverlayProps> = ({
   title = 'Premium Feature',
   ctaText = 'Upgrade to Unlock',
-  bodyText = 'Unlock this feature with TAILRD Premium for real-time analytics and AI-powered insights.',
+  // AUDIT-233: was 'real-time analytics and AI-powered insights'. Neither was true - this
+  // platform runs deterministic, guideline-cited rules and is explicitly NOT permitted to use ML
+  // for gap detection (CLAUDE.md section 8, FDA CDS exemption). This is the default that every
+  // LockedOverlay without an explicit bodyText inherits, so the false framing propagated to any
+  // caller that did not override it.
+  bodyText = 'Unlock this feature with TAILRD Premium for guideline-based analysis of your own population.',
   children,
 }) => {
   return (

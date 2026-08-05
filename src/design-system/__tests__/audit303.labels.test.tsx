@@ -20,7 +20,9 @@ import { createRoot, Root } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
 
 // Rendered surfaces (self-contained, no router/api/recharts/leaflet deps)
-import AIInsightCards from '../../components/free-tier/sections/AIInsightCards';
+// AUDIT-233: renamed from AIInsightCards - the filename itself carried the AI framing this
+// suite exists to keep out of the rendered labels.
+import GuidelineInsightCards from '../../components/free-tier/sections/GuidelineInsightCards';
 import SAQOutcomesPanel from '../../ui/coronaryIntervention/components/service-line/SAQOutcomesPanel';
 import HFCareNetworkVisualization from '../../ui/heartFailure/components/service-line/HFCareNetworkVisualization';
 import SHValveCareNetworkVisualization from '../../ui/structuralHeart/components/service-line/SHValveCareNetworkVisualization';
@@ -92,15 +94,15 @@ const SERVICE_LINE_CONFIGS: Array<[string, unknown]> = [
 const EHR_TAIL_MODULES = ['heartFailure', 'electrophysiology', 'structuralHeart', 'coronaryIntervention', 'peripheralVascular'] as const;
 
 // ------------------------- AI/ML class (rendered) -------------------------
-describe('AUDIT-303 AI/ML - free-tier AIInsightCards renders guideline-based, never AI', () => {
+describe('AUDIT-303 AI/ML - free-tier GuidelineInsightCards renders guideline-based, never AI', () => {
   it('renders the corrected AI/ML labels', () => {
-    const html = render(<AIInsightCards />);
+    const html = render(<GuidelineInsightCards />);
     expect(html).toContain('Guideline-Based Insights');   // section title
     expect(html).toContain('Guideline-Based');             // badge text (was "AI Powered")
     expect(html).toContain('guideline-based gaps');        // summary line
   });
   it('does NOT render any AI/ML false claim', () => {
-    const html = render(<AIInsightCards />);
+    const html = render(<GuidelineInsightCards />);
     expect(html).not.toContain('AI-Detected');
     expect(html).not.toContain('AI Powered');
     expect(html).not.toContain('Machine learning');

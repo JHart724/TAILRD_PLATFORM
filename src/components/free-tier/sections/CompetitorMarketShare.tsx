@@ -1,6 +1,25 @@
 import React, { useState } from 'react';
 import { Lock, TrendingUp } from 'lucide-react';
 import SectionCard from '../../../design-system/SectionCard';
+import Badge from '../../../design-system/Badge';
+
+/**
+ * OPERATOR RULING 2026-08-05 (AUDIT-233): market intelligence KEEPS its place on the freemium
+ * surface, relabelled as a Medicare-derived estimate with an explicit caveat. It is NOT ruled onto
+ * the in-suite Service Line tier.
+ *
+ * Share of CV procedure volume by facility within a service area IS derivable from federal data -
+ * the CMS Provider Utilization and Payment PUFs publish per-facility procedure counts, and the
+ * NPPES registry supplies the facility identities. That is why this is a relabel and not a
+ * removal. The caveat that must travel with it: those files cover MEDICARE volume, so the shares
+ * shown are Medicare shares, which diverge from all-payer share wherever a competitor's case mix
+ * skews commercial.
+ *
+ * OUT OF SCOPE by standing operator ruling: commercial market-intelligence vendors (Definitive
+ * Healthcare, Trilliant, Clarify, Sg2/Vizient, IQVIA, LexisNexis and similar). Do not propose them.
+ * The bars below are DEMO CONSTANTS; the federal pipeline is Phase 3 work, see
+ * `docs/PATH_TO_ROBUST.md` section 10.
+ */
 
 const carmonaGradient: React.CSSProperties = {
   background: 'linear-gradient(145deg, #1A3B5C, #2C4A60, #1A3B5C)',
@@ -31,8 +50,17 @@ const CompetitorMarketShare: React.FC = () => {
   return (
     <SectionCard
       title="Competitive Market Intelligence"
-      subtitle="CV service line market position in your primary service area"
+      subtitle="Estimated CV market position - Medicare volume only, not all-payer"
+      headerRight={<Badge variant="estimate" label="Medicare-derived estimate" />}
     >
+      <p className="text-xs text-titanium-500 mb-4">
+        HOW THIS IS DERIVED, and what it cannot tell you. Share is computed from per-facility CV
+        procedure counts in the CMS Provider Utilization public-use files, with facility identity
+        from NPPES. Those files cover MEDICARE volume only, so every share below is a Medicare
+        share - it will diverge from your all-payer position wherever a competitor's case mix skews
+        commercial. Competitor names are withheld on this tier; the estimate is not a substitute
+        for your own claims data.
+      </p>
       {/* Top stat cards */}
       <div className="grid grid-cols-3 gap-3 mb-6">
         <div className="bg-chrome-50 border border-chrome-200 rounded-xl p-4 text-center">
