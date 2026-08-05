@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Target, Grid3X3, Users, Stethoscope, Activity, Calculator, Shield, Network, FileText, BarChart3, Award, AlertTriangle, TrendingUp, Clock } from 'lucide-react';
+import { Heart, Target, Grid3X3, Users, Stethoscope, Activity, Calculator, Shield, Network, FileText, BarChart3, Award, AlertTriangle, TrendingUp } from 'lucide-react';
 import { ServiceLineViewConfig } from '../../../components/shared/BaseServiceLineView';
 import { ServiceLineTabConfig } from '../../../components/shared/StandardInterfaces';
 import { ExportData } from '../../../utils/dataExport';
@@ -43,33 +43,20 @@ const VDGapDetectionWithForecast: React.FC = () => (
       </div>
     </div>
 
-    {/* Pipeline Velocity Metric */}
-    <div className="mt-4 metal-card">
-      <div className="px-5 py-4">
-        <div className="flex items-center gap-2 mb-3">
-          <Clock className="w-4 h-4 text-slate-600" />
-          <span className="text-sm font-semibold text-titanium-800">Pipeline Velocity</span>
-          <span className="text-xs bg-slate-50 text-slate-600 px-1.5 py-0.5 rounded font-medium">Forward-looking</span>
-        </div>
-        <div className="grid grid-cols-3 gap-4 text-center">
-          <div className="bg-titanium-50/70 rounded-lg p-3">
-            <div className="text-xs text-titanium-500 mb-1">Current Rate</div>
-            <div className="text-lg font-bold text-red-600">22 months</div>
-            <div className="text-xs text-titanium-400">to clear pipeline</div>
-          </div>
-          <div className="bg-chrome-50/70 rounded-lg p-3">
-            <div className="text-xs text-titanium-500 mb-1">Systematic Closure</div>
-            <div className="text-lg font-bold text-teal-700">8 months</div>
-            <div className="text-xs text-titanium-400">with TAILRD protocol</div>
-          </div>
-          <div className="bg-blue-50/70 rounded-lg p-3">
-            <div className="text-xs text-titanium-500 mb-1">Revenue Acceleration</div>
-            <div className="text-lg font-bold text-blue-600">{formatDollar(2200000)}</div>
-            <div className="text-xs text-titanium-400">in 12 months</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    {/*
+      Pipeline Velocity was REMOVED 2026-08-05 (AUDIT-233, operator ruling). It rendered three cards:
+      "22 months to clear pipeline", "8 months with TAILRD protocol", and "Revenue Acceleration
+      $2.2M in 12 months" behind a "Forward-looking" chip. The first two are a PRODUCT EFFICACY claim -
+      a specific speedup attributed to using this software, with no trial, no cohort and no before/after
+      measurement behind either number. The third is a fabricated dollar amount that the freemium copy of
+      this same block did not even carry. Removed rather than marked, because an efficacy claim is not
+      something a demo label can rescue (the AUDIT-232 rule: marking a panel asserts the capability is
+      real and merely paywalled).
+    
+      This is the section-20 sweep of the class. The freemium instance was removed first; a grep of the
+      branch then found six MORE byte-identical instances - one per clinical module - which is the whole
+      reason the discipline exists: fixing one instance of a defect class is not fixing the class.
+    */}
 
     <VDClinicalGapDetectionDashboard />
   </div>

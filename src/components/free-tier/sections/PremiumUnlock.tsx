@@ -20,12 +20,19 @@ const PremiumUnlock: React.FC = () => {
     // platform has never computed, a specific headcount for a prospect whose roster we do not
     // have, and an implied capability to judge which named clinicians are underperforming.
     //
-    // OPERATOR RULING 2026-08-05: the PANEL may survive as a future, explicitly-marked version
-    // sourced from the Medicare Physician & Other Practitioners PUF, which does publish
-    // per-provider utilisation. That version is PHASE 3 work and is NOT built here; see
-    // `docs/PATH_TO_ROBUST.md` section 10 for the sourcing path. Until it exists the claim is
-    // absent rather than locked, because a locked panel asserts the capability is real and merely
-    // paywalled (the AUDIT-232 removal rule).
+    // OPERATOR RULING 2026-08-05, FINAL (this SUPERSEDES the first reading of the same ruling,
+    // under which only this advert was removed and the panel itself was left rendering): the
+    // panel `PhysicianVarianceTeaser.tsx` is REMOVED NOW, ENTIRELY, and is DELETED from the repo -
+    // decisively, because its five blurred rows were FABRICATED NAMED PHYSICIANS with quality
+    // scores, the same class as the fabricated patients removed under AUDIT-232: invented
+    // attribution about identifiable-shaped people, where a CSS blur is a style and not a
+    // redaction. The Medicare-PUF-sourced successor lives in `docs/PATH_TO_ROBUST.md` section 10
+    // as a PHASE 3 plan, not on the screen as a locked panel, because a locked panel asserts the
+    // capability is real and merely paywalled (the AUDIT-232 removal rule).
+    //
+    // Removing this advert while leaving the panel is exactly what the first pass did, and it is
+    // why the branch was held at the PR gate rather than shipped: an honesty pass that deletes the
+    // sentence describing a claim and leaves the claim rendering is not an honesty pass.
     {
       icon: Shield,
       title: 'Market Recapture',

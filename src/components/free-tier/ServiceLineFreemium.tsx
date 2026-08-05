@@ -50,7 +50,6 @@ import PopulationImpact from './sections/PopulationImpact';
 import PremiumUnlock from './sections/PremiumUnlock';
 import RevenueRecoveryCalculator from './sections/RevenueRecoveryCalculator';
 import GuidelineInsightCards from './sections/GuidelineInsightCards';
-import PhysicianVarianceTeaser from './sections/PhysicianVarianceTeaser';
 import CompetitorMarketShare from './sections/CompetitorMarketShare';
 import { PLATFORM_TOTALS } from '../../data/platformTotals';
 import ClinicalTrialEnrollment from './sections/ClinicalTrialEnrollment';
@@ -173,8 +172,29 @@ const ServiceLineFreemium: React.FC<ServiceLineFreemiumProps> = ({ backToMain })
         {/* 10. Care Gap Analysis */}
         <CareGapFunnels funnels={CARE_GAP_FUNNELS} hasUploadedFiles={hasUploadedFiles} />
 
-        {/* 11. Physician Performance Variance */}
-        <PhysicianVarianceTeaser />
+        {/*
+          11. Physician Performance Variance was REMOVED 2026-08-05 (AUDIT-233, operator ruling).
+          `PhysicianVarianceTeaser.tsx` is DELETED, not disabled. It rendered:
+            - "2.4x performance gap detected between your top and bottom quartile physicians" -
+              a measured variance this platform has never computed;
+            - "47 physicians in your panel" - a headcount for a prospect whose roster we do not have;
+            - "Coaching opportunity: Structured peer review and protocol adherence program" plus
+              "View coaching plan" - an implied capability to judge which named clinicians underperform;
+            - quartile splits (GDMT 84% vs 51%, readmission 10.2% vs 18.7%, LOS 4.1d vs 6.8d);
+            - and FIVE FABRICATED NAMED PHYSICIANS with quality scores (Dr. A. Marchetti 91/9.8/3.9d/96
+              through Dr. T. Nguyen 48/19.2/7.1d/61), CSS-blurred but present in source and in the DOM.
+
+          OPERATOR RULING 2026-08-05, and why this is a delete rather than a lock: the fabricated named
+          physicians are THE SAME CLASS as the fabricated patients removed under AUDIT-232 - invented
+          attribution about identifiable-shaped people. A blur is a style, not a redaction. The
+          Medicare-PUF-sourced successor lives in `docs/PATH_TO_ROBUST.md` section 10 as a Phase 3 plan,
+          NOT on the screen as a locked panel, because a locked panel asserts the capability is real and
+          merely paywalled.
+
+          The ADVERT for this panel - the `Physician Coaching` tile in `PremiumUnlock.tsx` - is removed
+          in the same pass. The first pass removed only the advert and left the panel rendering, which
+          is why this note is explicit that BOTH sites are gone.
+        */}
 
         {/* 12. DRG Volume & Reimbursement */}
         <DRGProcedureLOS hasUploadedFiles={hasUploadedFiles} />

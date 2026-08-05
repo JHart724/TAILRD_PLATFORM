@@ -421,9 +421,9 @@ and waits its turn. Recording the plan now is not a licence to start it.
 |---|---|---|---|
 | Referral leakage ($3.8M) | RELABEL - Medicare-derived estimate, freemium only | Medicare FFS claims: beneficiary-to-PCP attribution vs performing facility, divergence inside a ZIP cluster = leaked case | Medicare FFS is roughly a third of a typical CV panel. Commercial and Medicare Advantage volume is invisible, so the figure is a lower bound scaled by assumption |
 | Market share / competitor position | RELABEL - Medicare-derived estimate, freemium only | CMS Provider Utilization and Payment PUFs (per-facility procedure counts) + NPPES (facility identity) | Medicare volume only. Diverges from all-payer share wherever a competitor's case mix skews commercial |
-| Physician performance variance ("2.4x gap", "47 physicians") | REMOVE - panel may return later, explicitly marked | Medicare Physician & Other Practitioners PUF (per-provider utilisation, per-provider beneficiary counts) | Publishes UTILISATION, not guideline adherence. A variance computed from it is a volume/practice-pattern variance, and must never be labelled a quality or coaching signal |
+| Physician performance variance ("2.4x gap", "47 physicians", five fabricated named physicians with quality scores) | REMOVE NOW, ENTIRELY - panel DELETED; any successor is new Phase 3 work, never a marked revival of this one | Medicare Physician & Other Practitioners PUF (per-provider utilisation, per-provider beneficiary counts) | Publishes UTILISATION, not guideline adherence. A variance computed from it is a volume/practice-pattern variance, and must never be labelled a quality or coaching signal |
 | Attributed clinical outcomes (lives impacted, mortality reduction) | REMOVE - no path at any label | **NONE.** This is an efficacy claim about the product | Would require a controlled evaluation of TAILRD itself. No public dataset can substitute |
-| Pipeline velocity (18 months vs 6 months) | REMOVE - no path at any label | **NONE.** Same class: a product-efficacy claim | Same |
+| Pipeline velocity (18 months vs 6 months, x7 instances, plus a "Revenue Acceleration" dollar figure in six of them) | REMOVE - no path at any label | **NONE.** Same class: a product-efficacy claim | Same |
 | PCI supply chain margin | REMOVE - no path at any label | **NONE.** Purchasing and contract data is not federal and not ingested | Same |
 | Registry quality benchmarks (CathPCI, STS, TVT, SVS-VQI) | MARK pending-real-source, in-suite tier | The CUSTOMER'S OWN registry submissions - they already hold this data | Not a federal-sourcing problem at all. This is a WIRING problem, which is exactly why these are marked rather than removed |
 
@@ -431,6 +431,17 @@ and waits its turn. Recording the plan now is not a licence to start it.
 source exists and we simply have not connected it. A claim gets REMOVED when no source can ever produce
 it - because per the AUDIT-232 removal rule, marking a panel "unavailable" asserts the capability is
 real and merely paywalled. Marking an unsourceable claim is a second dishonesty layered on the first.
+
+**RULING RECORDED 2026-08-05 on the physician-variance row, because the wording matters and the first
+reading of it got this wrong.** "The panel may survive as a marked future Medicare-PUF-sourced version"
+does NOT mean the existing panel stays on screen wearing a marker. It means: the panel is deleted now,
+and a *different* panel - built from the PUF, labelled a utilisation variance rather than a quality or
+coaching signal - may be authored in Phase 3. The distinction is load-bearing because the deleted panel
+contained five FABRICATED NAMED PHYSICIANS with quality scores (`Dr. A. Marchetti` 91% / 9.8% / 3.9d /
+96 through `Dr. T. Nguyen` 48% / 19.2% / 7.1d / 61), CSS-blurred but present in source and in the DOM.
+That is the same class as the fabricated patients removed under AUDIT-232 - invented attribution about
+identifiable-shaped people - and a blur is a style, not a redaction. A "marked" version of that panel
+would still be shipping invented physicians.
 
 ### 10.2 What building it would actually involve
 
