@@ -162,6 +162,22 @@ router.post('/invite/accept/:token', async (req, res) => {
       },
     });
 
+    // AUDIT-209 Phase 2: record the creation in the HIPAA trail. This path is UNAUTHENTICATED
+    // self-provisioning (the invitee holds only a token, so there is no req.user), and before this
+    // fix it wrote NO audit row at all - a user came into existence and was auto-logged-in with
+    // nothing recorded. Attributed to the new user itself (self-service via invite); written BEFORE
+    // the response and awaited so it does not inherit the AUDIT-212 after-response weakness.
+    await writeAuditLog(
+      // Carry the real req.headers/socket so getClientIp captures the client IP and does not
+      // throw on a bare synthetic object; req.user is absent on this path, so attribute to the
+      // new user explicitly.
+      { user: { userId: user.id, hospitalId: user.hospitalId, role: user.role }, headers: req.headers, socket: req.socket } as any,
+      'USER_CREATED',
+      'User',
+      user.id,
+      `User self-provisioned via invite: ${user.role} at hospital ${user.hospitalId}`,
+    );
+
     // Mark invite as used
     await prisma.inviteToken.update({
       where: { id: invite.id },
