@@ -213,7 +213,9 @@ The Heart Failure module is API-first with a mock-data fallback (real backend wh
 
 ## 13. Demo Accounts
 
-When provisioning demo accounts or seeding demo data, create health-system-specific tenants for at minimum:
+**ACTUAL STATE (corrected 2026-08-05 per AUDIT-209 - this section previously documented demo accounts that DO NOT EXIST).** Production `users` holds exactly TWO rows (measured in-VPC 2026-08-05): a SUPER_ADMIN on the empty `tailrd-platform` tenant, and ONE HOSPITAL_ADMIN (`JHart4485@gmail.com`) on the data-bearing `demo-synthea-threaded` tenant (created 2026-07-19 under AUDIT-209). `demo-synthea-threaded` is at `maxUsers = 1`, so no second account is creatable there without raising the limit. **Medical City Dallas** has a hospital row (6,132 patients, 0 gaps) but NO user account. **CommonSpirit** and **Mount Sinai** have NO hospital row and NO account at all. Standing up a real second tenant (tenant + admin + one clinician, MFA-enrolled) is the open Phase 2 item under AUDIT-209 and is a gated production-data session.
+
+The ASPIRATION below (the demo tenants a full pilot would provision) is retained as a target, NOT a description of current state:
 - **Medical City Dallas** (HCA) -- large community hospital, high PCI volume
 - **CommonSpirit** -- multi-state system, diverse patient population
 - **Mount Sinai** -- academic medical center, research-heavy, complex cases

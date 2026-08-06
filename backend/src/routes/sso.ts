@@ -114,6 +114,20 @@ router.get('/callback', async (req: Request, res: Response) => {
         },
         include: { hospital: true },
       });
+
+      // AUDIT-209 Phase 2: record the JIT provisioning as a CREATION, not only a login. Before this
+      // fix the sole audit write on this path was SSO_LOGIN (below), so a user coming into existence
+      // was recorded as if they had merely logged in. Written here, inside the create branch, so it
+      // fires exactly when (and only when) a new user row is provisioned.
+      await writeAuditLog(
+        // Carry req.headers/socket so getClientIp captures the client IP and does not throw on a
+        // bare synthetic object; attribute to the newly-created user.
+        { user: { userId: user.id, hospitalId: user.hospitalId, role: user.role }, headers: req.headers, socket: req.socket } as any,
+        'USER_CREATED',
+        'User',
+        user.id,
+        `User JIT-provisioned via SSO: ${user.role} at hospital ${user.hospitalId}`,
+      );
     } else {
       await prisma.user.update({
         where: { id: user.id },
