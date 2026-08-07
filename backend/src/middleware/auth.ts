@@ -31,6 +31,20 @@ const isMfaEnforced = (): boolean => process.env.MFA_ENFORCED === 'true';
 // (PHYSICIAN, NURSE_MANAGER, etc.) get added in a follow-up rollout.
 const MFA_ENFORCED_ROLES = new Set<UserRole>(['SUPER_ADMIN', 'HOSPITAL_ADMIN']);
 
+// AUDIT-240: the MFA onboarding/completion endpoints must be reachable by a user who is not yet
+// fully MFA-verified. `/api/mfa` is mounted BEHIND the global `requireMFA` gate (server.ts:265 gate,
+// :292 mfa router), so without this exemption a user who enables MFA - or who is forced to enroll -
+// can never reach `/mfa/verify` to upgrade their token, and is locked out of the entire product.
+// SURGICAL by design: only these four paths, never `/mfa/disable`, `/mfa/status`, or anything else.
+// A token hitting these still proves nothing until it passes the second factor (verifyTOTP / backup
+// code), so the exemption does not reopen the AUDIT-239 hole - every PHI and admin route stays gated.
+const MFA_ONBOARDING_PATHS = new Set<string>([
+  '/api/mfa/setup',        // begin enrollment (allows a forced-to-enroll account to start)
+  '/api/mfa/verify-setup', // complete enrollment (sets UserMFA.enabled = true)
+  '/api/mfa/verify',       // upgrade a post-login mfaVerified:false token to mfaVerified:true
+  '/api/mfa/verify-backup',// same, via a backup code
+]);
+
 interface AuthenticatedRequest extends Request {
   user?: JWTPayload;
   hospital?: {
@@ -242,6 +256,16 @@ const requireMFA = async (req: Request, res: Response, next: NextFunction) => {
       error: 'Authentication required',
       timestamp: new Date().toISOString(),
     } as APIResponse);
+  }
+
+  // AUDIT-240: let a not-yet-verified (or forced-to-enroll) user reach ONLY the MFA
+  // onboarding/completion endpoints, so enabling MFA cannot self-lock the account. Checked here,
+  // before both the enrollment-forcing and verification-required blocks below, so it applies to
+  // both unverified states. `originalUrl` is the full path from the app root (this middleware is
+  // mounted at `/api`), so it reads e.g. `/api/mfa/verify`.
+  const requestPath = (req.originalUrl || '').split('?')[0];
+  if (MFA_ONBOARDING_PATHS.has(requestPath)) {
+    return next();
   }
 
   // Check if user has MFA enabled via UserMFA relation
