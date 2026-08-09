@@ -701,11 +701,11 @@ describe('applyPrismaBaaGuard ($extends Layer 3 BAA enforcement)', () => {
       expect(hospitalFindUnique).toHaveBeenCalledTimes(2);
       expect(hospitalFindUnique).toHaveBeenNthCalledWith(1, {
         where: { id: HOSPITAL_1 },
-        select: { baaExecuted: true },
+        select: { baaExecuted: true, isSyntheticData: true },
       });
       expect(hospitalFindUnique).toHaveBeenNthCalledWith(2, {
         where: { id: HOSPITAL_2 },
-        select: { baaExecuted: true },
+        select: { baaExecuted: true, isSyntheticData: true },
       });
     });
 
@@ -725,7 +725,7 @@ describe('applyPrismaBaaGuard ($extends Layer 3 BAA enforcement)', () => {
 
       expect(hospitalFindUnique).toHaveBeenCalledWith({
         where: { id: HOSPITAL_1 },
-        select: { baaExecuted: true },
+        select: { baaExecuted: true, isSyntheticData: true },
       });
     });
 
@@ -763,6 +763,127 @@ describe('applyPrismaBaaGuard ($extends Layer 3 BAA enforcement)', () => {
       expect(queryFn).toHaveBeenCalledTimes(1);
       expect(hospitalFindUnique).not.toHaveBeenCalled();
       expect(auditLoggerError).not.toHaveBeenCalled();
+    });
+  });
+
+  // --- AUDIT-215 synthetic-data classification (permit on baaExecuted OR isSyntheticData) ---
+  // The guard permits PHI flow when the tenant has an executed BAA OR is classified synthetic-data,
+  // so BAA_GUARD_MODE=strict can run in production without denying the synthetic demo tenants.
+  // isSyntheticData does NOT fake a BAA: baaExecuted stays honestly false for synthetic tenants.
+
+  describe('AUDIT-215 synthetic-data classification (permit on baaExecuted OR isSyntheticData)', () => {
+    it('strict + isSyntheticData=true (baaExecuted false): PHI query PERMITTED, no throw, no audit', async () => {
+      resetGuardState('strict');
+      const { prisma, capturedMiddleware, hospitalFindUnique } = buildMockPrisma();
+      hospitalFindUnique.mockResolvedValue({ baaExecuted: false, isSyntheticData: true });
+      applyPrismaBaaGuard(prisma as never);
+      const queryFn = jest.fn().mockResolvedValue({ ok: true });
+
+      const result = await capturedMiddleware.fn!({
+        args: { where: { hospitalId: HOSPITAL_1 } },
+        model: 'Patient',
+        operation: 'findFirst',
+        query: queryFn,
+      });
+
+      expect(result).toEqual({ ok: true });
+      expect(queryFn).toHaveBeenCalledTimes(1);
+      expect(auditLoggerError).not.toHaveBeenCalled();
+    });
+
+    it('strict + neither flag (baaExecuted false, isSyntheticData false): BLOCKED (throws)', async () => {
+      resetGuardState('strict');
+      const { prisma, capturedMiddleware, hospitalFindUnique } = buildMockPrisma();
+      hospitalFindUnique.mockResolvedValue({ baaExecuted: false, isSyntheticData: false });
+      applyPrismaBaaGuard(prisma as never);
+      const queryFn = jest.fn();
+
+      await expect(
+        capturedMiddleware.fn!({
+          args: { where: { hospitalId: HOSPITAL_1 } },
+          model: 'Patient',
+          operation: 'findFirst',
+          query: queryFn,
+        }),
+      ).rejects.toBeInstanceOf(BAANotExecutedError);
+      expect(queryFn).not.toHaveBeenCalled();
+    });
+
+    it('strict + baaExecuted=true (isSyntheticData false): PERMITTED (real-BAA path unchanged)', async () => {
+      resetGuardState('strict');
+      const { prisma, capturedMiddleware, hospitalFindUnique } = buildMockPrisma();
+      hospitalFindUnique.mockResolvedValue({ baaExecuted: true, isSyntheticData: false });
+      applyPrismaBaaGuard(prisma as never);
+      const queryFn = jest.fn().mockResolvedValue({ ok: true });
+
+      const result = await capturedMiddleware.fn!({
+        args: { where: { hospitalId: HOSPITAL_1 } },
+        model: 'Encounter',
+        operation: 'findMany',
+        query: queryFn,
+      });
+
+      expect(result).toEqual({ ok: true });
+      expect(queryFn).toHaveBeenCalledTimes(1);
+      expect(auditLoggerError).not.toHaveBeenCalled();
+    });
+
+    it('audit + isSyntheticData=true: PERMITTED and NOT a violation (no PHI_FLOW_BLOCKED audit)', async () => {
+      resetGuardState('audit');
+      const { prisma, capturedMiddleware, hospitalFindUnique } = buildMockPrisma();
+      hospitalFindUnique.mockResolvedValue({ baaExecuted: false, isSyntheticData: true });
+      applyPrismaBaaGuard(prisma as never);
+      const queryFn = jest.fn().mockResolvedValue([]);
+
+      await capturedMiddleware.fn!({
+        args: { where: { hospitalId: HOSPITAL_1 } },
+        model: 'TherapyGap',
+        operation: 'findMany',
+        query: queryFn,
+      });
+
+      expect(queryFn).toHaveBeenCalledTimes(1);
+      // A synthetic tenant is not a BAA violation, so no PHI_FLOW_BLOCKED audit fires.
+      expect(auditLoggerError).not.toHaveBeenCalled();
+    });
+
+    it('audit + neither flag: still logs-and-permits (regression: unchanged fail-open violation)', async () => {
+      resetGuardState('audit');
+      const { prisma, capturedMiddleware, hospitalFindUnique } = buildMockPrisma();
+      hospitalFindUnique.mockResolvedValue({ baaExecuted: false, isSyntheticData: false });
+      applyPrismaBaaGuard(prisma as never);
+      const queryFn = jest.fn().mockResolvedValue([]);
+
+      const result = await capturedMiddleware.fn!({
+        args: { where: { hospitalId: HOSPITAL_1 } },
+        model: 'Patient',
+        operation: 'findMany',
+        query: queryFn,
+      });
+
+      expect(result).toEqual([]);
+      expect(queryFn).toHaveBeenCalledTimes(1);
+      expect(auditLoggerError).toHaveBeenCalledTimes(1);
+    });
+
+    it('the guard lookup reads BOTH baaExecuted AND isSyntheticData in one findUnique select', async () => {
+      resetGuardState('strict');
+      const { prisma, capturedMiddleware, hospitalFindUnique } = buildMockPrisma();
+      hospitalFindUnique.mockResolvedValue({ baaExecuted: false, isSyntheticData: true });
+      applyPrismaBaaGuard(prisma as never);
+      const queryFn = jest.fn().mockResolvedValue({});
+
+      await capturedMiddleware.fn!({
+        args: { where: { hospitalId: HOSPITAL_1 } },
+        model: 'Patient',
+        operation: 'findFirst',
+        query: queryFn,
+      });
+
+      expect(hospitalFindUnique).toHaveBeenCalledWith({
+        where: { id: HOSPITAL_1 },
+        select: { baaExecuted: true, isSyntheticData: true },
+      });
     });
   });
 });
