@@ -65,6 +65,15 @@ jobs:
           echo "Health: $STATUS"
           [ "$STATUS" = "healthy" ] || exit 1
 
+      # AUDIT-213: SMOKE_TEST_EMAIL/SMOKE_TEST_PASSWORD point to a DELIBERATELY NON-PRIVILEGED
+      # principal - a VIEWER scoped to the synthetic tenant demo-medical-city-dallas (provisioned by
+      # backend/scripts/migrations/audit-213-provision-smoke-principal.ts). VIEWER is NOT in
+      # MFA_ENFORCED_ROLES {SUPER_ADMIN, HOSPITAL_ADMIN}, so it is tracked-not-forced and can log in
+      # password-only and reach its tenant-scoped reads under MFA_ENFORCED=true. Do NOT repoint these
+      # secrets to a SUPER_ADMIN / HOSPITAL_ADMIN: an MFA-enforced principal's password-only token is
+      # 403'd on every protected read (`MFA verification required`), which re-breaks the smoke and,
+      # via the AUDIT-107 rung-2 smoke-hold gate, wedges all deploys. The tenant is in the AUDIT-215
+      # six-tenant synthetic-classify set, so it stays reachable once BAA_GUARD_MODE=strict lands.
       - name: Login
         id: auth
         env:
