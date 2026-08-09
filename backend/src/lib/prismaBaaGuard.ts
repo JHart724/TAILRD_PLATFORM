@@ -28,6 +28,15 @@
  *   - `strict`  violations log + emit audit event + throw BAANotExecutedError
  *               (post-soak production mode; fail-closed)
  *
+ * Permit condition (AUDIT-215): a query is a VIOLATION only when the tenant has
+ * NEITHER an executed BAA NOR the synthetic-data classification. The guard permits
+ * PHI flow when Hospital.baaExecuted === true (real executed BAA, derived cache)
+ * OR Hospital.isSyntheticData === true (synthetic/demo tenant with no real BAA).
+ * The synthetic classification lets `strict` run in production without denying the
+ * synthetic demo tenants; it does NOT fake a BAA - baaExecuted stays honestly false
+ * for synthetic data (isSyntheticData is a directly-writable classification, not a
+ * cache of any canonical column).
+ *
  * Q-5ADM-B Path (c) - Layer 3 Prisma extension at ORM layer per most-robust
  * posture. Rejects route-layer + service-layer enforcement as bypassable
  * (any direct prisma.* call from any new caller skips them). ORM-layer
@@ -264,7 +273,7 @@ export function _resetBaaCacheForTests(): void {
   _baaCache.clear();
 }
 
-async function readBaaExecutedCached(
+async function readTenantBaaPermittedCached(
   prisma: PrismaClient,
   hospitalId: string,
 ): Promise<boolean> {
@@ -279,14 +288,21 @@ async function readBaaExecutedCached(
   // Tenant guard does not include Hospital in HIPAA_GRADE_TENANT_MODELS, but
   // we add the bypass marker defensively in case future scope expands to
   // include Hospital itself.
+  //
+  // AUDIT-215: read BOTH the derived BAA-execution cache AND the synthetic-data
+  // classification in ONE findUnique; the guard permits PHI flow when EITHER is
+  // set. isSyntheticData keeps baaExecuted honestly false for synthetic tenants
+  // (baaExecuted remains a do-not-write-directly cache of CoveredEntity.baaExecutedAt).
   const row = await prisma.hospital.findUnique({
     where: { id: hospitalId },
-    select: { baaExecuted: true },
+    select: { baaExecuted: true, isSyntheticData: true },
   });
 
-  const value = row?.baaExecuted === true;
-  _baaCache.set(hospitalId, { value, expiresAt: now + BAA_CACHE_TTL_MS });
-  return value;
+  // Cached value is the PERMIT decision (BAA executed OR synthetic-data), not
+  // baaExecuted alone. A missing row (null) yields false = fail-closed under strict.
+  const permitted = row?.baaExecuted === true || row?.isSyntheticData === true;
+  _baaCache.set(hospitalId, { value: permitted, expiresAt: now + BAA_CACHE_TTL_MS });
+  return permitted;
 }
 
 // ─── Audit event emission ───────────────────────────────────────────────────
@@ -416,15 +432,15 @@ export function applyPrismaBaaGuard<TClient extends PrismaClient>(
             return query(cleanArgs);
           }
 
-          // Read cached baaExecuted (TTL-bounded; sister-precedent absent
-          // but justified per design refinement above - bounded staleness
-          // window for non-flip-sensitive read pattern).
-          const baaExecuted = await readBaaExecutedCached(
+          // AUDIT-215: permit when the tenant has an executed BAA OR is classified
+          // synthetic-data. TTL-bounded cached lookup reads both flags together
+          // (bounded staleness window for a non-flip-sensitive read pattern).
+          const permitted = await readTenantBaaPermittedCached(
             prisma as unknown as PrismaClient,
             hospitalId,
           );
 
-          if (baaExecuted) {
+          if (permitted) {
             return query(cleanArgs);
           }
 

@@ -131,6 +131,16 @@ model Hospital {
   signedBaaS3Key      String?
   signedBaaUploadedAt DateTime?
 
+  // AUDIT-215 synthetic-data tenant classification. true = this tenant holds synthetic/demo data and
+  // has NO real Business Associate Agreement. The BAA guard (prismaBaaGuard.ts) permits PHI flow when
+  // baaExecuted === true OR isSyntheticData === true (OR-condition), so BAA_GUARD_MODE=strict does not
+  // deny synthetic tenants. DISTINCT from baaExecuted (the derived cache of CoveredEntity.baaExecutedAt,
+  // do-not-write-directly): isSyntheticData keeps baaExecuted HONESTLY false for synthetic data instead
+  // of faking a real BAA, and is writable directly (it is not a cache of any canonical column). DUA-day:
+  // on a signed DUA for a tenant, flip isSyntheticData=false AND record the real BAA via
+  // coveredEntityService.upsertCoveredEntityBaaExecution, so strict then requires a real executed BAA.
+  isSyntheticData     Boolean   @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
