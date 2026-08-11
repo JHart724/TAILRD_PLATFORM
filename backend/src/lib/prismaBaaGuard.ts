@@ -20,11 +20,12 @@
  * Hospital.baaExecuted column with idx_hospital_baa_executed index per
  * P1.3.3a), encryption third (most expensive, post-gating).
  *
- * Three-state mode (`BAA_GUARD_MODE` env):
+ * Three-state mode (`BAA_GUARD_MODE` env) - MUST be set explicitly. AUDIT-214 fail-fast:
+ * an unset or empty value throws BaaGuardConfigError at wire-up (no silent default).
  *   - `off`     extension installed but inert (deploy escape hatch only)
  *   - `audit`   violations log + emit HIPAA-graded
  *               PHI_FLOW_BLOCKED_BAA_NOT_EXECUTED audit event; NO throw
- *               (production soak mode; default - robustness-first)
+ *               (production soak mode)
  *   - `strict`  violations log + emit audit event + throw BAANotExecutedError
  *               (post-soak production mode; fail-closed)
  *
@@ -175,7 +176,17 @@ export function hasBaaBypassMarker(args: unknown): boolean {
 // ─── Mode resolution + module-init validation ───────────────────────────────
 
 export function parseBaaGuardMode(raw: string | undefined): BaaGuardMode {
-  if (raw === undefined || raw === '') return 'audit';
+  // AUDIT-214 (fail-fast on unset): an unset or empty BAA_GUARD_MODE is a HARD ERROR, not a
+  // silently-chosen default. Missing security configuration must fail LOUDLY (sister precedent:
+  // validateKeyOrThrow AUDIT-017 + validateEnvelopeConfigOrThrow AUDIT-016) so a task-def rebuilt
+  // from a template that omits the var fails to START rather than silently running permissive.
+  // Every environment declares its mode explicitly (production strict, staging audit, CI/local audit).
+  if (raw === undefined || raw === '') {
+    throw new BaaGuardConfigError(
+      `BAA_GUARD_MODE must be set explicitly to 'off' | 'audit' | 'strict'; ` +
+        `got ${raw === undefined ? 'undefined (unset)' : 'an empty string'}.`,
+    );
+  }
   if (raw === 'off' || raw === 'audit' || raw === 'strict') return raw;
   throw new BaaGuardConfigError(
     `BAA_GUARD_MODE must be 'off' | 'audit' | 'strict'; got: '${raw}'`,
@@ -339,13 +350,13 @@ function emitBaaViolationAuditEvent(violation: ViolationDescriptor): void {
  * client; caller stores this as the singleton for downstream imports.
  *
  * Side effect: validates `BAA_GUARD_MODE` env at first call; throws
- * `BaaGuardConfigError` on invalid value.
+ * `BaaGuardConfigError` on an unset, empty, or invalid value (AUDIT-214 fail-fast).
  *
  * Behavior per mode:
  *   - `off`     extension installed but every operation passes through
  *               unmodified.
  *   - `audit`   on violation emit PHI_FLOW_BLOCKED_BAA_NOT_EXECUTED audit
- *               event + log; proceed with query. Default mode.
+ *               event + log; proceed with query.
  *   - `strict`  on violation emit audit + log + throw BAANotExecutedError.
  *
  * The extension does NOT mutate `args` - pure inspection. Caller's existing
