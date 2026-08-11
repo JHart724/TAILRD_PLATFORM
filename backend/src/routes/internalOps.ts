@@ -16,6 +16,7 @@ import {
   createInternalNoteSchema,
 } from '../validation/clinicalSchemas';
 import prisma from '../lib/prisma';
+import { sumScopedCounts } from '../utils/platformStats';
 
 const router = Router();
 
@@ -309,6 +310,9 @@ router.post('/notes', async (req: AuthenticatedRequest, res) => {
 
 router.get('/dashboard', async (req: AuthenticatedRequest, res) => {
   try {
+    // AUDIT-011: aggregate the Patient count per-tenant (hospitalId-scoped) so the tenant guard keeps
+    // enforcing on Patient; Hospital is not a guarded model. Mirrors clinicalAlertService's hospital loop.
+    const hospitalIds = (await prisma.hospital.findMany({ select: { id: true } })).map((h) => h.id);
     const [
       totalHospitals,
       activeHospitals,
@@ -320,7 +324,7 @@ router.get('/dashboard', async (req: AuthenticatedRequest, res) => {
     ] = await Promise.all([
       prisma.hospital.count(),
       prisma.hospital.count({ where: { subscriptionActive: true } }),
-      prisma.patient.count({ where: { deletedAt: null } }),
+      sumScopedCounts(hospitalIds, (id) => prisma.patient.count({ where: { hospitalId: id, deletedAt: null } })),
       prisma.user.count({ where: { isActive: true, deletedAt: null } }),
       // AUDIT-011: SUPER_ADMIN-only platform ops dashboard (router requires SUPER_ADMIN); these are
       // platform-wide aggregate counts by design, count-only (no PHI rows). __tenantGuardBypass mirrors
