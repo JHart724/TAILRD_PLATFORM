@@ -128,13 +128,13 @@ describe('registerOpenCount invariants against the live register', () => {
   });
 
   it('known-RESOLVED findings are NOT counted OPEN', () => {
-    for (const id of ['AUDIT-001', 'AUDIT-039', 'AUDIT-099', 'AUDIT-139', 'AUDIT-197', 'AUDIT-201', 'AUDIT-204', 'AUDIT-205', 'AUDIT-206']) {
+    for (const id of ['AUDIT-001', 'AUDIT-039', 'AUDIT-099', 'AUDIT-139', 'AUDIT-197', 'AUDIT-201', 'AUDIT-204', 'AUDIT-205', 'AUDIT-206', 'AUDIT-215']) {
       expect(r.openIds).not.toContain(id);
     }
   });
 
   it('known-OPEN findings ARE counted OPEN', () => {
-    for (const id of ['AUDIT-002', 'AUDIT-080', 'AUDIT-148', 'AUDIT-208', 'AUDIT-211', 'AUDIT-215', 'AUDIT-217']) {
+    for (const id of ['AUDIT-002', 'AUDIT-080', 'AUDIT-148', 'AUDIT-208', 'AUDIT-211', 'AUDIT-217']) {
       expect(r.openIds).toContain(id);
     }
   });
