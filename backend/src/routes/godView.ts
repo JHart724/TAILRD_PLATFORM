@@ -12,6 +12,7 @@ import { writeAuditLog } from '../middleware/auditLogger';
 import prisma from '../lib/prisma';
 import { ModuleType } from '@prisma/client';
 import { clinicianResolvedWhere } from '../services/gapResolutionActor';
+import { sumScopedCounts } from '../utils/platformStats';
 
 // Map frontend camelCase module names to Prisma enum + patient boolean field
 const MODULE_MAP: Record<string, { enum: ModuleType; patientField: string }> = {
@@ -35,6 +36,14 @@ function buildModulePatientWhere(mapping: { enum: ModuleType; patientField: stri
       { therapyGaps: { some: { module: mapping.enum, resolvedAt: null } } },
     ],
   };
+}
+
+// AUDIT-011: GOD view aggregates stay cross-tenant TOTALS, but are computed via hospitalId-scoped
+// per-tenant queries (Hospital is not a guarded model) so the Layer-3 tenant guard keeps enforcing on
+// Patient / TherapyGap / Alert - no unscoped PHI read, no __tenantGuardBypass. Row-returning reads
+// (globalSearch) remain hospitalId-required.
+async function tenantHospitalIds(): Promise<string[]> {
+  return (await prisma.hospital.findMany({ select: { id: true } })).map((h) => h.id);
 }
 
 const router = Router();
@@ -67,12 +76,12 @@ router.get('/overview', async (req: AuthenticatedRequest, res) => {
       'coronaryIntervention'
     ];
     
+    const hospitalIds = await tenantHospitalIds();
     const summaries = await Promise.all(
       modules.map(async (moduleName) => {
-        // Mock data - in real implementation, this would query actual module services
-        const health = await getModuleHealth(moduleName);
-        const metrics = await getModuleMetrics(moduleName);
-        const alerts = await getModuleAlerts(moduleName);
+        const health = await getModuleHealth(moduleName, hospitalIds);
+        const metrics = await getModuleMetrics(moduleName, hospitalIds);
+        const alerts = await getModuleAlerts(moduleName, hospitalIds);
         
         return {
           module: moduleName,
@@ -102,14 +111,15 @@ router.get('/overview', async (req: AuthenticatedRequest, res) => {
  */
 router.get('/cross-module-analytics', async (req, res) => {
   try {
+    const hospitalIds = await tenantHospitalIds();
     const analytics = {
-      totalRevenueOpportunity: await calculateTotalRevenue(),
-      systemWideGaps: await aggregateGaps(),
-      patientCoverage: await getPatientCoverage(),
-      moduleComparison: await getModuleComparison(),
-      qualityMetrics: await getSystemQualityMetrics(),
-      financialSummary: await getSystemFinancialSummary(),
-      riskDistribution: await getSystemRiskDistribution(),
+      totalRevenueOpportunity: await calculateTotalRevenue(hospitalIds),
+      systemWideGaps: await aggregateGaps(hospitalIds),
+      patientCoverage: await getPatientCoverage(hospitalIds),
+      moduleComparison: await getModuleComparison(hospitalIds),
+      qualityMetrics: await getSystemQualityMetrics(hospitalIds),
+      financialSummary: await getSystemFinancialSummary(hospitalIds),
+      riskDistribution: await getSystemRiskDistribution(hospitalIds),
     };
     
     res.json({
@@ -185,7 +195,7 @@ router.get('/module-health/:moduleName', async (req, res) => {
       return res.status(400).json({ error: 'Invalid module name' });
     }
     
-    const detailedHealth = await getDetailedModuleHealth(moduleName);
+    const detailedHealth = await getDetailedModuleHealth(moduleName, await tenantHospitalIds());
     
     res.json({
       module: moduleName,
@@ -235,59 +245,66 @@ router.post('/system-action', async (req: AuthenticatedRequest, res) => {
 
 const REVENUE_PER_GAP_ESTIMATE = 2500; // Conservative revenue opportunity per open gap
 
-async function getModuleHealth(moduleName: string) {
+async function getModuleHealth(moduleName: string, hospitalIds: readonly string[]) {
   const mapping = MODULE_MAP[moduleName];
   if (!mapping) return 'unknown';
-  const openGaps = await prisma.therapyGap.count({ where: { module: mapping.enum, resolvedAt: null } });
-  const totalGaps = await prisma.therapyGap.count({ where: { module: mapping.enum } });
+  const openGaps = await sumScopedCounts(hospitalIds, (id) => prisma.therapyGap.count({ where: { hospitalId: id, module: mapping.enum, resolvedAt: null } }));
+  const totalGaps = await sumScopedCounts(hospitalIds, (id) => prisma.therapyGap.count({ where: { hospitalId: id, module: mapping.enum } }));
   const closureRate = totalGaps > 0 ? (totalGaps - openGaps) / totalGaps : 1;
   if (closureRate >= 0.8) return 'healthy';
   if (closureRate >= 0.5) return 'warning';
   return 'critical';
 }
 
-async function getModuleMetrics(moduleName: string) {
+async function getModuleMetrics(moduleName: string, hospitalIds: readonly string[]) {
   const mapping = MODULE_MAP[moduleName];
   if (!mapping) return { patients: 0, revenueOpportunity: 0, gapsIdentified: 0 };
   const [patients, gapsIdentified] = await Promise.all([
-    prisma.patient.count({ where: buildModulePatientWhere(mapping) }),
-    prisma.therapyGap.count({ where: { module: mapping.enum, resolvedAt: null } }),
+    sumScopedCounts(hospitalIds, (id) => prisma.patient.count({ where: { hospitalId: id, ...buildModulePatientWhere(mapping) } })),
+    sumScopedCounts(hospitalIds, (id) => prisma.therapyGap.count({ where: { hospitalId: id, module: mapping.enum, resolvedAt: null } })),
   ]);
   return { patients, revenueOpportunity: gapsIdentified * REVENUE_PER_GAP_ESTIMATE, gapsIdentified };
 }
 
-async function getModuleAlerts(moduleName: string) {
+async function getModuleAlerts(moduleName: string, hospitalIds: readonly string[]) {
   const mapping = MODULE_MAP[moduleName];
   if (!mapping) return 0;
   const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  return prisma.alert.count({ where: { moduleType: mapping.enum, severity: 'HIGH', createdAt: { gte: weekAgo } } });
+  return sumScopedCounts(hospitalIds, (id) => prisma.alert.count({ where: { hospitalId: id, moduleType: mapping.enum, severity: 'HIGH', createdAt: { gte: weekAgo } } }));
 }
 
-async function calculateTotalRevenue() {
-  const totalOpenGaps = await prisma.therapyGap.count({ where: { resolvedAt: null } });
+async function calculateTotalRevenue(hospitalIds: readonly string[]) {
+  const totalOpenGaps = await sumScopedCounts(hospitalIds, (id) => prisma.therapyGap.count({ where: { hospitalId: id, resolvedAt: null } }));
   return totalOpenGaps * REVENUE_PER_GAP_ESTIMATE;
 }
 
-async function aggregateGaps() {
-  const grouped = await prisma.therapyGap.groupBy({
-    by: ['gapType'],
-    where: { resolvedAt: null },
-    _count: { id: true },
-    orderBy: { _count: { id: 'desc' } },
-    take: 10,
-  });
-  return grouped.map(g => ({
-    category: g.gapType.replace(/_/g, ' '),
-    count: g._count.id,
-    impact: g._count.id > 100 ? 'high' : g._count.id > 30 ? 'medium' : 'low',
-  }));
+async function aggregateGaps(hospitalIds: readonly string[]) {
+  // Per-tenant groupBy, merged across tenants by gapType, then global top-10 (matches the prior
+  // unscoped groupBy orderBy _count desc / take 10).
+  const byType = new Map<string, number>();
+  for (const id of hospitalIds) {
+    const grouped = await prisma.therapyGap.groupBy({
+      by: ['gapType'],
+      where: { hospitalId: id, resolvedAt: null },
+      _count: { id: true },
+    });
+    for (const g of grouped) byType.set(g.gapType, (byType.get(g.gapType) || 0) + g._count.id);
+  }
+  return [...byType.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([gapType, count]) => ({
+      category: gapType.replace(/_/g, ' '),
+      count,
+      impact: count > 100 ? 'high' : count > 30 ? 'medium' : 'low',
+    }));
 }
 
-async function getPatientCoverage() {
-  const totalPatients = await prisma.patient.count({ where: { isActive: true } });
+async function getPatientCoverage(hospitalIds: readonly string[]) {
+  const totalPatients = await sumScopedCounts(hospitalIds, (id) => prisma.patient.count({ where: { hospitalId: id, isActive: true } }));
   const byModule: Record<string, number> = {};
   for (const [name, mapping] of Object.entries(MODULE_MAP)) {
-    byModule[name] = await prisma.patient.count({ where: buildModulePatientWhere(mapping) });
+    byModule[name] = await sumScopedCounts(hospitalIds, (id) => prisma.patient.count({ where: { hospitalId: id, ...buildModulePatientWhere(mapping) } }));
   }
   const managed = Object.values(byModule).reduce((sum, c) => sum + c, 0);
   return {
@@ -298,12 +315,12 @@ async function getPatientCoverage() {
   };
 }
 
-async function getModuleComparison() {
+async function getModuleComparison(hospitalIds: readonly string[]) {
   const moduleMetrics = await Promise.all(
     Object.entries(MODULE_MAP).map(async ([name, mapping]) => {
       const [patients, gaps] = await Promise.all([
-        prisma.patient.count({ where: buildModulePatientWhere(mapping) }),
-        prisma.therapyGap.count({ where: { module: mapping.enum, resolvedAt: null } }),
+        sumScopedCounts(hospitalIds, (id) => prisma.patient.count({ where: { hospitalId: id, ...buildModulePatientWhere(mapping) } })),
+        sumScopedCounts(hospitalIds, (id) => prisma.therapyGap.count({ where: { hospitalId: id, module: mapping.enum, resolvedAt: null } })),
       ]);
       return { name, patients, gaps, efficiency: patients > 0 ? gaps / patients : 0 };
     })
@@ -319,13 +336,13 @@ async function getModuleComparison() {
   };
 }
 
-async function getSystemQualityMetrics() {
+async function getSystemQualityMetrics(hospitalIds: readonly string[]) {
   const [totalGaps, closedGaps, safetyGaps] = await Promise.all([
-    prisma.therapyGap.count(),
+    sumScopedCounts(hospitalIds, (id) => prisma.therapyGap.count({ where: { hospitalId: id } })),
     // AUDIT-222 retirement blast-radius: gapClosureRate presents closures as CLINICAL achievement, so
     // system-retired rows (engine-retired rules, nobody's clinical work) must not inflate it.
-    prisma.therapyGap.count({ where: clinicianResolvedWhere({ resolvedAt: { not: null } }) }),
-    prisma.therapyGap.count({ where: { gapType: 'SAFETY_ALERT', resolvedAt: null } }),
+    sumScopedCounts(hospitalIds, (id) => prisma.therapyGap.count({ where: { hospitalId: id, ...clinicianResolvedWhere({ resolvedAt: { not: null } }) } })),
+    sumScopedCounts(hospitalIds, (id) => prisma.therapyGap.count({ where: { hospitalId: id, gapType: 'SAFETY_ALERT', resolvedAt: null } })),
   ]);
   const closureRate = totalGaps > 0 ? closedGaps / totalGaps : 1;
   return {
@@ -337,12 +354,12 @@ async function getSystemQualityMetrics() {
   };
 }
 
-async function getSystemFinancialSummary() {
+async function getSystemFinancialSummary(hospitalIds: readonly string[]) {
   const [openGaps, closedGaps] = await Promise.all([
-    prisma.therapyGap.count({ where: { resolvedAt: null } }),
+    sumScopedCounts(hospitalIds, (id) => prisma.therapyGap.count({ where: { hospitalId: id, resolvedAt: null } })),
     // AUDIT-222 retirement blast-radius: closedGaps multiplies into `captured` opportunity below, so a
     // system retirement would FABRICATE captured revenue for work nobody did (the AUDIT-187 class).
-    prisma.therapyGap.count({ where: clinicianResolvedWhere({ resolvedAt: { not: null } }) }),
+    sumScopedCounts(hospitalIds, (id) => prisma.therapyGap.count({ where: { hospitalId: id, ...clinicianResolvedWhere({ resolvedAt: { not: null } }) } })),
   ]);
   const totalOpportunity = openGaps * REVENUE_PER_GAP_ESTIMATE;
   const captured = closedGaps * REVENUE_PER_GAP_ESTIMATE;
@@ -354,23 +371,29 @@ async function getSystemFinancialSummary() {
   };
 }
 
-async function getSystemRiskDistribution() {
-  const patients = await prisma.patient.findMany({
-    where: { isActive: true },
-    select: { riskCategory: true },
-  });
-  const total = patients.length || 1;
+async function getSystemRiskDistribution(hospitalIds: readonly string[]) {
+  // Aggregate-in-effect: rows never reach the client, only the distribution. Per-tenant scoped
+  // findMany, merged, preserves the exact ratios the prior unscoped read produced.
   const counts = { low: 0, moderate: 0, high: 0, critical: 0 };
-  for (const p of patients) {
-    const cat = (p.riskCategory || 'low').toLowerCase();
-    if (cat in counts) counts[cat as keyof typeof counts]++;
-    else counts.low++;
+  let total = 0;
+  for (const id of hospitalIds) {
+    const patients = await prisma.patient.findMany({
+      where: { hospitalId: id, isActive: true },
+      select: { riskCategory: true },
+    });
+    total += patients.length;
+    for (const p of patients) {
+      const cat = (p.riskCategory || 'low').toLowerCase();
+      if (cat in counts) counts[cat as keyof typeof counts]++;
+      else counts.low++;
+    }
   }
+  const denom = total || 1;
   return {
-    low: counts.low / total,
-    moderate: counts.moderate / total,
-    high: counts.high / total,
-    critical: counts.critical / total,
+    low: counts.low / denom,
+    moderate: counts.moderate / denom,
+    high: counts.high / denom,
+    critical: counts.critical / denom,
   };
 }
 
@@ -406,19 +429,17 @@ async function globalSearch({ query, hospitalId, module, type, limit }: {
   }));
 }
 
-async function getDetailedModuleHealth(moduleName: string) {
+async function getDetailedModuleHealth(moduleName: string, hospitalIds: readonly string[]) {
   const mapping = MODULE_MAP[moduleName];
   if (!mapping) return { status: 'unknown' };
   const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   const [openGaps, newGapsThisWeek, closedThisWeek, patientCount] = await Promise.all([
-    prisma.therapyGap.count({ where: { module: mapping.enum, resolvedAt: null } }),
-    prisma.therapyGap.count({ where: { module: mapping.enum, identifiedAt: { gte: weekAgo } } }),
+    sumScopedCounts(hospitalIds, (id) => prisma.therapyGap.count({ where: { hospitalId: id, module: mapping.enum, resolvedAt: null } })),
+    sumScopedCounts(hospitalIds, (id) => prisma.therapyGap.count({ where: { hospitalId: id, module: mapping.enum, identifiedAt: { gte: weekAgo } } })),
     // AUDIT-222 retirement blast-radius: closedThisWeek drives the module-health closureRate (and its
     // healthy/warning/critical verdict), so system retirements must not register as a week of closures.
-    prisma.therapyGap.count({
-      where: clinicianResolvedWhere({ module: mapping.enum, resolvedAt: { gte: weekAgo } }),
-    }),
-    prisma.patient.count({ where: buildModulePatientWhere(mapping) }),
+    sumScopedCounts(hospitalIds, (id) => prisma.therapyGap.count({ where: { hospitalId: id, ...clinicianResolvedWhere({ module: mapping.enum, resolvedAt: { gte: weekAgo } }) } })),
+    sumScopedCounts(hospitalIds, (id) => prisma.patient.count({ where: { hospitalId: id, ...buildModulePatientWhere(mapping) } })),
   ]);
   const closureRate = (newGapsThisWeek + closedThisWeek) > 0 ? closedThisWeek / (newGapsThisWeek + closedThisWeek) : 1;
   return {
