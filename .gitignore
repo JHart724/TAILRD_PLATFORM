@@ -22,6 +22,9 @@ coverage/
 # Environment files
 .env
 .env.*
+# AUDIT-214 PR 1: the .env.example template is documentation (placeholders only), not a
+# real env file - track it so a fresh clone has the template. Real .env/.env.test stay ignored.
+!backend/.env.example
 
 # Editor directories and files
 .vscode/

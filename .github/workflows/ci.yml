@@ -98,6 +98,11 @@ jobs:
       DATABASE_URL: postgresql://tailrd_test:tailrd_test_pw@localhost:5432/tailrd_test
       JWT_SECRET: ci-test-secret-do-not-use-in-production
       NODE_ENV: test
+      # AUDIT-214 PR 1: declare the Layer-3 BAA guard mode explicitly. Unset resolves to
+      # 'audit' today, so this is no behavior change - it makes the posture visible here and
+      # keeps CI green once PR 2 makes an unset BAA_GUARD_MODE a hard startup error. Also set
+      # in backend/tests/setup.ts (covers local `npm test`); this line is belt-and-braces.
+      BAA_GUARD_MODE: audit
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
