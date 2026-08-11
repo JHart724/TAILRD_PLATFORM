@@ -322,8 +322,11 @@ router.get('/dashboard', async (req: AuthenticatedRequest, res) => {
       prisma.hospital.count({ where: { subscriptionActive: true } }),
       prisma.patient.count({ where: { deletedAt: null } }),
       prisma.user.count({ where: { isActive: true, deletedAt: null } }),
-      prisma.webhookEvent.count({ where: { createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } } }),
-      prisma.webhookEvent.count({ where: { status: 'FAILED' } }),
+      // AUDIT-011: SUPER_ADMIN-only platform ops dashboard (router requires SUPER_ADMIN); these are
+      // platform-wide aggregate counts by design, count-only (no PHI rows). __tenantGuardBypass mirrors
+      // the webhookPipeline bypass shape. A HOSPITAL_ADMIN cannot reach this endpoint (403 at authorizeRole).
+      prisma.webhookEvent.count({ where: { createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } }, __tenantGuardBypass: true } as any),
+      prisma.webhookEvent.count({ where: { status: 'FAILED' }, __tenantGuardBypass: true } as any),
       prisma.onboarding.groupBy({ by: ['status'], _count: true }),
     ]);
 

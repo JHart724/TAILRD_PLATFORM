@@ -81,16 +81,21 @@ router.get('/dashboard',
             } 
           } 
         }),
+        // AUDIT-011: SUPER_ADMIN-only platform-wide statistics (endpoint gated authorizeRole(['SUPER_ADMIN'])).
+        // Platform-wide aggregate counts by design, count-only (no PHI rows). __tenantGuardBypass mirrors
+        // the webhookPipeline bypass shape; a tenant-scoped user cannot reach this endpoint.
         prisma.webhookEvent.count({
-          where: { receivedAt: { gte: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000) } } // Last 90 days (bounded)
-        }),
+          where: { receivedAt: { gte: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000) } }, // Last 90 days (bounded)
+          __tenantGuardBypass: true,
+        } as any),
         prisma.webhookEvent.count({
           where: {
             receivedAt: {
               gte: new Date(Date.now() - 24 * 60 * 60 * 1000) // Last 24 hours
             }
-          }
-        }),
+          },
+          __tenantGuardBypass: true,
+        } as any),
         prisma.alert.count({ where: { isAcknowledged: false } }),
         prisma.alert.count({ where: { isAcknowledged: false } })
       ]);
