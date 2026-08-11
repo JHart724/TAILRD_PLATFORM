@@ -127,11 +127,10 @@ function buildMockPrisma(): {
  * for jest beforeEach lifecycle (no async DB ops here).
  */
 function resetGuardState(mode?: 'off' | 'audit' | 'strict'): void {
-  if (mode === undefined) {
-    delete process.env.BAA_GUARD_MODE;
-  } else {
-    process.env.BAA_GUARD_MODE = mode;
-  }
+  // AUDIT-214 PR 2 (fail-fast on unset): never leave BAA_GUARD_MODE unset - an unset value now
+  // throws at wire-up. resetGuardState() with no mode resets to the test-suite default 'audit'
+  // (matching tests/setup.ts), never delete.
+  process.env.BAA_GUARD_MODE = mode ?? 'audit';
   _resetBaaGuardModeCacheForTests();
   _resetBaaCacheForTests();
 }
@@ -148,12 +147,12 @@ afterEach(() => {
 // === Pure helpers ===
 
 describe('parseBaaGuardMode (pure helper)', () => {
-  it('returns audit when env is undefined (robustness-first default)', () => {
-    expect(parseBaaGuardMode(undefined)).toBe('audit');
+  it('throws when env is undefined (AUDIT-214 fail-fast; unset is not a silent default)', () => {
+    expect(() => parseBaaGuardMode(undefined)).toThrow(BaaGuardConfigError);
   });
 
-  it('returns audit when env is empty string', () => {
-    expect(parseBaaGuardMode('')).toBe('audit');
+  it('throws when env is empty string (AUDIT-214 fail-fast)', () => {
+    expect(() => parseBaaGuardMode('')).toThrow(BaaGuardConfigError);
   });
 
   it('returns off when env is off', () => {
