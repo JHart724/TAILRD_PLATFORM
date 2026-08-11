@@ -1,6 +1,7 @@
 import { Router, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import prisma from '../lib/prisma';
+import { sumScopedCounts } from '../utils/platformStats';
 import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
 import { body, validationResult } from 'express-validator';
@@ -56,13 +57,23 @@ router.get('/dashboard',
   authorizeRole(['SUPER_ADMIN']), 
   async (req: AuthenticatedRequest, res: Response) => {
     try {
-      // Get platform-wide statistics
+      // Get platform-wide statistics.
+      // AUDIT-011: every PHI-model count (Patient, Alert) is aggregated PER-TENANT (hospitalId-scoped)
+      // so the Layer-3 tenant guard keeps enforcing on those models - never one unscoped cross-tenant
+      // count. Hospital is not a guarded model, so hospital.findMany yields the tenant ids plus the
+      // all-patients total via the _count relation; filtered totals sum per-tenant scoped counts
+      // (mirrors clinicalAlertService.runDailyDigestForAllHospitals). No __tenantGuardBypass on any PHI model.
+      const hospitalRows = await prisma.hospital.findMany({
+        select: { id: true, _count: { select: { patients: true } } },
+      });
+      const hospitalIds = hospitalRows.map((h) => h.id);
+      const totalPatients = hospitalRows.reduce((sum, h) => sum + h._count.patients, 0);
+
       const [
         totalHospitals,
         activeHospitals,
         totalUsers,
         activeUsers,
-        totalPatients,
         recentPatients,
         totalWebhookEvents,
         recentWebhookEvents,
@@ -73,17 +84,12 @@ router.get('/dashboard',
         prisma.hospital.count({ where: { subscriptionActive: true } }),
         prisma.user.count(),
         prisma.user.count({ where: { isActive: true } }),
-        prisma.patient.count(),
-        prisma.patient.count({ 
-          where: { 
-            createdAt: { 
-              gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) // Last 30 days
-            } 
-          } 
-        }),
-        // AUDIT-011: SUPER_ADMIN-only platform-wide statistics (endpoint gated authorizeRole(['SUPER_ADMIN'])).
-        // Platform-wide aggregate counts by design, count-only (no PHI rows). __tenantGuardBypass mirrors
-        // the webhookPipeline bypass shape; a tenant-scoped user cannot reach this endpoint.
+        sumScopedCounts(hospitalIds, (id) =>
+          prisma.patient.count({
+            where: { hospitalId: id, createdAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } }, // Last 30 days
+          })),
+        // AUDIT-011: WebhookEvent is a genuinely non-tenant-scoped system queue, so the bypass is
+        // appropriate HERE (unlike Patient/Alert, aggregated per-tenant). SUPER_ADMIN-only endpoint.
         prisma.webhookEvent.count({
           where: { receivedAt: { gte: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000) } }, // Last 90 days (bounded)
           __tenantGuardBypass: true,
@@ -96,8 +102,9 @@ router.get('/dashboard',
           },
           __tenantGuardBypass: true,
         } as any),
-        prisma.alert.count({ where: { isAcknowledged: false } }),
-        prisma.alert.count({ where: { isAcknowledged: false } })
+        // AUDIT-011 fix: real alerts TOTAL (previously a duplicate of unacknowledged), aggregated per-tenant.
+        sumScopedCounts(hospitalIds, (id) => prisma.alert.count({ where: { hospitalId: id } })),
+        sumScopedCounts(hospitalIds, (id) => prisma.alert.count({ where: { hospitalId: id, isAcknowledged: false } })),
       ]);
 
       // Get subscription tier breakdown
@@ -1152,19 +1159,22 @@ router.get('/config',
   authorizeRole(['SUPER_ADMIN']),
   async (_req: AuthenticatedRequest, res: Response) => {
     try {
-      const [hospitals, totalUsers, totalPatients, totalGaps] = await Promise.all([
-        prisma.hospital.findMany({
-          select: {
-            id: true, name: true, subscriptionTier: true, subscriptionActive: true, maxUsers: true,
-            moduleHeartFailure: true, moduleElectrophysiology: true, moduleStructuralHeart: true,
-            moduleCoronaryIntervention: true, modulePeripheralVascular: true, moduleValvularDisease: true,
-            _count: { select: { users: true, patients: true } },
-          },
-          orderBy: { name: 'asc' },
-        }),
+      const hospitals = await prisma.hospital.findMany({
+        select: {
+          id: true, name: true, subscriptionTier: true, subscriptionActive: true, maxUsers: true,
+          moduleHeartFailure: true, moduleElectrophysiology: true, moduleStructuralHeart: true,
+          moduleCoronaryIntervention: true, modulePeripheralVascular: true, moduleValvularDisease: true,
+          _count: { select: { users: true, patients: true } },
+        },
+        orderBy: { name: 'asc' },
+      });
+      const hospitalIds = hospitals.map((h) => h.id);
+      // AUDIT-011: aggregate the PHI-model totals (Patient, TherapyGap) per-tenant (hospitalId-scoped)
+      // so the tenant guard keeps enforcing on them; Hospital is not a guarded model.
+      const [totalUsers, totalPatients, totalGaps] = await Promise.all([
         prisma.user.count({ where: { isActive: true } }),
-        prisma.patient.count({ where: { isActive: true } }),
-        prisma.therapyGap.count({ where: { resolvedAt: null } }),
+        sumScopedCounts(hospitalIds, (id) => prisma.patient.count({ where: { hospitalId: id, isActive: true } })),
+        sumScopedCounts(hospitalIds, (id) => prisma.therapyGap.count({ where: { hospitalId: id, resolvedAt: null } })),
       ]);
 
       const moduleConfig: Record<string, Record<string, boolean>> = {};
