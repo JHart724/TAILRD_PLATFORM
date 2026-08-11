@@ -139,6 +139,35 @@ test and every review. Hardening is where they get found deliberately instead of
   population as the numerators, which is why it is derived from the persisted set rather than from a
   live patient count.
 
+### Operator rulings on Phase 2 scope and posture (2026-08-05)
+
+**Recorded here rather than only in the register, because each one governs SEQUENCING and a future
+session reads this section first.**
+
+**RULING 1 - AUDIT-145 is Phase 2 hardening, not Phase 3 growth.** The 7th module's sequencing "after
+Phase 2" must not be used to defer AUDIT-145 itself. The line is: **fixing a numerator that cannot
+produce a correct answer is repairing existing code (Phase 2); building the VBC module out is growth
+(Phase 3).** `vbcService` is filed as structurally dead-on-arrival - a correctness defect in shipped
+code - and a thin surface around a defect does not convert it into a feature request. Cite this ruling
+if anyone proposes deferring the fix on sequencing grounds.
+
+**RULING 2 - the BAA guard goes FAIL-CLOSED, with the pre-DUA synthetic tenant explicitly allowlisted
+and the allowlist held as a GATED CONFIG ARTIFACT.** Rationale, recorded because it is the whole
+argument: **a guard that has only ever run permissive has never been proven to DENY.** `audit` mode
+reports and continues, so every passing day is evidence about logging, not about enforcement. Flipping
+it to enforcing on the day real PHI arrives means discovering whether the deny path works at the worst
+possible moment, on the highest-stakes data, under time pressure. Fail-closed now, with synthetic
+explicitly allowed, proves the deny path while the cost of being wrong is zero - and it makes
+**removing the allowlist entry the DUA-day action**, which is a one-line reviewable change rather than
+a posture flip. Implementation is a Phase 2 work block; this is the ruling, not the work.
+
+**RULING 3 - the CSRF posture (Option B) is settled BEFORE AUDIT-217, which is downstream of it.**
+AUDIT-217 (the admin console write surface 403s on CSRF, silently) is very likely a CONSEQUENCE of the
+unsettled posture rather than an independent defect. Fixing 217 first risks fixing it twice - once
+against today's posture and again after the posture changes. **Dependency recorded: Option B CSRF ->
+then AUDIT-217.** If they turn out to be independent on inspection, say so explicitly and proceed;
+what is not acceptable is discovering the dependency after the second fix.
+
 ### Phase 3 - gap and function growth
 
 New gap rules, new modules, new capability. Only after Phase 2. Growth built on an unhardened base is
