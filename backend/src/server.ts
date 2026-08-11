@@ -422,7 +422,10 @@ if (require.main === module) {
         try {
           // processRetryQueue needs a dispatch function — re-route through the webhook handler
           // For now, log retryable events count without re-dispatching (dispatch requires refactoring)
-          const retryCount = await require('./lib/prisma').default.webhookEvent.count({ where: { status: 'RETRYING' } });
+          // AUDIT-011: system-internal retry-queue depth (this cron has no user/tenant context); the
+          // webhook retry queue is a global processing queue, not tenant-scoped. Aggregate count only,
+          // no PHI rows. __tenantGuardBypass mirrors the webhookPipeline callsites' bypass shape.
+          const retryCount = await require('./lib/prisma').default.webhookEvent.count({ where: { status: 'RETRYING' }, __tenantGuardBypass: true } as any);
           if (retryCount > 0) {
             logger.info(`Webhook retry queue: ${retryCount} events pending retry`);
           }
