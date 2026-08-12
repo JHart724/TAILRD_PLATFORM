@@ -24,6 +24,13 @@
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
+import { createRequire } from 'module';
+
+// AUDIT-118: the candidate-extraction is the SHARED single source of truth, also consumed by
+// backend/tests/terminology/audit118MapCompleteness.test.ts - so the map this generator builds
+// covers EXACTLY the medication RxCUIs the completeness gate demands (no silent drift).
+const require = createRequire(import.meta.url);
+const { extractCandidateRxcuis } = require('./medCandidateExtraction.cjs');
 
 const RXNAV = 'https://rxnav.nlm.nih.gov/REST';
 const RETRIEVED = process.env.AUDIT118_RETRIEVED_DATE || new Date().toISOString().slice(0, 10);
@@ -52,17 +59,12 @@ async function rxnav(urlPath) {
 }
 
 // --- extract candidate RxCUIs from the two med-set sources ----------------
+// Delegates to the shared extraction (medCandidateExtraction.cjs) so the generator and the
+// completeness gate can never disagree about the candidate universe.
 function extractCandidates() {
   const vs = fs.readFileSync(VS, 'utf8');
   const eng = fs.readFileSync(ENG, 'utf8');
-  const vsCodes = new Set([...vs.matchAll(/'(\d{3,7})'/g)].map((m) => m[1]));
-  const engCodes = new Set();
-  const arrRe = /const\s+[A-Z][A-Z0-9_]*\s*=\s*\[([^\]]*)\]/g;
-  let m;
-  while ((m = arrRe.exec(eng))) {
-    for (const c of m[1].matchAll(/'(\d{3,7})'/g)) engCodes.add(c[1]);
-  }
-  return { vsCodes, engCodes, all: new Set([...vsCodes, ...engCodes]) };
+  return extractCandidateRxcuis(vs, eng);
 }
 
 async function getTTY(rxcui) {
