@@ -93,7 +93,12 @@ test and every review. Hardening is where they get found deliberately instead of
 - **AUDIT-118-class runtime-wrapper retrofits.**
 - **demo-synthea-proof procedures disposition** - what happens to the proof-run procedure rows.
 - **The BAA fail-open posture** - the guard currently runs in `audit` mode; fail-open is a decision, and
-  it should be an explicit one.
+  it should be an explicit one. **[CLOSED 2026-08-11 - the decision was made explicit: flipped to `strict`
+  on `:442` (`BAA_GUARD_MODE=strict`, AUDIT-214/215). Fail-closed PROVEN LIVE by a negative control -
+  `Patient.count` on a non-existent tenant threw `BAANotExecutedError` (PHI flow blocked per
+  §164.308(b)(1)) and emitted a `PHI_FLOW_BLOCKED` event, while the positive probe across all six
+  classified tenants threw 0 times. The bullet text above is the pre-closure statement, retained for
+  legibility per supersede-not-overwrite.]**
 - **`.claude/settings.local.json` untracking** - CLAUDE.md RULE 9 hygiene.
 - **The stale local-branch backlog** - ~200 merged-and-abandoned local branches.
 - **A mechanical PARSED-CANONICAL-DOC detector (AUDIT-229)** - fail CI whenever a `docs/**` or
@@ -314,13 +319,13 @@ Each row was verified against running code or a green CI job on 2026-08-05, not 
 | CSRF | PRESENT, posture undecided | `middleware/csrfProtection.ts`; the Option B posture decision is an open Phase 2 item |
 | PHI encryption | YES | `middleware/phiEncryption.ts`, applied by the shared prisma singleton (CLAUDE.md section 14 forbids bypassing it) |
 | Tenant isolation | YES | `lib/prismaTenantGuard.ts` + `hospitalId` sourced from the verified JWT, never body/params; guarded by source-level tests |
-| BAA guard | PRESENT, FAIL-OPEN | `lib/prismaBaaGuard.ts` runs in `audit` mode - it reports rather than blocks. That is a decision, and making it an explicit one is an open Phase 2 item |
+| BAA guard | PRESENT, STRICT (enforcing) | `lib/prismaBaaGuard.ts` runs in `strict` mode on `:442` (`BAA_GUARD_MODE=strict`, flipped 2026-08-11, AUDIT-214/215) - it BLOCKS, not just reports. Fail-closed PROVEN LIVE by a negative control: `Patient.count` on a non-existent tenant threw `BAANotExecutedError` (PHI flow blocked per §164.308(b)(1)) + a `PHI_FLOW_BLOCKED` event, while the positive probe across all six classified tenants threw 0 times. The fail-open posture was an open Phase 2 item, CLOSED 2026-08-11 |
 | HIPAA-grade audit logging | YES | `middleware/auditLogger.ts`; `writeAuditLog` called across 10+ route files including every clinical-decision write |
 | CI required checks | 8, all green | audit-canonical, dependency-check, evidence-consistency, lint, migration-validation, security-scan, test, typecheck |
 
 **What this section does NOT claim:** that these controls are sufficient, penetration-tested, or free of
 the defects a hardening pass would find. Phase 2 exists precisely because present-and-wired is not the
-same as sound. Two of the rows above (CSRF posture, BAA fail-open) are themselves Phase 2 items.
+same as sound. One of the rows above (CSRF posture) is itself an open Phase 2 item; the BAA fail-open row was a Phase 2 item, CLOSED 2026-08-11 (strict on `:442`).
 
 ---
 
@@ -332,7 +337,7 @@ something different; none is a proxy for the others. Quote a measure WITH its de
 does-not-measure clause, or do not quote it.
 
 **1. Plan nodes.** Of section 0's Phase 1 and Phase 2 nodes, 2 of 4 are complete (trials done; registry
-blocked; Phase 2 unstarted; Phase 3 correctly gated).
+blocked; Phase 2 STARTED (1 of 12 hardening items closed - the BAA fail-open posture, 2026-08-11); Phase 3 correctly gated).
 *Does not measure:* node SIZE - registry abstraction alone may exceed everything delivered in the
 2026-08 arc - nor any of section 7, which no node enumerates.
 
@@ -355,7 +360,7 @@ while six findings were resolved and eight filed. The register grew while the pl
 because hardening surfaces defects faster than it closes them. A falling count during active hardening
 would be the suspicious reading.
 
-**The Phase 2 number, for when a single figure is unavoidable:** 0 of 12 hardening items closed. It is
+**The Phase 2 number, for when a single figure is unavoidable:** 1 of 12 hardening items closed (the BAA fail-open posture, flipped strict on `:442` 2026-08-11). Unlike the register/coverage/task-def figures this count is NOT machine-checked - no script counts closed Phase 2 items - so it is a prose assessment that can drift. It is
 the cleanest scalar available and it is the one that gates Phase 3.
 
 ---
