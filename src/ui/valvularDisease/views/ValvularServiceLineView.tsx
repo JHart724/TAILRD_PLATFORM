@@ -5,7 +5,7 @@ import { Heart, Users, Calendar, Shield, Activity, Target, BarChart3, FileText, 
 import ValvePatientHeatmap from '../components/ValvePatientHeatmap';
 import ValvularSurgicalNetworkVisualization from '../components/ValvularSurgicalNetworkVisualization';
 import VDClinicalGapDetectionDashboard from '../components/clinical/VDClinicalGapDetectionDashboard';
-import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
+import ReportingEmptyState from '../../../components/reporting/ReportingEmptyState';
 import ServiceLineKPIBanner from '../../../components/shared/ServiceLineKPIBanner';
 // Relocated from the VHD Executive tier (AUDIT-304 IA convergence): care-team action
 // telemetry and worsening-population trajectory are Service Line content, not exec KPIs.
@@ -541,7 +541,7 @@ const ValvularServiceLineView: React.FC = () => {
           </div>
         );
       case 'reporting':
-        return <AutomatedReportingSystem />;
+        return <ReportingEmptyState />;
       case 'clinical-gap-detection':
         return (
           <div className="space-y-6">

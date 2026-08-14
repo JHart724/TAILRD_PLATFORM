@@ -6,7 +6,7 @@ import { ExportData } from '../../../utils/dataExport';
 import { formatDollar } from '../../../utils/predictiveCalculators';
 
 // Import existing Peripheral Vascular Service Line components
-import PADReportingSystem from '../components/PADReportingSystem';
+import ReportingEmptyState from '../../../components/reporting/ReportingEmptyState';
 import PVWoundCareNetworkVisualization from '../components/PVWoundCareNetworkVisualization';
 import WIfIClassification from '../components/WIfIClassification';
 import LimbSalvageScreening from '../components/LimbSalvageScreening';
@@ -14,7 +14,6 @@ import LimbSalvageScreening from '../components/LimbSalvageScreening';
 // Import shared components
 import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHeatmap';
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
-import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
 import PVClinicalGapDetectionDashboard, { PV_CLINICAL_GAPS, PVGapPatient } from '../components/clinical/PVClinicalGapDetectionDashboard';
 
 // Peripheral Vascular Analytics Dashboard
@@ -754,7 +753,7 @@ export const peripheralVascularServiceLineConfig: ServiceLineViewConfig = {
  'network': CareTeamNetworkGraph,
  'wound-care-network': PVWoundCareNetworkVisualization,
  'quality': PADQualityMetrics,
- 'reporting': PADReportingSystem,
+ 'reporting': ReportingEmptyState,
  'vascular-pipeline': PVVascularPipeline,
  'pv-clinical-gap-detection': PVClinicalGapDetectionDashboard
   },

@@ -11,7 +11,7 @@ import CADClinicalGapDetectionDashboard from '../components/clinical/CADClinical
 import SAQOutcomesPanel from '../components/service-line/SAQOutcomesPanel';
 import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHeatmap';
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
-import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
+import ReportingEmptyState from '../../../components/reporting/ReportingEmptyState';
 import CrossReferralEngine from '../../../components/crossReferral/CrossReferralEngine';
 import ServiceLineKPIBanner from '../../../components/shared/ServiceLineKPIBanner';
 import PendingRealSourceNote from '../../../components/shared/PendingRealSourceNote';
@@ -642,7 +642,7 @@ const CoronaryServiceLineView: React.FC = () => {
  </div>
  );
  case 'reporting':
- return <AutomatedReportingSystem />;
+ return <ReportingEmptyState />;
  case 'saq-outcomes':
  return <SAQOutcomesPanel />;
  case 'risk-heatmap':

@@ -4,7 +4,7 @@ import { CareTeamViewConfig } from '../../../components/shared/BaseCareTeamView'
 import { StandardTabConfig } from '../../../components/shared/StandardInterfaces';
 import WIfIClassification from '../components/WIfIClassification';
 import LimbSalvageScreening from '../components/LimbSalvageScreening';
-import PADReportingSystem from '../components/PADReportingSystem';
+import ReportingEmptyState from '../../../components/reporting/ReportingEmptyState';
 import PVWoundCareNetworkVisualization from '../components/PVWoundCareNetworkVisualization';
 import WIFIClassificationCalculator from '../../../components/riskCalculators/WIFIClassificationCalculator';
 import { featureFlags } from '../../../config/featureFlags';
@@ -189,7 +189,7 @@ const PeripheralWorkflow: React.FC = () => (
  <Target className="w-5 h-5 text-crimson-600" />
  PAD Optimization & Reporting
  </h3>
- <PADReportingSystem />
+ <ReportingEmptyState />
  </div>
   </div>
 );

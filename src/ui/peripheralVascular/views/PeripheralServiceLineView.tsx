@@ -3,7 +3,7 @@ import { Activity, Target, Grid3X3, Users, Calculator, MapPin, BarChart3, Heart,
 import ExportButton from '../../../components/shared/ExportButton';
 
 // Import Peripheral Vascular components
-import PADReportingSystem from '../components/PADReportingSystem';
+import ReportingEmptyState from '../../../components/reporting/ReportingEmptyState';
 import PVWoundCareNetworkVisualization from '../components/PVWoundCareNetworkVisualization';
 import WIfIClassification from '../components/WIfIClassification';
 import LimbSalvageScreening from '../components/LimbSalvageScreening';
@@ -320,7 +320,7 @@ const PeripheralServiceLineView: React.FC = () => {
       case 'network': return <CareTeamNetworkGraph />;
       case 'wound-care-network': return <PVWoundCareNetworkVisualization />;
       case 'quality': return <PADQualityMetrics />;
-      case 'reporting': return <PADReportingSystem />;
+      case 'reporting': return <ReportingEmptyState />;
       case 'gap-detection':
         return (
           <div className="space-y-6">
