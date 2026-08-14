@@ -21,7 +21,7 @@ import AdvancedDeviceTracker from '../components/clinical/AdvancedDeviceTracker'
 import HFCareNetworkVisualization from '../components/service-line/HFCareNetworkVisualization';
 import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHeatmap';
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
-import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
+import ReportingEmptyState from '../../../components/reporting/ReportingEmptyState';
 import ClinicalGapDetectionDashboard from '../components/clinical/ClinicalGapDetectionDashboard';
 import KCCQOutcomesPanel from '../components/service-line/KCCQOutcomesPanel';
 import PhenotypeDetectionChart from '../components/PhenotypeDetectionChart';
@@ -477,7 +477,7 @@ export const heartFailureServiceLineConfig: ServiceLineViewConfig = {
  'network': CareTeamNetworkGraph,
  'hf-care-network': HFCareNetworkVisualization,
  'quality': QualityMetricsDashboard,
- 'reporting': AutomatedReportingSystem,
+ 'reporting': ReportingEmptyState,
  'clinical-gap-detection': ClinicalGapDetectionDashboard,
  'pro-outcomes': KCCQOutcomesPanel,
  'advanced-pipeline': HFAdvancedTherapyPipeline,

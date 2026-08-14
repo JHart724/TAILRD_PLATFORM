@@ -15,7 +15,7 @@ import CoronarySafetyScreening from '../components/CoronarySafetyScreening';
 // Import shared components
 import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHeatmap';
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
-import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
+import ReportingEmptyState from '../../../components/reporting/ReportingEmptyState';
 import CADClinicalGapDetectionDashboard, { CAD_CLINICAL_GAPS, CADGapPatient } from '../components/clinical/CADClinicalGapDetectionDashboard';
 import SAQOutcomesPanel from '../components/service-line/SAQOutcomesPanel';
 import { estimateSYNTAX } from '../../../utils/clinicalCalculators';
@@ -806,7 +806,7 @@ export const coronaryServiceLineConfig: ServiceLineViewConfig = {
  'network': CareTeamNetworkGraph,
  'pci-network': PCINetworkVisualization,
  'quality': CoronaryQualityMetrics,
- 'reporting': AutomatedReportingSystem,
+ 'reporting': ReportingEmptyState,
  'intervention-pipeline': CADInterventionPipeline,
  'cad-clinical-gap-detection': CADClinicalGapDetectionDashboard,
  'pro-outcomes': SAQOutcomesPanel

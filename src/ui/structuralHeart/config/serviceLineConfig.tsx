@@ -15,7 +15,7 @@ import SHProviderScorecard from '../components/service-line/SHProviderScorecard'
 // Import shared components
 import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHeatmap';
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
-import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
+import ReportingEmptyState from '../../../components/reporting/ReportingEmptyState';
 import SHClinicalGapDetectionDashboard, { SH_CLINICAL_GAPS, SHGapPatient } from '../components/clinical/SHClinicalGapDetectionDashboard';
 
 // Structural Heart Analytics Dashboard
@@ -760,7 +760,7 @@ export const structuralHeartServiceLineConfig: ServiceLineViewConfig = {
  'network': CareTeamNetworkGraph,
  'referral-network': StructuralReferralNetworkVisualization,
  'tavr-analytics': TAVRAnalyticsDashboard,
- 'reporting': AutomatedReportingSystem,
+ 'reporting': ReportingEmptyState,
  'sh-phenotype-detection': SHPhenotypeDetectionChart,
  'sh-provider-scorecard': SHProviderScorecard,
  'sh-clinical-gap-detection': SHClinicalGapDetectionDashboard

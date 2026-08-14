@@ -216,8 +216,10 @@ describe('AUDIT-303 Real-time extension - asserted-at-source (charts / views / p
     // [label, file, present-string, absent-string]
     ['SH TAVRAnalyticsDashboard subtitle', '../../ui/structuralHeart/components/TAVRAnalyticsDashboard.tsx',
       'Structural heart program analytics with risk stratification and outcomes tracking', 'Real-time structural heart program analytics'],
-    ['PV PADReportingSystem', '../../ui/peripheralVascular/components/PADReportingSystem.tsx',
-      'Limb preservation outcomes', 'Real-time limb preservation outcomes'],
+    // PV PADReportingSystem case REMOVED 2026-08-14 with the reporting-simulation surface
+    // (AUDIT-314): the file it asserted against was deleted and replaced by the honest, label-free
+    // ReportingEmptyState, so the assertion goes WITH its file rather than be left to fail - the
+    // same pattern as the RC RCOperationsView removal directly below.
     // RC RCOperationsView case REMOVED 2026-08-05 with the revenue-cycle surface (AUDIT-232):
     // the file it asserted against no longer exists, so the assertion had to go WITH its file
     // rather than be left to fail. The other five real-time-class cases are untouched, and

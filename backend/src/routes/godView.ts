@@ -218,7 +218,7 @@ router.post('/system-action', async (req: AuthenticatedRequest, res) => {
     const { action, parameters } = req.body;
 
     // Validate action type
-    const allowedActions = ['refresh-cache', 'sync-data', 'generate-reports', 'maintenance-mode'];
+    const allowedActions = ['refresh-cache', 'sync-data', 'maintenance-mode'];
     if (!allowedActions.includes(action)) {
       return res.status(400).json({ error: 'Invalid system action' });
     }
@@ -460,10 +460,9 @@ async function executeSystemAction(action: string, parameters: any) {
     // No-op for now (caches are in-memory, refresh on restart)
     return { success: true, message: 'Cache refresh scheduled' };
   }
-  if (action === 'generate-reports') {
-    const hospitalCount = await prisma.hospital.count({ where: { subscriptionActive: true } });
-    return { success: true, message: `Report generation queued for ${hospitalCount} hospitals` };
-  }
+  // 'generate-reports' branch removed (AUDIT-314): it returned a fabricated "Report generation
+  // queued for N hospitals" success for work it never did, and had no caller. Removed from
+  // allowedActions above, so the action is now rejected as invalid rather than faking success.
   return { success: true, message: `${action} completed`, details: parameters };
 }
 

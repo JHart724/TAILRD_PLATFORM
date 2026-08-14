@@ -13,7 +13,7 @@ import VDClinicalGapDetectionDashboard from '../components/clinical/VDClinicalGa
 // Import shared components
 import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHeatmap';
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
-import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
+import ReportingEmptyState from '../../../components/reporting/ReportingEmptyState';
 
 // VD Clinical Gap Detection with Pipeline Forecast
 const VDGapDetectionWithForecast: React.FC = () => (
@@ -419,7 +419,7 @@ export const valvularDiseaseServiceLineConfig: ServiceLineViewConfig = {
  'surgical-network': ValvularSurgicalNetworkVisualization,
  'vd-clinical-gap-detection': VDGapDetectionWithForecast,
  'quality': ValvularQualityMetrics,
- 'reporting': AutomatedReportingSystem
+ 'reporting': ReportingEmptyState
   },
   exportData: valvularDiseaseExportData,
   hasExport: true
