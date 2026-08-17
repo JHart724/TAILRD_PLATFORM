@@ -267,7 +267,7 @@ router.get('/results/:patientId', authenticateToken, authorizeRole(['SUPER_ADMIN
     const hospitalId = req.user?.hospitalId;
 
     // Verify patient belongs to requesting user's hospital
-    if (hospitalId && req.user?.role?.toLowerCase().replace(/_/g, '-') !== 'SUPER_ADMIN') {
+    if (hospitalId && req.user?.role !== 'SUPER_ADMIN') {
       const patient = await prisma.patient.findFirst({
         where: { id: patientId, hospitalId },
         select: { id: true },
@@ -626,7 +626,7 @@ router.get('/rules/:id/recommendations', authenticateToken, authorizeRole(['SUPE
 
     // Verify patient belongs to requesting user's hospital
     const hospitalId = req.user?.hospitalId;
-    if (hospitalId && req.user?.role?.toLowerCase().replace(/_/g, '-') !== 'SUPER_ADMIN') {
+    if (hospitalId && req.user?.role !== 'SUPER_ADMIN') {
       const patient = await prisma.patient.findFirst({
         where: { id: patientId, hospitalId },
         select: { id: true },

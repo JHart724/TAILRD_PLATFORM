@@ -259,8 +259,7 @@ router.patch('/hospitals/:hospitalId/onboarding/:step',
 
       // Tenant ownership check: hospital-admin can only modify their own hospital
       const tokenHospitalId = req.user?.hospitalId;
-      const role = req.user?.role?.toLowerCase().replace(/_/g, '-');
-      if (role !== 'SUPER_ADMIN' && tokenHospitalId !== hospitalId) {
+      if (req.user?.role !== 'SUPER_ADMIN' && tokenHospitalId !== hospitalId) {
         return res.status(403).json({
           success: false,
           error: 'Access denied: cannot modify another health system\'s onboarding',

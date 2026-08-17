@@ -35,8 +35,7 @@ router.post('/invite', authenticateToken, authorizeRole(['SUPER_ADMIN', 'HOSPITA
     }
 
     // Only super-admin can assign super-admin role
-    const callerRole = (user.role ?? '').toLowerCase().replace(/_/g, '-');
-    if (role === 'SUPER_ADMIN' && callerRole !== 'SUPER_ADMIN') {
+    if (role === 'SUPER_ADMIN' && user.role !== 'SUPER_ADMIN') {
       return res.status(403).json({ error: 'Only super-admins can invite super-admins' });
     }
 
