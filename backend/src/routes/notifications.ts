@@ -184,8 +184,7 @@ router.put('/preferences', async (req: AuthenticatedRequest, res: Response) => {
 // Manually trigger daily digest (super-admin only, also called by cron)
 
 router.post('/trigger/daily-digest', async (req: AuthenticatedRequest, res: Response) => {
-  const normalizedRole = req.user?.role?.toLowerCase().replace(/_/g, '-') || '';
-  if (normalizedRole !== 'SUPER_ADMIN') {
+  if (req.user?.role !== 'SUPER_ADMIN') {
     return res.status(403).json({ error: 'Super-admin only' });
   }
 
@@ -205,8 +204,7 @@ router.post('/trigger/daily-digest', async (req: AuthenticatedRequest, res: Resp
 // ─── POST /api/notifications/trigger/weekly-summary ─────────────────────────
 
 router.post('/trigger/weekly-summary', async (req: AuthenticatedRequest, res: Response) => {
-  const normalizedRole = req.user?.role?.toLowerCase().replace(/_/g, '-') || '';
-  if (normalizedRole !== 'SUPER_ADMIN') {
+  if (req.user?.role !== 'SUPER_ADMIN') {
     return res.status(403).json({ error: 'Super-admin only' });
   }
 

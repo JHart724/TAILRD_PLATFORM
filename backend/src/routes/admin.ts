@@ -1074,7 +1074,6 @@ router.get('/users/:id/activity',
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const targetUserId = req.params.id;
-      const callerRole = (req.user?.role ?? '').toLowerCase().replace(/_/g, '-');
       const callerHospitalId = req.user?.hospitalId;
 
       const targetUser = await prisma.user.findUnique({
@@ -1086,7 +1085,7 @@ router.get('/users/:id/activity',
         return res.status(404).json({ success: false, error: 'User not found' } as APIResponse);
       }
 
-      if (callerRole !== 'SUPER_ADMIN' && targetUser.hospitalId !== callerHospitalId) {
+      if (req.user?.role !== 'SUPER_ADMIN' && targetUser.hospitalId !== callerHospitalId) {
         return res.status(403).json({ success: false, error: 'Cross-tenant access denied' } as APIResponse);
       }
 
