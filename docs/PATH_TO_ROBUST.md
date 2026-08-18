@@ -353,7 +353,7 @@ one (trials) is complete on its specified scope and one (VBC) is ~109 lines.
 *Does not measure:* per-module DEPTH - VHD at 25.7% coverage and HF at 69.0% both count as one
 delivered module - nor the registry half of the 8th module.
 
-**4. Open findings.** <!--@checked register.open2-->103<!--/@checked--> open (0 CRITICAL / <!--@checked register.high2-->19<!--/@checked--> HIGH / <!--@checked register.medium2-->45<!--/@checked--> MEDIUM / <!--@checked register.low2-->36<!--/@checked--> LOW / <!--@checked register.info2-->3<!--/@checked--> INFO), script-derived.
+**4. Open findings.** <!--@checked register.open2-->104<!--/@checked--> open (0 CRITICAL / <!--@checked register.high2-->19<!--/@checked--> HIGH / <!--@checked register.medium2-->46<!--/@checked--> MEDIUM / <!--@checked register.low2-->36<!--/@checked--> LOW / <!--@checked register.info2-->3<!--/@checked--> INFO), script-derived.
 *Does not measure:* unknown defects, effort per finding, or the ~30 explicitly deferred as
 never-blocking. **Read the TREND, not the level:** across the 2026-08 arc the register went 87 -> 89
 while six findings were resolved and eight filed. The register grew while the platform improved,
