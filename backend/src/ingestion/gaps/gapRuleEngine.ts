@@ -17660,6 +17660,7 @@ export function evaluateGapRules(
   const hasPCI_VHD40 = dxCodes.some(c => c.startsWith('Z95.5'));
   if (hasProstheticValve_VHD40 && hasCAD_VHD40 && !hasCABG_VHD40 && !hasPCI_VHD40 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
+      ruleId: 'gap-vhd-040-valve-cad-revasc',
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.VALVULAR_DISEASE,
       status: 'Prosthetic valve + coronary artery disease without coded revascularization: review concomitant/staged CABG',

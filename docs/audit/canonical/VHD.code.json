@@ -530,7 +530,7 @@
       "name": "VD-ANTIPLATELET-BIOPROSTHETIC"
     },
     {
-      "bodyEndLine": 17684,
+      "bodyEndLine": 17685,
       "bodyStartLine": 17661,
       "commentLine": 17649,
       "commentLiteral": "// Gap VHD-040: prosthetic valve + CAD without coded revascularization -> concomitant/staged revascularization review",
