@@ -273,7 +273,7 @@ export default function NotificationPanel({ isOpen, onClose }: Props) {
               {/* Header text */}
               <div className="px-1 pb-2">
                 <p className="text-xs font-body text-titanium-500 leading-relaxed">
-                  Active care gap orchestrations with real-time status tracking.
+                  Active care gap orchestrations with status tracking.
                   Each case follows the TAILRD pathway: Detection &rarr; Notification &rarr;
                   Response Window &rarr; Escalation &rarr; Safety Net.
                 </p>

@@ -13,7 +13,7 @@ import EPOutcomesByCohort from '../components/service-line/EPOutcomesByCohort';
 // Import shared components
 import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHeatmap';
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
-import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
+import ReportingEmptyState from '../../../components/reporting/ReportingEmptyState';
 
 import EPClinicalGapDetectionDashboard from '../components/clinical/EPClinicalGapDetectionDashboard';
 import EPPhenotypeDetectionChart from '../components/EPPhenotypeDetectionChart';
@@ -246,7 +246,7 @@ const EPServiceLineView: React.FC = () => {
       case 'outcomes-trends': return <EPOutcomesTrends />;
       case 'equity-analysis': return <EPEquityAnalysis />;
       case 'outcomes-cohort': return <EPOutcomesByCohort />;
-      case 'reporting': return <AutomatedReportingSystem />;
+      case 'reporting': return <ReportingEmptyState />;
       case 'gap-detection':
         return <EPClinicalGapDetectionDashboard />;
       default: return <ElectrophysiologyAnalytics />;

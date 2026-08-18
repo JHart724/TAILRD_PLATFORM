@@ -5,7 +5,7 @@ import { Heart, Users, Calendar, Shield, Activity, Target, BarChart3, FileText, 
 import ValvePatientHeatmap from '../components/ValvePatientHeatmap';
 import ValvularSurgicalNetworkVisualization from '../components/ValvularSurgicalNetworkVisualization';
 import VDClinicalGapDetectionDashboard from '../components/clinical/VDClinicalGapDetectionDashboard';
-import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
+import ReportingEmptyState from '../../../components/reporting/ReportingEmptyState';
 import ServiceLineKPIBanner from '../../../components/shared/ServiceLineKPIBanner';
 
 type TabId = 'bicuspid' | 'ross' | 'repair-vs-replace' | 'echo-surveillance' | 'clinical-gap-detection' | 'heatmap' | 'network' | 'analytics' | 'outcomes' | 'quality' | 'reporting';
@@ -518,7 +518,7 @@ const ValvularServiceLineView: React.FC = () => {
           </div>
         );
       case 'reporting':
-        return <AutomatedReportingSystem />;
+        return <ReportingEmptyState />;
       case 'clinical-gap-detection':
         return <VDClinicalGapDetectionDashboard />;
       default:

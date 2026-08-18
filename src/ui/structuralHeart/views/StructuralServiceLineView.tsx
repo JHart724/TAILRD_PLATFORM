@@ -10,7 +10,7 @@ import SHProviderScorecard from '../components/service-line/SHProviderScorecard'
 import SHPhenotypeDetection from '../components/SHPhenotypeDetectionChart';
 import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHeatmap';
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
-import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
+import ReportingEmptyState from '../../../components/reporting/ReportingEmptyState';
 import CrossReferralEngine from '../../../components/crossReferral/CrossReferralEngine';
 import ServiceLineKPIBanner from '../../../components/shared/ServiceLineKPIBanner';
 
@@ -363,7 +363,7 @@ const StructuralServiceLineView: React.FC = () => {
           </div>
         );
       case 'reporting':
-        return <AutomatedReportingSystem />;
+        return <ReportingEmptyState />;
       case 'risk-heatmap':
         return <PatientRiskHeatmap />;
       case 'care-network':

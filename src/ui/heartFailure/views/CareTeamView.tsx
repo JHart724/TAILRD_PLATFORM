@@ -137,7 +137,7 @@ const CareTeamView: React.FC = () => {
  { id: 'patients', label: 'Patients', icon: Users, description: 'Enhanced patient worklist' },
  { id: 'workflow', label: 'Workflow', icon: Calendar, description: 'GDMT optimization workflow' },
  { id: 'safety', label: 'Safety', icon: Shield, description: 'Risk assessment & monitoring' },
- { id: 'hospital-alerts', label: 'Hospital Alerts', icon: Heart, description: 'Real-time heart failure hospital alerts' },
+ { id: 'hospital-alerts', label: 'Hospital Alerts', icon: Heart, description: 'Heart failure hospital alerts' },
  { id: 'team', label: 'Team', icon: UserCheck, description: 'Team collaboration & communication' },
  { id: 'documentation', label: 'Documentation', icon: FileText, description: 'Clinical documentation tools' },
  { id: 'clinicaltools', label: 'Clinical Intelligence', icon: Stethoscope, description: 'Phenotype classification, risk calculators, and clinical decision support' },
