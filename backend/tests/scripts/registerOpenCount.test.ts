@@ -144,11 +144,19 @@ describe('registerOpenCount invariants against the live register', () => {
     expect(sum).toBe(r.total);
   });
 
-  // Operator ruling 2026-07-21: AUDIT-011 IN PROGRESS stays EXCLUDED from the OPEN total per the
-  // literal rule (it carries no OPEN status token); no vocabulary change. It must be surfaced by the
-  // script (not silently dropped), not counted OPEN.
-  it('AUDIT-011 (IN PROGRESS) is not counted OPEN and IS surfaced', () => {
-    expect(r.openIds).not.toContain('AUDIT-011');
-    expect(r.unclassifiedBullets.map((u) => u.id)).toContain('AUDIT-011');
-  });
+  // RETIRED 2026-08-18 (operator ruling, SUPERSEDING the ruling of 2026-07-21 - recorded, not
+  // deleted quietly).
+  //
+  // The 2026-07-21 ruling held that AUDIT-011 (IN PROGRESS) stays EXCLUDED from the OPEN total -
+  // surfaced by the script but not counted - and this block asserted that against the LIVE register.
+  // It is retired because its PREMISE no longer holds: that ruling treated AUDIT-011 as ACTIVE
+  // in-progress work running to a schedule, but the schedule (a 14-day soak from 2026-05-07) expired
+  // 2026-05-21 and the Phase d strict-mode flip has been outstanding 89 days since. A non-counting
+  // status on a STALLED item is exactly what hid that lapse, so AUDIT-011 now carries an OPEN token
+  // and counts. See the AUDIT-011 entry in the register for the full reasoning.
+  //
+  // THE BEHAVIORAL INVARIANT IS NOT LOST: "DEPLOYED / IN PROGRESS / no-status bullets are surfaced,
+  // not counted OPEN" stays covered by the synthetic fixtures AUDIT-913/914/915 above, which prove
+  // the property without depending on a live finding remaining mis-classified - which is precisely
+  // why the live-register form was brittle: it could only pass while a real entry stayed broken.
 });
