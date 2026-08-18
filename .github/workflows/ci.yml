@@ -76,6 +76,41 @@ jobs:
         working-directory: backend
         run: npx tsx scripts/checkTsNocheck.ts
 
+  # ─── Frontend Test ────────────────────────────────────────────────────────
+  # Runs the ROOT (src/) suite. Added 2026-08-18 as step 0 of the demo-mode-as-build-flag
+  # migration, after the discovery that CI had NEVER run any frontend test: every other job
+  # in this file is working-directory: backend. The honesty suite that main relies on -
+  # audit303.labels (claims-honesty labels), the six *exec.convergence suites, honesty.hotfix,
+  # primitives.regression - therefore ran only when a human invoked it locally, i.e. it was
+  # decorative. This job makes it enforced. Do NOT scope it to a subset: the point is that the
+  # whole frontend suite gates main, so an honesty regression cannot land unobserved.
+  frontend-test:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache root node_modules
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: node_modules
+          key: frontend-deps-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: frontend-deps-${{ runner.os }}-
+
+      # npm ci requires the ROOT package-lock.json to be tracked. It was ignored-but-tracked
+      # until AUDIT-321 removed the stale .gitignore rule; without that fix this step fails.
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Run frontend tests
+        env:
+          CI: true
+        run: npx react-scripts test --watchAll=false
+
   # ─── Test ──────────────────────────────────────────────────────────────────────
   test:
     name: Jest Tests
