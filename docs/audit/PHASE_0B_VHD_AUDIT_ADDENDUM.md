@@ -8,7 +8,7 @@
 
 ## 1. Summary
 
-Valvular Heart Disease has **105 spec gaps** across 18 subcategories. Implementation: **15 DET_OK + 12 PARTIAL + 78 SPEC_ONLY** (any-coverage: 27/105 = 25.7%).
+Valvular Heart Disease has **105 spec gaps** across 18 subcategories. Implementation: **15 DET_OK + 13 PARTIAL + 77 SPEC_ONLY** (any-coverage: 28/105 = 26.7%).
 
 **Tier 1 priority status:** 2 DET_OK + 3 PARTIAL + 3 SPEC_ONLY of 8 T1 gaps (T1 any-coverage: 62.5%).
 
@@ -22,8 +22,8 @@ Valvular Heart Disease has **105 spec gaps** across 18 subcategories. Implementa
 |---|---:|---:|
 | PRODUCTION_GRADE | 0 | 0.0% |
 | DET_OK | 15 | 14.3% |
-| PARTIAL_DETECTION | 12 | 11.4% |
-| SPEC_ONLY | 78 | 74.3% |
+| PARTIAL_DETECTION | 13 | 12.4% |
+| SPEC_ONLY | 77 | 73.3% |
 | **Total** | **105** | **100.0%** |
 
 **PRODUCTION_GRADE = 0** is platform-wide; gated on closure of AUDIT-001 P0 (test coverage gap). Per AUDIT_METHODOLOGY.md §3.1, no rule classifies PRODUCTION_GRADE until the platform testing baseline is established.
@@ -35,9 +35,9 @@ Valvular Heart Disease has **105 spec gaps** across 18 subcategories. Implementa
 | Tier | Total | DET_OK | PARTIAL | SPEC_ONLY | Any-coverage % |
 |------|------:|-------:|--------:|----------:|---------------:|
 | **T1** | 8 | 2 | 3 | 3 | 62.5% |
-| **T2** | 72 | 8 | 7 | 57 | 20.8% |
+| **T2** | 72 | 8 | 8 | 56 | 22.2% |
 | **T3** | 25 | 5 | 2 | 18 | 28.0% |
-| **Overall** | **105** | **15** | **12** | **78** | **25.7%** |
+| **Overall** | **105** | **15** | **13** | **77** | **26.7%** |
 
 ---
 
@@ -50,7 +50,7 @@ Valvular Heart Disease has **105 spec gaps** across 18 subcategories. Implementa
 | Prosthesis Selection (6) | 0/5/1 | 0 | 0 | 6 | 0.0% |
 | Surgical AVR (6) | 0/5/1 | 0 | 1 | 5 | 16.7% |
 | Surgical MVR (7) | 0/5/2 | 0 | 0 | 7 | 0.0% |
-| Concomitant Procedures (5) | 0/5/0 | 0 | 1 | 4 | 20.0% |
+| Concomitant Procedures (5) | 0/5/0 | 0 | 2 | 3 | 40.0% |
 | IE General (8) | 0/8/0 | 0 | 0 | 8 | 0.0% |
 | IE Pathogens (7) | 1/6/0 | 0 | 0 | 7 | 0.0% |
 | IE Surgical (6) | 3/3/0 | 2 | 1 | 3 | 50.0% |
@@ -147,7 +147,7 @@ No T1 SPEC_ONLY gaps carry literal BSW pathway tags in CK v4.0 spec text. Pathwa
 
 **For VHD:** Light implementation coverage; significant v2.0 Phase 1 build work required.
 
-Coverage data: 27/105 any-coverage (25.7%); 15/105 DET_OK only (14.3%); 12 PARTIAL via broad-rule consolidation or partial-trigger match; 78 SPEC_ONLY.
+Coverage data: 28/105 any-coverage (26.7%); 15/105 DET_OK only (14.3%); 13 PARTIAL via broad-rule consolidation or partial-trigger match; 77 SPEC_ONLY.
 
 Rules-per-DET_OK efficiency: 52 registry rules / 15 DET_OK = 3.47.
 
@@ -260,7 +260,7 @@ Per-module wall-clock data lives in `docs/audit/canonical/audit_runs.jsonl` (app
 
 **VHD module: LIGHTLY BUILT.**
 
-- 15 DET_OK (14.3%), 12 PARTIAL (11.4%), 78 SPEC_ONLY (74.3%)
+- 15 DET_OK (14.3%), 13 PARTIAL (12.4%), 77 SPEC_ONLY (73.3%)
 - 2/8 T1 priority gaps DET_OK; 3 T1 SPEC_ONLY gaps require v2.0 Phase 1 work
 - Audit method: `rule-body-citation-AUDIT-030D`. Generated from canonical crosswalk on 2026-06-10.
 
