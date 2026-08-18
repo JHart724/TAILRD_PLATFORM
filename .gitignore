@@ -1,9 +1,8 @@
 # Dependencies
 node_modules/
 
-# Keep root lockfile ignored, but allow backend lockfile
-package-lock.json
-!backend/package-lock.json
+# Lockfiles (root + backend) are TRACKED - npm ci requires them. The root
+# package-lock.json ignore rule was removed under AUDIT-321 (ignored-but-tracked).
 
 # Build output
 build/
@@ -22,6 +21,11 @@ coverage/
 # Environment files
 .env
 .env.*
+# AUDIT-321: .env.production is FRONTEND build config (three REACT_APP_* values - demo-mode
+# flag, use-real-api flag, public API URL) compiled into the browser bundle by design, not
+# secrets. It must stay tracked or a production build loses its config. The broad .env.* rule
+# above still catches real env files (.env, .env.local, backend/.env).
+!.env.production
 # AUDIT-214 PR 1: the .env.example template is documentation (placeholders only), not a
 # real env file - track it so a fresh clone has the template. Real .env/.env.test stay ignored.
 !backend/.env.example
