@@ -4216,6 +4216,13 @@ export const RUNTIME_GAP_REGISTRY = [
     guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
     classOfRecommendation: '1', levelOfEvidence: 'C-LD',
   },
+  {
+    id: 'gap-vhd-040-valve-cad-revasc',
+    name: 'Prosthetic Valve + CAD Without Revascularization (Concomitant CABG)', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA VHD Guideline; 2021 ACC/AHA Coronary Revascularization Guideline',
+    guidelineVersion: '2021', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-22', nextReviewDue: '2026-12-22',
+    classOfRecommendation: '1', levelOfEvidence: 'C-LD',
+  },
   // v3.0 VHD buildout chunk 2 registry entries (prosthetic-valve dysfunction PVT/SVD partition, 2026-06-17).
   {
     id: 'gap-vhd-068-mech-pvt-gradient',
@@ -17635,6 +17642,43 @@ export function evaluateGapRules(
         classOfRecommendation: '3',
         levelOfEvidence: 'A',
         exclusions: ['Hospice/palliative care (Z51.5)', 'No structural heart disease (lone AF - class IC appropriate)', 'Agent already discontinued'],
+      },
+    });
+  }
+
+  // Gap VHD-040: prosthetic valve + CAD without coded revascularization -> concomitant/staged revascularization review
+  // T3 valve batch (2026-06-19). Guideline: 2020 ACC/AHA VHD + 2021 ACC/AHA Revascularization, Class 1, LOE C-LD -
+  // significant CAD at the time of valve surgery warrants concomitant CABG. section-16: Z95.2 (mechanical) / Z95.3
+  // (xenogenic/bio) / Z95.4 (other) prosthetic-valve presence = valve surgery occurred; I25.* = CAD; Z95.1 =
+  // aortocoronary-bypass status (the engine's CABG-present signal, as in CAD-029); Z95.5 = coronary-angioplasty/
+  // stent status (PCI) - all NLM-verified, all dx (no valve-CPT sourcing needed). Subgroup/Path-B: "needing
+  // revascularization" (CAD severity) is not precisely coded - I25 is the proxy; the gap surfaces valve patients
+  // with CAD and NO coded revascularization (neither CABG nor PCI) for that review, not a blanket recommendation.
+  const hasProstheticValve_VHD40 = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4'));
+  const hasCAD_VHD40 = dxCodes.some(c => c.startsWith('I25'));
+  const hasCABG_VHD40 = dxCodes.some(c => c.startsWith('Z95.1'));
+  const hasPCI_VHD40 = dxCodes.some(c => c.startsWith('Z95.5'));
+  if (hasProstheticValve_VHD40 && hasCAD_VHD40 && !hasCABG_VHD40 && !hasPCI_VHD40 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.REFERRAL_NEEDED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Prosthetic valve + coronary artery disease without coded revascularization: review concomitant/staged CABG',
+      target: 'Coronary revascularization status reviewed; concomitant/staged CABG considered for significant CAD',
+      recommendations: {
+        action: 'Consider reviewing the coronary revascularization status of this valve-surgery patient with coronary artery disease and no coded revascularization (neither aortocoronary bypass nor PCI) - significant CAD at the time of valve surgery warrants concomitant CABG, per the 2020 ACC/AHA VHD and 2021 ACC/AHA Coronary Revascularization Guidelines',
+        guideline: '2020 ACC/AHA VHD Guideline; 2021 ACC/AHA Coronary Revascularization Guideline',
+        note: 'Subgroup-aware: concomitant CABG is recommended for significant CAD at valve surgery (Class 1). Detected via prosthetic-valve presence (Z95.2/3/4) + CAD (I25) + NO coded revascularization (no Z95.1 CABG-status, no Z95.5 PCI-status). Path-B: CAD severity ("needing revascularization") is not precisely coded, so this surfaces the population for review.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Prosthetic heart valve (Z95.2 mechanical / Z95.3 xenogenic / Z95.4 other)',
+          'Coronary artery disease (I25.*)',
+          'No coded revascularization (no Z95.1 aortocoronary-bypass status, no Z95.5 PCI status)',
+        ],
+        guidelineSource: '2020 ACC/AHA VHD Guideline; 2021 ACC/AHA Coronary Revascularization Guideline',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prior CABG (Z95.1)', 'Prior PCI (Z95.5)', 'Non-obstructive CAD not warranting revascularization'],
       },
     });
   }

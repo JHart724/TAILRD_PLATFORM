@@ -25,7 +25,7 @@ describe('Structural: Gap rule engine integrity', () => {
     content = fs.readFileSync(ENGINE_PATH, 'utf8');
   });
 
-  it('exactly 370 gap rules defined (gaps.push calls)', () => {
+  it('exactly 371 gap rules defined (gaps.push calls)', () => {
     // Count incremented from 257 to 259 by EP-XX-7 mitigation (2026-05-04, fix/ep-017-rate-control-hfref-gating):
     // - +1: EP-017 SAFETY gap (HFrEF + on non-DHP CCB → Class 3 Harm alert)
     // - +1: EP-RC LVEF-data-required gap (HF dx + AF + LVEF undefined → structured data gap, not silent default)
@@ -102,7 +102,7 @@ describe('Structural: Gap rule engine integrity', () => {
     // GAP-CAD-051 post-PCI non-cardiac surgery timing (curated NCS <6mo post-PCI, 2016 DAPT FU COR 1).
     // tranche3Slice1PciCabg guard.
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(370);
+    expect(count).toBe(371); // 370 -> 371 by the T3 valve batch (landed 2026-08-18): VHD-040 prosthetic valve + CAD + no coded revasc.
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

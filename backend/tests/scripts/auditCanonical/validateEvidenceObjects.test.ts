@@ -159,8 +159,8 @@ describe('validateEvidenceObjects - live gapRuleEngine.ts baseline', () => {
     // (presence-as-proxy defect). Then 368 -> 370 by Tranche 3 Slice 1 (2026-07-31): +2 CAD
     // procedure-timing evaluators (GAP-CAD-061 + GAP-CAD-051, both with full evidence objects).
     // Sibling count-guard to clinicalScenarios.test.ts.
-    expect(result.pushCount).toBe(370);
-    expect(result.evidenceCount).toBe(370);
+    expect(result.pushCount).toBe(371);   // +1 VHD-040 (T3 valve batch, landed 2026-08-18)
+    expect(result.evidenceCount).toBe(371); // +1 VHD-040 (T3 valve batch, landed 2026-08-18)
   });
 
   it('reports ZERO inconsistencies (clean baseline post-AUDIT-103)', () => {
