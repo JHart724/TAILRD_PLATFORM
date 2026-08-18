@@ -8,7 +8,7 @@ import DevicePathwayFunnel from '../components/service-line/DevicePathwayFunnel'
 import QualityMetricsDashboard from '../components/service-line/QualityMetricsDashboard';
 import HFCareNetworkVisualization from '../components/service-line/HFCareNetworkVisualization';
 import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHeatmap';
-import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
+import ReportingEmptyState from '../../../components/reporting/ReportingEmptyState';
 import ClinicalGapDetectionDashboard from '../components/clinical/ClinicalGapDetectionDashboard';
 import KCCQOutcomesPanel from '../components/service-line/KCCQOutcomesPanel';
 import PhenotypeDetection from '../components/PhenotypeDetectionChart';
@@ -104,7 +104,7 @@ const ServiceLineView: React.FC = () => {
       case 'phenotype-detection': return <PhenotypeDetection />;
       case 'network': return <HFCareNetworkVisualization />;
       case 'quality': return <QualityMetricsDashboard />;
-      case 'reporting': return <AutomatedReportingSystem />;
+      case 'reporting': return <ReportingEmptyState />;
       case 'kccq-outcomes': return <KCCQOutcomesPanel />;
       case 'device-underutil': return <DeviceUnderutilizationPanel />;
       case 'cross-referral': return <CrossReferralEngine />;

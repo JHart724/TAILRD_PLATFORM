@@ -20,7 +20,7 @@ import EPPhenotypeDetectionChart from '../components/EPPhenotypeDetectionChart';
 // Import shared components
 import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHeatmap';
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
-import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
+import ReportingEmptyState from '../../../components/reporting/ReportingEmptyState';
 import EPClinicalGapDetectionDashboard, { EP_CLINICAL_GAPS, EPGapPatient } from '../components/clinical/EPClinicalGapDetectionDashboard';
 
 // Electrophysiology Analytics Dashboard
@@ -779,7 +779,7 @@ export const electrophysiologyServiceLineConfig: ServiceLineViewConfig = {
  'automated-support': EPAutomatedClinicalSupport,
  'quality': EPQualityMetrics,
  'roi-calculator': EPROICalculator,
- 'reporting': AutomatedReportingSystem,
+ 'reporting': ReportingEmptyState,
  'ep-outcomes-by-cohort': EPOutcomesByCohort,
  'ep-outcomes-trends': EPOutcomesTrends,
  'ep-phenotype-detection': EPPhenotypeDetectionChart,
