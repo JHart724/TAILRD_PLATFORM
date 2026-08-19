@@ -46,11 +46,11 @@ export interface CanonicalValidation {
  * Pure validation of the 6 canonical crosswalks. Reads the extracts, runs validateCrosswalk per module,
  * and RETURNS the aggregate - it does NOT console.log or process.exit (the CLI main() does that).
  */
-export function runValidation(): CanonicalValidation {
+export function runValidation(inputDir: string = CANONICAL_OUTPUT_DIR): CanonicalValidation {
   // Pre-load all module code extracts for cross-module cite validation
   const allCodeExtracts = new Map<ModuleCode, CodeExtract>();
   for (const cfg of MODULE_CONFIGS) {
-    const cp = path.join(CANONICAL_OUTPUT_DIR, `${cfg.code}.code.json`);
+    const cp = path.join(inputDir, `${cfg.code}.code.json`);
     if (!fs.existsSync(cp)) {
       return { valid: false, modulesValidated: 0, missingExtract: cp, results: [] };
     }
@@ -62,8 +62,8 @@ export function runValidation(): CanonicalValidation {
   let modulesValidated = 0;
 
   for (const cfg of MODULE_CONFIGS) {
-    const sp = path.join(CANONICAL_OUTPUT_DIR, `${cfg.code}.spec.json`);
-    const xp = path.join(CANONICAL_OUTPUT_DIR, `${cfg.code}.crosswalk.json`);
+    const sp = path.join(inputDir, `${cfg.code}.spec.json`);
+    const xp = path.join(inputDir, `${cfg.code}.crosswalk.json`);
     if (!fs.existsSync(sp)) {
       results.push({ code: cfg.code, status: 'SKIPPED_NO_SPEC' });
       continue;
@@ -82,7 +82,11 @@ export function runValidation(): CanonicalValidation {
     if (!r.valid) anyInvalid = true;
   }
 
-  return { valid: modulesValidated > 0 && !anyInvalid, modulesValidated, results };
+  // AUDIT-328: a SKIPPED module is not an INVALID one, so the old predicate returned true with a
+  // module silently unvalidated - modulesValidated 5 of 6, anyInvalid false, valid TRUE. A skip now
+  // makes the aggregate invalid: "we could not check it" must never read the same as "we checked it".
+  const anySkipped = results.some((r) => r.status !== 'VALIDATED');
+  return { valid: modulesValidated > 0 && !anyInvalid && !anySkipped, modulesValidated, results };
 }
 
 /**

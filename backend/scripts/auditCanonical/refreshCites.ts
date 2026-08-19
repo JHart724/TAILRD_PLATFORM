@@ -268,10 +268,12 @@ function main(): void {
   let totalSpecLineUpdated = 0;
   let anyError = false;
 
+  let skippedModules = 0;
   for (const cfg of targets) {
     const paths = modulePaths(cfg.code, args.inputDir);
     if (!fs.existsSync(paths.crosswalk) || !fs.existsSync(paths.spec)) {
       console.error(`  ${cfg.code}: SKIPPED — missing crosswalk or spec.json`);
+      skippedModules++;
       continue;
     }
     const spec = JSON.parse(fs.readFileSync(paths.spec, 'utf8')) as SpecExtract;
@@ -304,6 +306,18 @@ function main(): void {
     if (!args.dryRun && (result.citesUpdated > 0 || result.specLineUpdated > 0)) {
       fs.writeFileSync(paths.crosswalk, stableStringify(result.updatedCrosswalk));
     }
+  }
+
+  // AUDIT-328: a SKIPPED module means this stage did not do what it was asked. Denominated in
+  // targets.length, NOT MODULE_CONFIGS.length, so a --module run does not self-fail on the
+  // modules it was never asked to process. No --allow-skip flag exists, by operator ruling:
+  // the moment someone reaches for such a flag is the moment this gate should hold.
+  if (skippedModules > 0) {
+    console.error(
+      `\nAUDIT-328: ${skippedModules} of ${targets.length} module(s) SKIPPED - required inputs missing. ` +
+        'This stage regenerated nothing for them. Run the earlier pipeline stages first (see CLAUDE.md section 9.2).',
+    );
+    process.exit(1);
   }
 
   if (anyError) {
