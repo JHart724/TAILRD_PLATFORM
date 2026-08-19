@@ -54,7 +54,7 @@ const KPI_DEFS: KPICardDef[] = [
   },
   {
     id: 'gdmt-optimized',
-    label: 'GDMT Optimized (no open med gaps)',
+    label: 'GDMT Optimized (all four pillars)',
     icon: Activity,
     color: 'teal',
     live: true,
@@ -165,10 +165,13 @@ export const HFExecutiveSummary: React.FC<HFExecutiveSummaryProps> = ({ dashboar
       case 'open-gaps':
         return { value: s.totalOpenGaps.toLocaleString(), subtext: 'Recommended for review (database)' };
       case 'gdmt-optimized': {
-        const rate = s.totalPatients > 0 ? Math.round((s.gdmtOptimized / s.totalPatients) * 100) : null;
+        // AUDIT-324: the denominator is the EVALUABLE HFrEF population, not the whole HF panel.
+        // Dividing by totalPatients here would replace one silent wrong number with another.
+        const denom = s.gdmtOptimizedDenominator ?? 0;
+        const rate = denom > 0 ? Math.round((s.gdmtOptimized / denom) * 100) : null;
         return {
           value: rate !== null ? `${rate}%` : '-',
-          subtext: `${s.gdmtOptimized.toLocaleString()} of ${s.totalPatients.toLocaleString()} patients with no unresolved GDMT medication gaps`,
+          subtext: `${s.gdmtOptimized.toLocaleString()} of ${denom.toLocaleString()} evaluable HFrEF patients on all four GDMT pillars`,
         };
       }
       case 'device-candidates':
