@@ -73,6 +73,7 @@ const FAKE_DASHBOARD: HFDashboardData = {
     gapsByType: { MEDICATION_MISSING: 300, SAFETY_ALERT: 42 },
     deviceCandidates: 77,
     gdmtOptimized: 1234,
+    gdmtOptimizedDenominator: 2000, // AUDIT-324: evaluable HFrEF, not totalPatients
   },
   gdmtMetrics: {
     aceArb: { current: 80, target: 95, status: 'amber', missingCount: 10 },
@@ -93,11 +94,14 @@ describe('HF Exec batch 1 - HFExecutiveSummary wired to the dashboard contract',
   });
   it('renders the derived GDMT-optimized rate + honest eligibility-aware label', () => {
     const html = render(<HFExecutiveSummary dashboard={FAKE_DASHBOARD} />);
-    const rate = Math.round((1234 / 4321) * 100); // 29
+    // AUDIT-324: the divisor is the EVALUABLE HFrEF denominator, never totalPatients. 1234/4321
+    // (29%) was the old wrong shape; dividing by totalPatients now would be a new silent error.
+    const rate = Math.round((1234 / 2000) * 100); // 62
     expect(html).toContain(`${rate}%`);
+    expect(html).not.toContain('29%'); // the totalPatients divisor must be gone
     expect(html).not.toContain('65%'); // old hardcode gone
-    expect(html).toContain('no unresolved GDMT medication gaps');
-    expect(html).toContain('GDMT Optimized (no open med gaps)');
+    expect(html).toContain('evaluable HFrEF patients on all four GDMT pillars');
+    expect(html).toContain('GDMT Optimized (all four pillars)');
   });
   it('renders the API device-candidate count', () => {
     const html = render(<HFExecutiveSummary dashboard={FAKE_DASHBOARD} />);

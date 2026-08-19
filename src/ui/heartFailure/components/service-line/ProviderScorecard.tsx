@@ -53,7 +53,8 @@ const ProviderScorecard: React.FC = () => {
                 </div>
                 <div className="p-4 bg-green-50 border border-green-100 rounded-xl text-center">
                   <div className="text-2xl font-bold text-green-700">{dashboard.summary.gdmtOptimized}</div>
-                  <div className="text-xs text-green-600 mt-1">GDMT Optimized</div>
+                  {/* AUDIT-324: denominator rendered inline so scope is never separated from the figure. */}
+                  <div className="text-xs text-green-600 mt-1">GDMT Optimized of {dashboard.summary.gdmtOptimizedDenominator ?? 0} evaluable</div>
                 </div>
                 <div className="p-4 bg-titanium-50 border border-titanium-200 rounded-xl text-center">
                   <div className="text-2xl font-bold text-titanium-700">—</div>

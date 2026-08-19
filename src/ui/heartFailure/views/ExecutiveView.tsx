@@ -255,7 +255,9 @@ const ExecutiveView: React.FC = () => {
   // targets/variances with no source are exported as '-' (HF Exec batch 1).
   const generateExportData = (): ExportData => {
  const s = dashboard?.summary;
- const gdmtRate = s && s.totalPatients > 0 ? `${Math.round((s.gdmtOptimized / s.totalPatients) * 100)}%` : 'pending';
+ // AUDIT-324: evaluable HFrEF denominator, not the whole HF panel. This value is EXPORTED.
+ const gdmtDenom = s?.gdmtOptimizedDenominator ?? 0;
+ const gdmtRate = s && gdmtDenom > 0 ? `${Math.round((s.gdmtOptimized / gdmtDenom) * 100)}%` : 'pending';
  return {
  filename: 'heart-failure-executive-report',
  title: 'Heart Failure Executive Dashboard',

@@ -334,7 +334,19 @@ export interface HFGDMTPillar {
   current: number | null;
   target: number;
   status: 'green' | 'amber' | 'red' | 'unknown';
+  /** AUDIT-324: evaluable patients NOT on this class (was "patients with an open gap"). */
   missingCount: number;
+  onTherapyCount?: number;
+  evaluableCount?: number;
+}
+
+/** AUDIT-324: the explicit evaluable denominator, with the three-way unevaluable split. */
+export interface HFGDMTDenominator {
+  criteria: string;
+  cohortTotal: number;
+  evaluable: number;
+  unevaluable: number;
+  unevaluableReasons: { lvefAbove40: number; echoStale: number; echoAbsent: number };
 }
 
 export interface HFDashboardData {
@@ -344,6 +356,8 @@ export interface HFDashboardData {
     gapsByType: Record<string, number>;
     deviceCandidates: number;
     gdmtOptimized: number;
+    /** AUDIT-324: divide gdmtOptimized by THIS, never by totalPatients. */
+    gdmtOptimizedDenominator?: number;
   };
   gdmtMetrics: {
     aceArb: HFGDMTPillar;
@@ -351,6 +365,7 @@ export interface HFDashboardData {
     mra: HFGDMTPillar;
     sglt2i: HFGDMTPillar;
   };
+  gdmtDenominator?: HFGDMTDenominator;
   recentAlerts: Array<{
     gapId: string;
     patientId: string;

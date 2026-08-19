@@ -4,6 +4,12 @@ import { authenticateToken, authorizeHospital, authorizeModule, authorizeView, A
 import prisma from '../lib/prisma';
 import { logger } from '../utils/logger';
 import { buildFfrDecisionSupport, buildGdmtGapAnalysis } from './decisionSupport';
+import {
+  emptyScan,
+  scanGdmtBatch,
+  toGdmtDenominator,
+  toGdmtMetrics,
+} from '../services/gdmtMetrics';
 
 const router = Router();
 
@@ -129,7 +135,6 @@ router.get('/heart-failure/dashboard', async (req: AuthenticatedRequest, res: Re
     const [
       totalPatients,
       openGapsByType,
-      medicationGaps,
       deviceGaps,
       recentGaps,
     ] = await Promise.all([
@@ -138,10 +143,6 @@ router.get('/heart-failure/dashboard', async (req: AuthenticatedRequest, res: Re
         by: ['gapType'],
         where: openGapWhere,
         _count: { id: true },
-      }),
-      prisma.therapyGap.findMany({
-        where: { ...openGapWhere, gapType: 'MEDICATION_MISSING' },
-        select: { medication: true, patientId: true },
       }),
       prisma.therapyGap.count({
         where: { ...openGapWhere, gapType: 'DEVICE_ELIGIBLE' },
@@ -169,49 +170,41 @@ router.get('/heart-failure/dashboard', async (req: AuthenticatedRequest, res: Re
       return acc;
     }, {});
 
-    // GDMT pillar coverage — derived from unresolved MEDICATION_MISSING gaps.
-    // Coverage = 1 - (distinct patients missing this drug class / total HF patients).
-    // Dedupe by patientId so one patient with multiple gaps on the same class
-    // counts as one missing patient. Clamp to [0, totalPatients] so a stale
-    // gap row count can never produce negative coverage.
-    const countMissing = (matcher: RegExp) => {
-      const patientIds = new Set<string>();
-      for (const g of medicationGaps) {
-        if (g.medication && matcher.test(g.medication)) {
-          patientIds.add(g.patientId);
-        }
-      }
-      return patientIds.size;
-    };
+    // AUDIT-324: GDMT pillar rates are computed from MEDICATION CODES on the patient record,
+    // never from gap rows and never by matching drug NAMES. See src/services/gdmtMetrics.ts for
+    // the full reasoning, the pillar code sets, and the finerenone / canagliflozin rulings.
+    //
+    // The scan is CURSOR-BATCHED at 100 per the AUDIT-227 precedent: the previous shape's
+    // successor here would have loaded the whole HF cohort with its medications and observations
+    // in one query, which is the exact unbounded-load that OOM-killed the trials endpoint.
+    const GDMT_BATCH_SIZE = 100;
+    const gdmtAcc = emptyScan();
+    const nowMs = Date.now();
+    let gdmtCursor: string | undefined;
+    for (;;) {
+      const batch = await prisma.patient.findMany({
+        where: hfPatientWhere,
+        orderBy: { id: 'asc' },
+        take: GDMT_BATCH_SIZE,
+        ...(gdmtCursor ? { skip: 1, cursor: { id: gdmtCursor } } : {}),
+        select: {
+          id: true,
+          medications: { select: { rxNormCode: true } },
+          observations: {
+            where: { observationType: 'lvef', valueNumeric: { not: null } },
+            select: { valueNumeric: true, observedDateTime: true },
+            orderBy: { observedDateTime: 'desc' },
+          },
+        },
+      });
+      if (batch.length === 0) break;
+      scanGdmtBatch(batch, nowMs, gdmtAcc);
+      gdmtCursor = batch[batch.length - 1].id;
+      if (batch.length < GDMT_BATCH_SIZE) break;
+    }
 
-    const coverageFor = (missing: number) => {
-      if (totalPatients <= 0) return null;
-      const clamped = Math.min(Math.max(missing, 0), totalPatients);
-      return Math.round((1 - clamped / totalPatients) * 1000) / 10;
-    };
-
-    // Distinct patients with any unresolved medication gap — used for the
-    // "GDMT optimized" summary card (patients with zero medication gaps).
-    const patientsWithMedicationGap = new Set(medicationGaps.map(g => g.patientId)).size;
-
-    const statusFor = (coverage: number | null, target: number, amber: number) => {
-      if (coverage === null) return 'unknown';
-      if (coverage >= target) return 'green';
-      if (coverage >= amber) return 'amber';
-      return 'red';
-    };
-
-    const aceArbMissing = countMissing(/(ACEi|ACE inhibitor|ARB|ARNI|sacubitril|valsartan|lisinopril|enalapril|losartan)/i);
-    const betaBlockerMissing = countMissing(/(beta blocker|bisoprolol|carvedilol|metoprolol)/i);
-    const mraMissing = countMissing(/(MRA|spironolactone|eplerenone|mineralocorticoid)/i);
-    const sglt2iMissing = countMissing(/(SGLT2|dapagliflozin|empagliflozin|canagliflozin)/i);
-
-    const gdmtMetrics = {
-      aceArb: { current: coverageFor(aceArbMissing), target: 95, status: statusFor(coverageFor(aceArbMissing), 95, 85), missingCount: aceArbMissing },
-      betaBlocker: { current: coverageFor(betaBlockerMissing), target: 95, status: statusFor(coverageFor(betaBlockerMissing), 95, 85), missingCount: betaBlockerMissing },
-      mra: { current: coverageFor(mraMissing), target: 85, status: statusFor(coverageFor(mraMissing), 85, 70), missingCount: mraMissing },
-      sglt2i: { current: coverageFor(sglt2iMissing), target: 75, status: statusFor(coverageFor(sglt2iMissing), 75, 60), missingCount: sglt2iMissing },
-    };
+    const gdmtMetrics = toGdmtMetrics(gdmtAcc);
+    const gdmtDenominator = toGdmtDenominator(gdmtAcc);
 
     const recentAlerts = recentGaps.map(g => ({
       gapId: g.id,
@@ -236,10 +229,15 @@ router.get('/heart-failure/dashboard', async (req: AuthenticatedRequest, res: Re
           totalOpenGaps,
           gapsByType,
           deviceCandidates: deviceGaps,
-          // gdmtOptimized = patients with zero unresolved medication gaps
-          gdmtOptimized: Math.max(totalPatients - patientsWithMedicationGap, 0),
+          // AUDIT-324: gdmtOptimized is now EVALUABLE-SCOPED and CODE-DERIVED - evaluable HFrEF
+          // patients on ALL FOUR pillars. It was "patients with zero unresolved medication gaps",
+          // which counted the unevaluable as optimized and excluded gapless patients from the
+          // cohort entirely. Consumers MUST divide by gdmtOptimizedDenominator, not totalPatients.
+          gdmtOptimized: gdmtAcc.onAllFour,
+          gdmtOptimizedDenominator: gdmtDenominator.evaluable,
         },
         gdmtMetrics,
+        gdmtDenominator,
         recentAlerts,
         source: 'database',
       },
