@@ -1,0 +1,91 @@
+{
+  "generatedBy": "backend/scripts/auditCanonical/reconcile.ts",
+  "inputs": [
+    {
+      "path": "docs/audit/canonical/CAD.code.json",
+      "sha256": "7ee35c998c4c8720b30371244061a2183ed2e924bf4495efb4978a2ef3eac682"
+    },
+    {
+      "path": "docs/audit/canonical/CAD.spec.json",
+      "sha256": "f24d8a7b24fef14cd1110de13111ba06f455c75de50622598d55db08f60c5e13"
+    },
+    {
+      "path": "docs/audit/canonical/EP.code.json",
+      "sha256": "a832e0a33cd5546dc11c856207f50554d3d1d0d18c4c5c1b4982d748f93cee11"
+    },
+    {
+      "path": "docs/audit/canonical/EP.spec.json",
+      "sha256": "7045c2288264e499b58a2f6570daca1e3b42f1b786019f9c7fc4b07d7435c760"
+    },
+    {
+      "path": "docs/audit/canonical/HF.code.json",
+      "sha256": "72d3cdb23bb5477a1df8916d9fed51632a73202ee813af90a5f9c7c12082a486"
+    },
+    {
+      "path": "docs/audit/canonical/HF.spec.json",
+      "sha256": "50c0b8786878d60ffe2d58d3588875a64e0c1e426a6c8f336f2ef35ab78f406f"
+    },
+    {
+      "path": "docs/audit/canonical/PV.code.json",
+      "sha256": "a8dc943fe4776f2fd017be15f097a49a192fa843022f0efc1b4a33a6ceb85993"
+    },
+    {
+      "path": "docs/audit/canonical/PV.spec.json",
+      "sha256": "00a8aee10a1e161fb4f818cfbede73ebc9c23b4d540433c855783915910fd939"
+    },
+    {
+      "path": "docs/audit/canonical/SH.code.json",
+      "sha256": "d94a2f1095f1f2a48ed48d741a409c2b39b7439b414b12393606f1f13a25c6d2"
+    },
+    {
+      "path": "docs/audit/canonical/SH.spec.json",
+      "sha256": "78dbc1c98b798b039374a12cdb1874e5b8c14e7afba21a502c6c0f2f6012066d"
+    },
+    {
+      "path": "docs/audit/canonical/VHD.code.json",
+      "sha256": "a2006186379b24905db9e0469570cf3f5c3567b4a4ab6f9c56e64f50a2d236e0"
+    },
+    {
+      "path": "docs/audit/canonical/VHD.spec.json",
+      "sha256": "6a51efddd32edbde85f531c8484101c6e26db90595a1e848998d0d70f6153ca8"
+    }
+  ],
+  "modulesProcessed": [
+    "CAD",
+    "EP",
+    "HF",
+    "PV",
+    "SH",
+    "VHD"
+  ],
+  "modulesSkipped": [],
+  "outputs": [
+    {
+      "path": "docs/audit/canonical/CAD.reconciliation.json",
+      "sha256": "ad0ef0163fa92c82b7cbe1d456d17320c1aa7b81a55bb7f21d2ce34351cfe2ea"
+    },
+    {
+      "path": "docs/audit/canonical/EP.reconciliation.json",
+      "sha256": "b3d352f93b4786b13ad3e30a6cd80325e53807b8409340ec2d0d080533882180"
+    },
+    {
+      "path": "docs/audit/canonical/HF.reconciliation.json",
+      "sha256": "24b051ce3b6d85f0c1319c5002535e50ee564f757e666c791a738b4605bef6ac"
+    },
+    {
+      "path": "docs/audit/canonical/PV.reconciliation.json",
+      "sha256": "67f9a2cf43863334e27269cd3d2780aa5db129eeb74ba90cb356f6d2a6aa0079"
+    },
+    {
+      "path": "docs/audit/canonical/SH.reconciliation.json",
+      "sha256": "7d845b7838e343eeb33d25d39215766f1e11ce12f139fefcf4ecdcc38f626b3d"
+    },
+    {
+      "path": "docs/audit/canonical/VHD.reconciliation.json",
+      "sha256": "5ca0559ab755ebe59984b0c367b824b4c905f7225dabf3d8cf0fdaab0f7aeb95"
+    }
+  ],
+  "schemaVersion": 1,
+  "stage": "reconcile"
+}
+

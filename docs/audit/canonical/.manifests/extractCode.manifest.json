@@ -1,0 +1,47 @@
+{
+  "generatedBy": "backend/scripts/auditCanonical/extractCode.ts",
+  "inputs": [
+    {
+      "path": "backend/src/ingestion/gaps/gapRuleEngine.ts",
+      "sha256": "d4ee2bbdb5680810211af0b97512dcbcd627becc05d6331c5536fdaba0bcdc47"
+    }
+  ],
+  "modulesProcessed": [
+    "CAD",
+    "EP",
+    "HF",
+    "PV",
+    "SH",
+    "VHD"
+  ],
+  "modulesSkipped": [],
+  "outputs": [
+    {
+      "path": "docs/audit/canonical/CAD.code.json",
+      "sha256": "7ee35c998c4c8720b30371244061a2183ed2e924bf4495efb4978a2ef3eac682"
+    },
+    {
+      "path": "docs/audit/canonical/EP.code.json",
+      "sha256": "a832e0a33cd5546dc11c856207f50554d3d1d0d18c4c5c1b4982d748f93cee11"
+    },
+    {
+      "path": "docs/audit/canonical/HF.code.json",
+      "sha256": "72d3cdb23bb5477a1df8916d9fed51632a73202ee813af90a5f9c7c12082a486"
+    },
+    {
+      "path": "docs/audit/canonical/PV.code.json",
+      "sha256": "a8dc943fe4776f2fd017be15f097a49a192fa843022f0efc1b4a33a6ceb85993"
+    },
+    {
+      "path": "docs/audit/canonical/SH.code.json",
+      "sha256": "d94a2f1095f1f2a48ed48d741a409c2b39b7439b414b12393606f1f13a25c6d2"
+    },
+    {
+      "path": "docs/audit/canonical/VHD.code.json",
+      "sha256": "a2006186379b24905db9e0469570cf3f5c3567b4a4ab6f9c56e64f50a2d236e0"
+    }
+  ],
+  "schemaVersion": 1,
+  "stage": "extractCode"
+}
+

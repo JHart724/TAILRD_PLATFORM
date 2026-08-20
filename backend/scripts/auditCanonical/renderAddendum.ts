@@ -45,6 +45,7 @@ import {
   CANONICAL_OUTPUT_DIR,
   REPO_ROOT,
 } from './lib/modules';
+import { emitManifest } from './lib/manifest';
 
 const MODULE_TITLES: Record<ModuleCode, string> = {
   HF: 'Heart Failure',
@@ -644,6 +645,9 @@ function main(): void {
 
   const targets = all ? MODULE_CONFIGS : MODULE_CONFIGS.filter((m) => m.code === mod);
   console.log('=== renderAddendum.ts ===');
+  const mProcessed: string[] = [];
+  const mInputs: string[] = [];
+  const mOutputs: string[] = [];
   let skippedModules = 0;
   for (const cfg of targets) {
     const sp = path.join(inputDir, `${cfg.code}.spec.json`);
@@ -665,6 +669,9 @@ function main(): void {
     const md = renderAddendum(ctx);
     const outPath = path.join(outputDir, `PHASE_0B_${cfg.code}_AUDIT_ADDENDUM.md`);
     fs.writeFileSync(outPath, md);
+    mProcessed.push(cfg.code);
+    mInputs.push(sp, cp, xp, rp);
+    mOutputs.push(outPath);
     console.log(`  ${cfg.code}: ${md.length} chars → ${path.relative(REPO_ROOT, outPath).replace(/\\/g, '/')}`);
   }
 
@@ -672,6 +679,16 @@ function main(): void {
   // targets.length, NOT MODULE_CONFIGS.length, so a --module run does not self-fail on the
   // modules it was never asked to process. No --allow-skip flag exists, by operator ruling:
   // the moment someone reaches for such a flag is the moment this gate should hold.
+  emitManifest({
+    stage: 'renderAddendum',
+    generatedBy: 'backend/scripts/auditCanonical/renderAddendum.ts',
+    processed: mProcessed,
+    skipped: [],
+    inputs: mInputs,
+    outputs: mOutputs,
+    canonicalDir: inputDir,
+    isFullRun: all,
+  });
   if (skippedModules > 0) {
     console.error(
       `\nAUDIT-328: ${skippedModules} of ${targets.length} module(s) SKIPPED - required inputs missing. ` +

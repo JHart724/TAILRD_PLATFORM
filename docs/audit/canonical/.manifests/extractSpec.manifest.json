@@ -1,0 +1,47 @@
+{
+  "generatedBy": "backend/scripts/auditCanonical/extractSpec.ts",
+  "inputs": [
+    {
+      "path": "docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md",
+      "sha256": "280a198be5edb94207f98c26c7e6f4b3559f57228ba1cd2fb1f73116b132754a"
+    }
+  ],
+  "modulesProcessed": [
+    "CAD",
+    "EP",
+    "HF",
+    "PV",
+    "SH",
+    "VHD"
+  ],
+  "modulesSkipped": [],
+  "outputs": [
+    {
+      "path": "docs/audit/canonical/CAD.spec.json",
+      "sha256": "f24d8a7b24fef14cd1110de13111ba06f455c75de50622598d55db08f60c5e13"
+    },
+    {
+      "path": "docs/audit/canonical/EP.spec.json",
+      "sha256": "7045c2288264e499b58a2f6570daca1e3b42f1b786019f9c7fc4b07d7435c760"
+    },
+    {
+      "path": "docs/audit/canonical/HF.spec.json",
+      "sha256": "50c0b8786878d60ffe2d58d3588875a64e0c1e426a6c8f336f2ef35ab78f406f"
+    },
+    {
+      "path": "docs/audit/canonical/PV.spec.json",
+      "sha256": "00a8aee10a1e161fb4f818cfbede73ebc9c23b4d540433c855783915910fd939"
+    },
+    {
+      "path": "docs/audit/canonical/SH.spec.json",
+      "sha256": "78dbc1c98b798b039374a12cdb1874e5b8c14e7afba21a502c6c0f2f6012066d"
+    },
+    {
+      "path": "docs/audit/canonical/VHD.spec.json",
+      "sha256": "6a51efddd32edbde85f531c8484101c6e26db90595a1e848998d0d70f6153ca8"
+    }
+  ],
+  "schemaVersion": 1,
+  "stage": "extractSpec"
+}
+

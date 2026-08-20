@@ -1556,3 +1556,26 @@ Before acting on any number that gates a decision, state what the number measure
 ---
 
 *Authored 2026-05-04 in response to compounding methodology defect cycles (AUDIT-029 -> AUDIT-030 -> AUDIT-030.D). This document is the contract that prevents methodology drift living in audit prose. Implementation under `backend/scripts/auditCanonical/` follows. §16 added 2026-05-05 in response to Cat A clinical-code verification surfacing 15.5% wrong-drug bug rate (AUDIT-042 through AUDIT-061). §17 added 2026-05-06 in response to AUDIT-067/068 ABI deferral course-correction; codifies clinical-code PR acceptance criteria as drift-prevention mechanism. §18 added 2026-05-07 in response to AUDIT-016 status-surface drift across PR #248-#250 work; codifies status-surface discipline (register severity is authoritative; agent must not re-classify at status-surface time). §20 added 2026-06-11 (§19 permanently skipped to avoid collision with the CLAUDE.md §19 PAUSE procedure referenced unprefixed throughout the corpus) for the service-line aggregation + provenance surface class; authored from the PHASE-0 service-line inventory, ahead of the first classification pass. §21 added 2026-06-15 in response to AUDIT-163 (POAF prophylaxis absent from KB) for the KB-completeness / spec-completeness class - the inverted discipline (KB vs external clinical reality, not code vs KB); two-pronged (structured reference-standard mapping + expert-gated literature fill); authored ahead of the surgical peri-operative audit (step 3) it governs. §22 added 2026-07-18 in response to three consecutive coverage-of-an-invariant findings (AUDIT-203 audit coverage, AUDIT-204 type-check coverage, AUDIT-208 contract coverage), each found by accident while reading code for an unrelated reason; codifies that an invariant and the mechanism measuring its coverage ship together, with a precise detector + sanctioned-exceptions list + CI enforcement. §23 added 2026-07-18 from the same-day state reconciliation, which surfaced two invalid metrics (stale-PR distance-behind vs own-diff-from-merge-base; register OPEN token-parse vs literal-read-with-addenda) plus the gh-CLI-tail scope hazard; codifies measuring the decision-driving quantity, the ID-level-set-diff reconciliation rule, and scope verification against origin rather than CLI output.*
+
+## 24. Derived-artifact conflict resolution (AUDIT-328 (iii))
+
+The per-stage run manifests at `docs/audit/canonical/.manifests/*.manifest.json` are DERIVED OUTPUT. They exist so a gate can distinguish "nothing changed" from "nothing ran" - a regenerate-then-diff gate cannot, because a stage that writes no output produces no diff.
+
+**THE RULE: the correct conflict resolution is always delete-and-regenerate. Never hand-merge a manifest.** Every canonical PR touches its stage's manifest, so conflicts on stacked PRs are certain. Because the file is derived, there is never a hunk worth preserving from either side:
+
+```
+git checkout --ours docs/audit/canonical/.manifests/   # or --theirs; it does not matter
+npx tsx backend/scripts/auditCanonical/extractCode.ts --all
+npx tsx backend/scripts/auditCanonical/extractSpec.ts --all
+npx tsx backend/scripts/auditCanonical/reconcile.ts --all
+npx tsx backend/scripts/auditCanonical/renderAddendum.ts --all
+npx tsx backend/scripts/auditCanonical/renderSynthesis.ts
+```
+
+**A careless resolution fails Gate 5 rather than passing quietly.** Hand-picking hunks leaves input or output hashes that no longer match the working tree, and `verifyManifest.ts` rejects it with the stage named. That is the point: the conflict surface converts a merge hazard into a caught error rather than a silent one.
+
+**THE CAVEAT, recorded because it is the failure mode this rule could itself create.** The rule trains a "conflict -> regenerate -> accept" reflex. That reflex is SAFE ONLY WHILE THE GENERATORS ARE DETERMINISTIC - byte-identical output for identical input. It is deterministic today (verified 2026-08-20: two consecutive `extractCode --all` runs produce an identical manifest hash, and the canonical artifacts are byte-identical to their committed state after a full pipeline run). If a generator ever acquires a timestamp, a random ordering, a machine-dependent path, or any other nondeterminism, "regenerate and accept" would silently discard a real difference from the other branch, and the reflex would carry the mistake. Two consequences follow:
+
+- Any change that introduces nondeterminism into a pipeline stage MUST be treated as invalidating this rule, not as a routine change.
+- `*.meta.json` files carry a `generatedAt` timestamp and are DELIBERATELY EXCLUDED from manifest `outputs[]` for exactly this reason - including them would make the manifest non-reproducible and defeat its own purpose.
+

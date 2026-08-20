@@ -1,0 +1,47 @@
+{
+  "generatedBy": "backend/scripts/auditCanonical/renderSynthesis.ts",
+  "inputs": [
+    {
+      "path": "docs/audit/canonical/CAD.crosswalk.json",
+      "sha256": "ad3ddf994335da2b1da5b687da5e592923b8e1e733bbb3664e43aa90dcd20650"
+    },
+    {
+      "path": "docs/audit/canonical/EP.crosswalk.json",
+      "sha256": "eea19509ed9c3b9fa4d79be9e9f1ad471277bd127189c158aa488dba67cfe900"
+    },
+    {
+      "path": "docs/audit/canonical/HF.crosswalk.json",
+      "sha256": "ef8b7ad7e4e46810bc606581f57b2de62c305523d00923b9b5e9b7d9f272a5e9"
+    },
+    {
+      "path": "docs/audit/canonical/PV.crosswalk.json",
+      "sha256": "a127311057bcc86cd77c00c185ac0901b51c266db89e9a634a1a0f4a5429be0e"
+    },
+    {
+      "path": "docs/audit/canonical/SH.crosswalk.json",
+      "sha256": "c0ed279ccf681cac07f82237e5746c3b0cc6d8e82167b699ef1c364bff1a20fe"
+    },
+    {
+      "path": "docs/audit/canonical/VHD.crosswalk.json",
+      "sha256": "0ee35629fc4aaad0bc57378156bdc8008e96181a5e00ead3d8d1d877526560cd"
+    }
+  ],
+  "modulesProcessed": [
+    "CAD",
+    "EP",
+    "HF",
+    "PV",
+    "SH",
+    "VHD"
+  ],
+  "modulesSkipped": [],
+  "outputs": [
+    {
+      "path": "docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md",
+      "sha256": "fbe05525972911b3b5374e4e579b48fd3cbc8c12063005baa35106dfd678b61e"
+    }
+  ],
+  "schemaVersion": 1,
+  "stage": "renderSynthesis"
+}
+

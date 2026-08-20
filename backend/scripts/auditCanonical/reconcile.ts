@@ -39,6 +39,7 @@ import {
   getModuleConfig,
 } from './lib/modules';
 import { stableStringify } from './lib/utils';
+import { emitManifest } from './lib/manifest';
 
 const SCRIPT_RELPATH = 'backend/scripts/auditCanonical/reconcile.ts';
 
@@ -405,6 +406,9 @@ function main(): void {
   const targets = args.all ? MODULE_CONFIGS : MODULE_CONFIGS.filter((m) => m.code === args.module);
 
   console.log('=== reconcile.ts ===');
+  const mProcessed: string[] = [];
+  const mInputs: string[] = [];
+  const mOutputs: string[] = [];
   let skippedModules = 0;
   for (const cfg of targets) {
     const specPath = path.join(inputDir, `${cfg.code}.spec.json`);
@@ -421,6 +425,9 @@ function main(): void {
     const reconciliation = buildReconciliation(spec, code, cfg.codePrefix);
     const outPath = path.join(outputDir, `${cfg.code}.reconciliation.json`);
     fs.writeFileSync(outPath, stableStringify(reconciliation));
+    mProcessed.push(cfg.code);
+    mInputs.push(specPath, codePath);
+    mOutputs.push(outPath);
 
     const r = reconciliation;
     console.log(
@@ -451,6 +458,16 @@ function main(): void {
     );
     process.exit(1);
   }
+  emitManifest({
+    stage: 'reconcile',
+    generatedBy: 'backend/scripts/auditCanonical/reconcile.ts',
+    processed: mProcessed,
+    skipped: [],
+    inputs: mInputs,
+    outputs: mOutputs,
+    canonicalDir: inputDir,
+    isFullRun: Boolean(args.all),
+  });
   console.log(`Output: ${outputDir}`);
 }
 
