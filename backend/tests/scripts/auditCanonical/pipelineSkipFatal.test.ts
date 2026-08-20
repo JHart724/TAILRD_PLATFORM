@@ -45,6 +45,9 @@ function makeTree(omit?: string): string {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'audit328-'));
   for (const f of fs.readdirSync(CANONICAL)) {
     if (f === omit) continue;
+    // AUDIT-328 (iii) added docs/audit/canonical/.manifests/ - copyFileSync throws EISDIR on a
+    // directory, so entries must be filtered by type rather than assumed to be files.
+    if (!fs.statSync(path.join(CANONICAL, f)).isFile()) continue;
     fs.copyFileSync(path.join(CANONICAL, f), path.join(dir, f));
   }
   return dir;

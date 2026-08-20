@@ -201,7 +201,22 @@ jobs:
             echo "::error::See AUDIT_METHODOLOGY.md §4 (citation requirements), §6 (SAFETY-tag rules), §10.4 (line-shift workflow)."
             exit 1
           fi
-          echo "Gate 5 passed: all crosswalks valid against schema."
+          echo "Gate 5a passed: all crosswalks valid against schema."
+
+          # AUDIT-328 (iii): distinguish "nothing changed" from "nothing ran". Gates 2-4 are
+          # PATH-TRIGGERED and regenerate-then-diff, so a stage that writes nothing produces no
+          # diff, and a hand-edited input on an untriggered PR is never regenerated at all. This
+          # verifier hangs on Gate 5 DELIBERATELY, because Gate 5 is the one gate that always runs -
+          # putting it behind a path trigger would inherit the AUDIT-229 rotting hinge.
+          if ! npx tsx scripts/auditCanonical/verifyManifest.ts; then
+            echo "::error::REJECT: manifest-verification-failed"
+            echo "::error::A pipeline stage has no record of running, ran without processing all"
+            echo "::error::modules, or a recorded input/output changed since it last ran."
+            echo "::error::Manifests are DERIVED OUTPUT - never hand-edit them. Re-run the full"
+            echo "::error::section 9.2 pipeline and commit the regenerated artifacts AND manifests."
+            exit 1
+          fi
+          echo "Gate 5b passed: every stage manifest is present, complete, and consistent with the tree."
 
       # ─── GATE 6: tests ────────────────────────────────────────────────────────
       # Run only the auditCanonical tests when canonical files changed (cheap subset).

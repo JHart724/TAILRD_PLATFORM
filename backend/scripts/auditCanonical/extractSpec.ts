@@ -39,6 +39,7 @@ import {
   EXTRACTOR_VERSION,
 } from './lib/modules';
 import { readLines, sha256, escapeRegExp, stableStringify, relativePosix } from './lib/utils';
+import { emitManifest } from './lib/manifest';
 
 const SCRIPT_RELPATH = 'backend/scripts/auditCanonical/extractSpec.ts';
 
@@ -326,6 +327,8 @@ function main(): void {
   const generatedAt = new Date().toISOString();
 
   console.log('=== extractSpec.ts ===');
+  const mProcessed: string[] = [];
+  const mOutputs: string[] = [];
   for (const cfg of targets) {
     try {
       const extract = buildSpecExtract(cfg, lines);
@@ -336,6 +339,11 @@ function main(): void {
 
       fs.writeFileSync(extractPath, stableStringify(extract));
       fs.writeFileSync(metaPath, stableStringify(meta));
+      mProcessed.push(cfg.code);
+      // *.meta.json carries a generatedAt timestamp, so including it would make the manifest
+      // churn on every run and stop being reproducible - which would defeat its own purpose.
+      // The gates diff the extract, not the meta, so the extract is what must be recorded.
+      mOutputs.push(extractPath);
 
       const safetyCount = extract.gaps.filter((g) => g.safetyTagCategory !== null).length;
       console.log(
@@ -348,6 +356,19 @@ function main(): void {
       process.exit(2);
     }
   }
+  // AUDIT-328 (iii): record what this run actually produced. Written only for a full run
+  // against the real canonical tree - a --module or --output run must not overwrite the
+  // committed manifest, which would make it claim only one module was generated.
+  emitManifest({
+    stage: 'extractSpec',
+    generatedBy: 'backend/scripts/auditCanonical/extractSpec.ts',
+    processed: mProcessed,
+    skipped: [],
+    inputs: [SPEC_PATH],
+    outputs: mOutputs,
+    canonicalDir: outputDir,
+    isFullRun: Boolean(args.all),
+  });
   console.log(`Output: ${outputDir}`);
 }
 

@@ -17,6 +17,7 @@ import * as path from 'path';
 import { ModuleCode, SpecExtract, SpecGap } from './lib/types';
 import { Crosswalk, CrosswalkRow } from './crosswalkSchema';
 import { MODULE_CONFIGS, CANONICAL_OUTPUT_DIR, REPO_ROOT } from './lib/modules';
+import { emitManifest } from './lib/manifest';
 
 const MODULE_TITLES: Record<ModuleCode, string> = {
   HF: 'Heart Failure',
@@ -355,9 +356,36 @@ function main(): void {
     console.error('ERROR: no module crosswalks found in ' + inputDir);
     process.exit(2);
   }
+  // AUDIT-328: loadAllModules() silently `continue`s past a module whose spec or crosswalk is
+  // missing - an EIGHTH skip site, inside a helper rather than behind a SKIPPED log line, which is
+  // why the original sweep did not name it. A synthesis rendered from five of six modules is a
+  // wrong TOTAL row in a document quoted externally, so a dropped module is fatal here too.
+  if (modules.length !== MODULE_CONFIGS.length) {
+    const seen = new Set(modules.map((m) => m.module));
+    const missing = MODULE_CONFIGS.filter((c) => !seen.has(c.code)).map((c) => c.code);
+    console.error(
+      `
+AUDIT-328: renderSynthesis loaded ${modules.length} of ${MODULE_CONFIGS.length} modules; ` +
+        `missing [${missing.join(', ')}]. The synthesis TOTAL row would be wrong. Run the earlier stages first.`,
+    );
+    process.exit(1);
+  }
   const md = renderSynthesis(modules);
   fs.writeFileSync(outputPath, md);
   console.log(`renderSynthesis: ${modules.length} modules → ${path.relative(REPO_ROOT, outputPath).replace(/\\/g, '/')} (${md.length} chars)`);
+  // AUDIT-328 (iii): renderSynthesis has no skip branch - it aggregates every crosswalk - but
+  // "did it run at all" is still a different question from "did it skip a module", and that is
+  // exactly the question a regenerate-then-diff gate cannot answer.
+  emitManifest({
+    stage: 'renderSynthesis',
+    generatedBy: 'backend/scripts/auditCanonical/renderSynthesis.ts',
+    processed: modules.map((m) => m.module),
+    skipped: [],
+    inputs: modules.map((m) => path.join(inputDir, `${m.module}.crosswalk.json`)),
+    outputs: [outputPath],
+    canonicalDir: inputDir,
+    isFullRun: true,
+  });
 }
 
 if (require.main === module) {
