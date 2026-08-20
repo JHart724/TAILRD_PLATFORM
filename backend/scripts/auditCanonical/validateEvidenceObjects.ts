@@ -33,8 +33,18 @@
  * Bare-vs-prefixed evidence values ('1' vs 'Class 1', 'B' vs 'LOE B') are
  * reported as HYGIENE (non-failing). The gate does NOT rewrite source.
  *
- * BEHAVIOR: PURE HARD GATE. Exits non-zero on ANY inconsistency. No allowlist -
- * the runtime baseline is clean post-AUDIT-103.
+ * BEHAVIOR: PURE HARD GATE. Exits non-zero on ANY inconsistency AND on ANY comment
+ * divergence. No allowlist - the runtime baseline is clean post-AUDIT-103.
+ *
+ * AUDIT-329 (2026-08-19): the comment cross-check was a SOFT tier that detected COR/LOE
+ * divergence correctly and could not fail on it - a signal with no obligation. It was hardened
+ * to fatal AT ZERO COST, because the measured count was ZERO (371 gaps.push nodes, 371 with
+ * evidence objects, 0 divergences): no corpus sweep, no false-positive wall, nothing broke on
+ * the day it was turned on. The error-vs-non-authoritative question is settled in favour of
+ * ERROR: the comment and the evidence object must agree, and the author reconciles them.
+ * HYGIENE is deliberately UNCHANGED and still non-failing - its 387 findings are a naming
+ * convention (194 "Class "-prefixed COR, 193 "LOE "-prefixed LOE), not drift, and hardening
+ * that tier is a separate 387-site decision.
  *
  * Run:
  *   npx tsx backend/scripts/auditCanonical/validateEvidenceObjects.ts
@@ -62,7 +72,7 @@ export type EvidenceField =
   | 'levelOfEvidence'
   | 'guidelineSource';
 
-export type Severity = 'INCONSISTENCY' | 'WARN' | 'HYGIENE';
+export type Severity = 'INCONSISTENCY' | 'COMMENT_DIVERGENCE' | 'HYGIENE';
 
 export interface Finding {
   readonly line: number;
@@ -80,7 +90,7 @@ export interface AnalysisResult {
   readonly pushCount: number;
   readonly evidenceCount: number;
   readonly inconsistencies: Finding[];
-  readonly warnings: Finding[];
+  readonly commentDivergences: Finding[];
   readonly hygiene: Finding[];
 }
 
@@ -236,7 +246,7 @@ export function analyzeSource(sourceText: string, fileLabel: string): AnalysisRe
   );
 
   const inconsistencies: Finding[] = [];
-  const warnings: Finding[] = [];
+  const commentDivergences: Finding[] = [];
   const hygiene: Finding[] = [];
   let pushCount = 0;
   let evidenceCount = 0;
@@ -316,15 +326,15 @@ export function analyzeSource(sourceText: string, fileLabel: string): AnalysisRe
         }
         for (const claim of unique(extractCorClaims(commentText))) {
           if (claim !== evTok) {
-            warnings.push({
+            commentDivergences.push({
               line,
               ruleLabel,
               field: 'classOfRecommendation',
-              severity: 'WARN',
+              severity: 'COMMENT_DIVERGENCE',
               source: 'comment',
               evidenceValue: evCor,
               claimValue: `Class ${claim}`,
-              message: `evidence COR '${evCor}' (=${evTok}) disagrees with preceding comment 'Class ${claim}' (soft: comment may govern multiple pushes)`,
+              message: `evidence COR '${evCor}' (=${evTok}) disagrees with preceding comment 'Class ${claim}' (one of the two is WRONG - correct the evidence object, or if the comment governs several gaps.push sites, scope it to the rule it describes)`,
             });
           }
         }
@@ -363,11 +373,11 @@ export function analyzeSource(sourceText: string, fileLabel: string): AnalysisRe
         }
         for (const claim of unique(extractLoeClaims(commentText))) {
           if (claim !== evTok) {
-            warnings.push({
+            commentDivergences.push({
               line,
               ruleLabel,
               field: 'levelOfEvidence',
-              severity: 'WARN',
+              severity: 'COMMENT_DIVERGENCE',
               source: 'comment',
               evidenceValue: evLoe,
               claimValue: `LOE ${claim}`,
@@ -411,10 +421,10 @@ export function analyzeSource(sourceText: string, fileLabel: string): AnalysisRe
   const byLineField = (a: Finding, b: Finding): number =>
     a.line - b.line || a.field.localeCompare(b.field);
   inconsistencies.sort(byLineField);
-  warnings.sort(byLineField);
+  commentDivergences.sort(byLineField);
   hygiene.sort(byLineField);
 
-  return { pushCount, evidenceCount, inconsistencies, warnings, hygiene };
+  return { pushCount, evidenceCount, inconsistencies, commentDivergences, hygiene };
 }
 
 // =============================================================================
@@ -459,7 +469,7 @@ function main(): void {
     `gaps.push nodes: ${result.pushCount} | with evidence object: ${result.evidenceCount}`,
   );
   console.log(
-    `Inconsistencies: ${result.inconsistencies.length} | Warnings (soft/comment): ${result.warnings.length} | Hygiene (prefix): ${result.hygiene.length}`,
+    `Inconsistencies: ${result.inconsistencies.length} | Comment divergences: ${result.commentDivergences.length} | Hygiene (prefix): ${result.hygiene.length}`,
   );
 
   if (result.hygiene.length > 0) {
@@ -470,9 +480,9 @@ function main(): void {
     );
   }
 
-  if (result.warnings.length > 0) {
-    console.log('\n--- WARN (soft comment cross-check; does NOT fail the gate) ---');
-    for (const f of result.warnings) {
+  if (result.commentDivergences.length > 0) {
+    console.log('\n--- COMMENT DIVERGENCES (gate FAILS) ---');
+    for (const f of result.commentDivergences) {
       console.log(`  [${f.field}] L${f.line} ${f.ruleLabel}: ${f.message}`);
     }
   }
@@ -485,6 +495,18 @@ function main(): void {
     console.error(
       `\nFAIL: ${result.inconsistencies.length} evidence-object inconsistency(ies). ` +
         `Each evidence object must agree with its rule's recommendations text. See ${SCRIPT_RELPATH}.`,
+    );
+    process.exit(1);
+  }
+
+  // AUDIT-329: comment divergences are FATAL. Each printed line above names the rule (label +
+  // line), the comment claim and the evidence-object value - the three things an author needs.
+  if (result.commentDivergences.length > 0) {
+    console.error(
+      `\nFAIL: ${result.commentDivergences.length} comment/evidence divergence(s). A rule comment claims a ` +
+        'guideline Class or Level of Evidence that its own evidence object contradicts. One of the two is ' +
+        'wrong: the evidence object is what SHIPS to a clinician, so correct whichever is mistaken rather ' +
+        `than silencing the check. See ${SCRIPT_RELPATH}.`,
     );
     process.exit(1);
   }
