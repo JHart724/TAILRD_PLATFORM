@@ -65,7 +65,7 @@ Batch-2 distribution: **DET_OK 2 / PARTIAL 11 / SPEC_ONLY 5 = 18.**
   (AUDIT-031). Under §16.5 it is PARTIAL because a WPW+AF patient on an SCD-coded BB/CCB under-detects - the
   remediation is AUDIT-118 (ingredient-normalize) and/or enumerate BB/CCB descendants like digoxin already is.
 - **2024 HRS PFA consensus (GAP-EP-070):** cites the 2024 HRS Expert Consensus on PFA - distinct from the
-  2024 HRS Cardiac Physiologic Pacing under-anchoring (candidate horizon); PFA is appropriately anchored.
+  2024 HRS Cardiac Physiologic Pacing under-anchoring (candidate horizon); PFA is appropriately anchored. (corrected 2026-08-20 per AUDIT-332; original read 2024, no such document; governing guideline is the 2023 HRS/APHRS/LAHRS Cardiac Physiologic Pacing Guideline)
 
 ## 4. PAUSE-C + STOP
 Batch 2 close. **STOP for operator review before Batch 3.** No source code changed; no canonical

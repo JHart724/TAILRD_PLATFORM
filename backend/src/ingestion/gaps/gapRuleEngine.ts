@@ -1129,7 +1129,7 @@ export const RUNTIME_GAP_REGISTRY = [
     id: 'gap-cad-acei',
     name: 'ACEi/ARB Post-MI',
     module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+    guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
     guidelineVersion: '2022',
     guidelineOrg: 'ACC/AHA',
     lastReviewDate: '2026-04-03',
@@ -1141,7 +1141,7 @@ export const RUNTIME_GAP_REGISTRY = [
     id: 'gap-cad-bb-post-mi',
     name: 'Beta-Blocker Post-MI',
     module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+    guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
     guidelineVersion: '2022',
     guidelineOrg: 'ACC/AHA',
     lastReviewDate: '2026-04-03',
@@ -2677,7 +2677,7 @@ export const RUNTIME_GAP_REGISTRY = [
     id: 'gap-ep-anticoag-interruption',
     name: 'Perioperative Anticoagulation Management',
     module: 'ELECTROPHYSIOLOGY',
-    guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF; 2022 ACC/AHA Perioperative Guidelines',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF; perioperative anticoagulation guidance (specific edition pending ledger entry, AUDIT-332; prior text cited a 2022 ACC/AHA perioperative guideline, which is not a published document)',
     guidelineVersion: '2023',
     guidelineOrg: 'ACC/AHA/ACCP/HRS',
     lastReviewDate: '2026-04-03',
@@ -3289,7 +3289,7 @@ export const RUNTIME_GAP_REGISTRY = [
     id: 'gap-cad-echo-cad',
     name: 'Echocardiography in CAD',
     module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+    guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
     guidelineVersion: '2022',
     guidelineOrg: 'ACC/AHA',
     lastReviewDate: '2026-04-03',
@@ -3301,7 +3301,7 @@ export const RUNTIME_GAP_REGISTRY = [
     id: 'gap-cad-bnp-cad',
     name: 'BNP Monitoring in CAD',
     module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2022 AHA/ACC/HFSA HF Guideline; 2022 ACC/AHA Chest Pain Guideline',
+    guidelineSource: '2022 AHA/ACC/HFSA HF Guideline; 2021 ACC/AHA Chest Pain Guideline',
     guidelineVersion: '2022',
     guidelineOrg: 'AHA/ACC',
     lastReviewDate: '2026-04-03',
@@ -3313,7 +3313,7 @@ export const RUNTIME_GAP_REGISTRY = [
     id: 'gap-cad-renal-monitor',
     name: 'Renal Function Monitoring on ACEi in CAD',
     module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+    guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
     guidelineVersion: '2022',
     guidelineOrg: 'ACC/AHA',
     lastReviewDate: '2026-04-03',
@@ -3373,7 +3373,7 @@ export const RUNTIME_GAP_REGISTRY = [
     id: 'gap-cad-anemia',
     name: 'Anemia Screening Post-MI',
     module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+    guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
     guidelineVersion: '2022',
     guidelineOrg: 'ACC/AHA',
     lastReviewDate: '2026-04-03',
@@ -3493,7 +3493,7 @@ export const RUNTIME_GAP_REGISTRY = [
     id: 'gap-cad-cardiac-ct',
     name: 'Cardiac CT for Stable Chest Pain',
     module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain (SCOT-HEART, PROMISE)',
+    guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain (SCOT-HEART, PROMISE)',
     guidelineVersion: '2022',
     guidelineOrg: 'ACC/AHA',
     lastReviewDate: '2026-04-03',
@@ -3817,7 +3817,7 @@ export const RUNTIME_GAP_REGISTRY = [
     id: 'gap-cad-coronary-cta-fu',
     name: 'Coronary CTA Follow-Up',
     module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+    guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
     guidelineVersion: '2022',
     guidelineOrg: 'ACC/AHA',
     lastReviewDate: '2026-04-03',
@@ -3829,7 +3829,7 @@ export const RUNTIME_GAP_REGISTRY = [
     id: 'gap-cad-nuclear-stress',
     name: 'Nuclear Stress Test Consideration',
     module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+    guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
     guidelineVersion: '2022',
     guidelineOrg: 'ACC/AHA',
     lastReviewDate: '2026-04-03',
@@ -3877,7 +3877,7 @@ export const RUNTIME_GAP_REGISTRY = [
     id: 'gap-cad-minoca',
     name: 'MINOCA Workup',
     module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2022 ACC/AHA Guideline for Evaluation and Diagnosis of Chest Pain; AHA MINOCA Scientific Statement',
+    guidelineSource: '2021 ACC/AHA Guideline for Evaluation and Diagnosis of Chest Pain; AHA MINOCA Scientific Statement',
     guidelineVersion: '2022',
     guidelineOrg: 'ACC/AHA',
     lastReviewDate: '2026-04-03',
@@ -3997,7 +3997,7 @@ export const RUNTIME_GAP_REGISTRY = [
     id: 'gap-cad-chest-pain-protocol',
     name: 'Chest Pain Protocol Adherence',
     module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+    guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
     guidelineVersion: '2022',
     guidelineOrg: 'ACC/AHA',
     lastReviewDate: '2026-04-03',
@@ -4033,7 +4033,7 @@ export const RUNTIME_GAP_REGISTRY = [
     id: 'gap-cad-young-mi',
     name: 'Young MI Workup',
     module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+    guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
     guidelineVersion: '2022',
     guidelineOrg: 'ACC/AHA',
     lastReviewDate: '2026-04-03',
@@ -6984,7 +6984,7 @@ export function evaluateGapRules(
   // ============================================================
   // CAD-ACEI: ACEi/ARB Post-MI
   // ============================================================
-  // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 1, LOE A
+  // Guideline: 2021 ACC/AHA Chest Pain Guideline, Class 1, LOE A
   // Recent MI (I21/I22) + no RAAS inhibitor
   const hasRecentMI = dxCodes.some(c => c.startsWith('I21') || c.startsWith('I22'));
   if (hasRecentMI && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
@@ -6999,8 +6999,8 @@ export function evaluateGapRules(
         target: 'RAAS inhibitor initiated post-MI',
         medication: 'Lisinopril, Enalapril, Ramipril, Losartan, or Valsartan',
         recommendations: {
-          action: 'Consider initiating ACEi/ARB post-MI per 2022 ACC/AHA Chest Pain Guideline, Class 1, LOE A',
-          guideline: '2022 ACC/AHA Chest Pain Guideline',
+          action: 'Consider initiating ACEi/ARB post-MI per 2021 ACC/AHA Chest Pain Guideline, Class 1, LOE A',
+          guideline: '2021 ACC/AHA Chest Pain Guideline',
           note: 'Recommended for review in all post-MI patients, especially with LVEF <=40% or anterior MI',
         },
         evidence: {
@@ -7008,7 +7008,7 @@ export function evaluateGapRules(
             'Recent MI diagnosis (I21.* or I22.*)',
             'No RAAS inhibitor in active medications',
           ],
-          guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           classOfRecommendation: 'Class 1',
           levelOfEvidence: 'LOE A',
           exclusions: ['Hospice/palliative care (Z51.5)', 'Hyperkalemia', 'Bilateral renal artery stenosis', 'Angioedema history'],
@@ -7020,7 +7020,7 @@ export function evaluateGapRules(
   // ============================================================
   // CAD-BB-POST-MI: Beta-Blocker Post-MI with Reduced EF
   // ============================================================
-  // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 1, LOE A
+  // Guideline: 2021 ACC/AHA Chest Pain Guideline, Class 1, LOE A
   // MI (I21/I22) + LVEF <=40% + no beta-blocker
   if (hasRecentMI && labValues['lvef'] !== undefined && labValues['lvef'] <= 40 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const BB_CODES_MI = ['20352', '6918', '19484']; // carvedilol, metoprolol succinate, bisoprolol
@@ -7034,8 +7034,8 @@ export function evaluateGapRules(
         target: 'Evidence-based beta-blocker initiated',
         medication: 'Carvedilol, Metoprolol Succinate, or Bisoprolol',
         recommendations: {
-          action: 'Consider initiating evidence-based beta-blocker post-MI per 2022 ACC/AHA Chest Pain Guideline, Class 1, LOE A',
-          guideline: '2022 ACC/AHA Chest Pain Guideline',
+          action: 'Consider initiating evidence-based beta-blocker post-MI per 2021 ACC/AHA Chest Pain Guideline, Class 1, LOE A',
+          guideline: '2021 ACC/AHA Chest Pain Guideline',
           note: 'Recommended for review in post-MI patients with LVEF <=40%',
         },
         evidence: {
@@ -7044,7 +7044,7 @@ export function evaluateGapRules(
             `LVEF: ${labValues['lvef']}% (<=40%)`,
             'No beta-blocker in active medications',
           ],
-          guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           classOfRecommendation: 'Class 1',
           levelOfEvidence: 'LOE A',
           exclusions: ['Hospice/palliative care (Z51.5)', 'Severe bradycardia', 'Decompensated HF', 'Severe reactive airway disease'],
@@ -12556,7 +12556,7 @@ export function evaluateGapRules(
   }
 
   // CAD-ECHO-CAD: Echocardiography for LVEF Assessment in CAD
-  // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 1, LOE B
+  // Guideline: 2021 ACC/AHA Chest Pain Guideline, Class 1, LOE B
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     if (labValues['lvef'] === undefined) {
       gaps.push({
@@ -12567,7 +12567,7 @@ export function evaluateGapRules(
         target: 'LVEF documented via echocardiography',
         recommendations: {
           action: 'Consider transthoracic echocardiogram to assess LV function per 2022 ACC/AHA Guideline',
-          guideline: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          guideline: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           note: 'Recommended for review: LVEF guides risk stratification and therapy selection in CAD',
         },
         evidence: {
@@ -12575,7 +12575,7 @@ export function evaluateGapRules(
             'Coronary artery disease (I25.*)',
             'No LVEF measurement in observations',
           ],
-          guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           classOfRecommendation: 'Class 1',
           levelOfEvidence: 'LOE B',
           exclusions: ['Hospice/palliative care (Z51.5)', 'Recent echocardiogram within 12 months'],
@@ -12589,7 +12589,7 @@ export function evaluateGapRules(
   // fired for ~all CAD patients. Suppressed (operator-confirmed); registry entry orphaned. (RETIRE precedent)
 
   // CAD-RENAL-MONITOR: Renal Function Monitoring on ACEi in CAD
-  // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 1, LOE B
+  // Guideline: 2021 ACC/AHA Chest Pain Guideline, Class 1, LOE B
   const ACEI_ARB_CODES_RENAL = ['29046', '214354', '83818', '321064', '52175', '69749'];
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const onACEiARBrenal = medCodes.some(c => ACEI_ARB_CODES_RENAL.includes(c));
@@ -12602,7 +12602,7 @@ export function evaluateGapRules(
         target: 'eGFR and creatinine documented',
         recommendations: {
           action: 'Consider checking eGFR and serum creatinine per guideline-directed monitoring',
-          guideline: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          guideline: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           note: 'Recommended for review: ACEi/ARB therapy requires periodic renal function assessment',
         },
         evidence: {
@@ -12611,7 +12611,7 @@ export function evaluateGapRules(
             'On ACEi/ARB therapy',
             'No eGFR in observations',
           ],
-          guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           classOfRecommendation: 'Class 1',
           levelOfEvidence: 'LOE B',
           exclusions: ['Hospice/palliative care (Z51.5)', 'Dialysis-dependent (N18.6)'],
@@ -12768,7 +12768,7 @@ export function evaluateGapRules(
   }
 
   // CAD-ANEMIA: Anemia Screening Post-MI
-  // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 1, LOE B
+  // Guideline: 2021 ACC/AHA Chest Pain Guideline, Class 1, LOE B
   if (hasRecentMI && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     if (labValues['hemoglobin'] === undefined) {
       gaps.push({
@@ -12779,7 +12779,7 @@ export function evaluateGapRules(
         target: 'Hemoglobin level documented',
         recommendations: {
           action: 'Consider CBC with hemoglobin for post-MI risk assessment per 2022 ACC/AHA Guideline',
-          guideline: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          guideline: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           note: 'Recommended for review: anemia worsens myocardial oxygen supply-demand and post-MI outcomes',
         },
         evidence: {
@@ -12787,7 +12787,7 @@ export function evaluateGapRules(
             'Acute MI (I21.*)',
             'No hemoglobin in observations',
           ],
-          guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           classOfRecommendation: 'Class 1',
           levelOfEvidence: 'LOE B',
           exclusions: ['Hospice/palliative care (Z51.5)', 'Recent CBC within 48 hours'],
@@ -12892,7 +12892,7 @@ export function evaluateGapRules(
   // a real palliative-referral signal; registry entry orphaned. (RETIRE precedent)
 
   // CAD-CARDIAC-CT: Cardiac CT Angiography for Stable Chest Pain
-  // Guideline: 2022 ACC/AHA Chest Pain Guideline (SCOT-HEART, PROMISE), Class 1, LOE A
+  // Guideline: 2021 ACC/AHA Chest Pain Guideline (SCOT-HEART, PROMISE), Class 1, LOE A
   // NOTE (AUDIT-184 CAD-EXT, 2026-06-29): KEPT firing. ccta IS a real threaded slug (csvSchema single-file
   // column; AUDIT-184-closed) so this rule discriminates in the single-file path. Over-fires ONLY in the
   // multi-file/FHIR path (ccta CSV-only, not threaded there) - a known data-threading limitation, NOT a defect.
@@ -12908,7 +12908,7 @@ export function evaluateGapRules(
         target: 'Coronary CT angiography or equivalent anatomical assessment completed',
         recommendations: {
           action: 'Consider CCTA as first-line anatomical evaluation for stable chest pain per SCOT-HEART/PROMISE evidence',
-          guideline: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          guideline: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           note: 'Recommended for review: CCTA has high sensitivity for excluding obstructive CAD in stable chest pain',
         },
         evidence: {
@@ -12917,7 +12917,7 @@ export function evaluateGapRules(
             'No established coronary artery disease',
             'No CCTA in observations',
           ],
-          guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain (SCOT-HEART, PROMISE)',
+          guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain (SCOT-HEART, PROMISE)',
           classOfRecommendation: 'Class 1',
           levelOfEvidence: 'LOE A',
           exclusions: ['Hospice/palliative care (Z51.5)', 'Contrast allergy', 'Severe renal impairment', 'Known CAD'],
@@ -13156,7 +13156,7 @@ export function evaluateGapRules(
   // mapped to a covered CAD spec gap. Dead code with unverifiable codes; removed cleanly (firing + registry).
 
   // CAD-CORONARY-CTA-FU: Coronary CTA Follow-Up
-  // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 2a, LOE B-NR
+  // Guideline: 2021 ACC/AHA Chest Pain Guideline, Class 2a, LOE B-NR
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasPriorCTA = dxCodes.some(c => c.startsWith('Z87.39')); // personal history of cardiac procedure proxy
     if (hasPriorCTA && labValues['coronary_cta_months'] === undefined) {
@@ -13167,8 +13167,8 @@ export function evaluateGapRules(
         status: 'Consider coronary CTA follow-up imaging interval review',
         target: 'Follow-up coronary CTA or alternative imaging scheduled',
         recommendations: {
-          action: 'Consider interval coronary CTA follow-up per 2022 ACC/AHA Chest Pain Guideline',
-          guideline: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          action: 'Consider interval coronary CTA follow-up per 2021 ACC/AHA Chest Pain Guideline',
+          guideline: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           note: 'Recommended for review: periodic noninvasive imaging reassessment may guide management adjustments in CAD',
         },
         evidence: {
@@ -13177,7 +13177,7 @@ export function evaluateGapRules(
             'Prior cardiac imaging history (Z87.39)',
             'No recent coronary CTA documented in observations',
           ],
-          guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           classOfRecommendation: 'Class 2a',
           levelOfEvidence: 'LOE B-NR',
           exclusions: ['Hospice/palliative care (Z51.5)', 'Contrast allergy', 'Severe renal disease (eGFR<30)', 'Recent catheterization'],
@@ -13187,7 +13187,7 @@ export function evaluateGapRules(
   }
 
   // CAD-NUCLEAR-STRESS: Nuclear Stress Test Consideration
-  // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 1, LOE B
+  // Guideline: 2021 ACC/AHA Chest Pain Guideline, Class 1, LOE B
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasIntermediateRisk = labValues['ascvd_risk'] !== undefined && labValues['ascvd_risk'] >= 7.5 && labValues['ascvd_risk'] < 20;
     const noRecentStress = labValues['stress_test_months'] === undefined;
@@ -13199,8 +13199,8 @@ export function evaluateGapRules(
         status: 'Consider nuclear stress test for intermediate-risk CAD patient',
         target: 'Stress imaging study ordered or alternative assessment documented',
         recommendations: {
-          action: 'Consider nuclear stress testing for functional ischemia assessment per 2022 ACC/AHA Chest Pain Guideline',
-          guideline: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          action: 'Consider nuclear stress testing for functional ischemia assessment per 2021 ACC/AHA Chest Pain Guideline',
+          guideline: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           note: 'Recommended for review: functional ischemia testing guides revascularization decisions in intermediate-risk patients',
         },
         evidence: {
@@ -13209,7 +13209,7 @@ export function evaluateGapRules(
             `ASCVD risk: ${labValues['ascvd_risk'] ?? 'N/A'}% (intermediate 7.5-20%)`,
             'No recent stress test documented',
           ],
-          guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           classOfRecommendation: 'Class 1',
           levelOfEvidence: 'LOE B',
           exclusions: ['Hospice/palliative care (Z51.5)', 'Unable to exercise with no pharmacologic alternative', 'Recent revascularization <90 days'],
@@ -13299,7 +13299,7 @@ export function evaluateGapRules(
   // retirement precedent; comment deliberately does NOT begin with a CAD-*/PREFIX-NNN block token.)
 
   // CAD-MINOCA: MINOCA Workup
-  // Guideline: 2022 ACC/AHA Chest Pain Guideline + AHA MINOCA Scientific Statement, Class 1, LOE B-NR
+  // Guideline: 2021 ACC/AHA Chest Pain Guideline + AHA MINOCA Scientific Statement, Class 1, LOE B-NR
   if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasMI = dxCodes.some(c => c.startsWith('I21'));
     const hasMINOCA = dxCodes.some(c => c.startsWith('I24'));
@@ -13312,7 +13312,7 @@ export function evaluateGapRules(
         target: 'MINOCA diagnostic evaluation (CMR, provocation testing) reviewed',
         recommendations: {
           action: 'Consider cardiac MRI and vasospasm provocation testing per AHA MINOCA Scientific Statement',
-          guideline: '2022 ACC/AHA Chest Pain Guideline; AHA MINOCA Scientific Statement',
+          guideline: '2021 ACC/AHA Chest Pain Guideline; AHA MINOCA Scientific Statement',
           note: 'Recommended for review: MINOCA requires etiologic workup including CMR, vasospasm testing, and thrombophilia screening',
         },
         evidence: {
@@ -13320,7 +13320,7 @@ export function evaluateGapRules(
             'Myocardial infarction (I21.*)',
             'Non-obstructive coronary disease (I24.*)',
           ],
-          guidelineSource: '2022 ACC/AHA Guideline for Evaluation and Diagnosis of Chest Pain; AHA MINOCA Scientific Statement',
+          guidelineSource: '2021 ACC/AHA Guideline for Evaluation and Diagnosis of Chest Pain; AHA MINOCA Scientific Statement',
           classOfRecommendation: 'Class 1',
           levelOfEvidence: 'LOE B-NR',
           exclusions: ['Hospice/palliative care (Z51.5)', 'MINOCA workup already completed', 'Obstructive CAD confirmed'],
@@ -13618,7 +13618,7 @@ export function evaluateGapRules(
   }
 
   // CAD-CHEST-PAIN-PROTOCOL: Chest Pain Protocol Adherence
-  // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 1, LOE B
+  // Guideline: 2021 ACC/AHA Chest Pain Guideline, Class 1, LOE B
   if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasChestPain = dxCodes.some(c => c.startsWith('I20'));
     const hasEDvisit = dxCodes.some(c => c.startsWith('Z76.89') || c.startsWith('R07')); // ED presentation proxy
@@ -13630,8 +13630,8 @@ export function evaluateGapRules(
         status: 'Consider chest pain protocol adherence review with troponin assessment',
         target: 'Serial troponin and risk stratification completed per protocol',
         recommendations: {
-          action: 'Consider high-sensitivity troponin protocol for chest pain evaluation per 2022 ACC/AHA Chest Pain Guideline',
-          guideline: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          action: 'Consider high-sensitivity troponin protocol for chest pain evaluation per 2021 ACC/AHA Chest Pain Guideline',
+          guideline: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           note: 'Recommended for review: 0/1-hour or 0/3-hour hs-troponin protocol enables rapid and safe triage of chest pain',
         },
         evidence: {
@@ -13640,7 +13640,7 @@ export function evaluateGapRules(
             'ED presentation proxy (Z76.89/R07)',
             'No troponin documented in observations',
           ],
-          guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           classOfRecommendation: 'Class 1',
           levelOfEvidence: 'LOE B',
           exclusions: ['Hospice/palliative care (Z51.5)', 'Non-cardiac chest pain established', 'Troponin already resulted'],
@@ -13690,7 +13690,7 @@ export function evaluateGapRules(
   // WORK (do NOT build now): re-module into a primary-prevention surface WITH a completion guard. (RETIRE precedent)
 
   // CAD-YOUNG-MI: Young MI Workup
-  // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 1, LOE C-LD
+  // Guideline: 2021 ACC/AHA Chest Pain Guideline, Class 1, LOE C-LD
   if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasAcuteMI = dxCodes.some(c => c.startsWith('I21'));
     if (hasAcuteMI && age < 45) {
@@ -13702,7 +13702,7 @@ export function evaluateGapRules(
         target: 'Young MI workup including hypercoagulability, toxicology, and familial screening reviewed',
         recommendations: {
           action: 'Consider thrombophilia screening, urine toxicology, and familial hypercholesterolemia assessment per ACC/AHA Guideline',
-          guideline: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          guideline: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           note: 'Recommended for review: MI in patients <45 warrants evaluation for non-atherosclerotic etiologies',
         },
         evidence: {
@@ -13710,7 +13710,7 @@ export function evaluateGapRules(
             'Acute myocardial infarction (I21.*)',
             `Age: ${age} (<45)`,
           ],
-          guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
           classOfRecommendation: 'Class 1',
           levelOfEvidence: 'LOE C-LD',
           exclusions: ['Hospice/palliative care (Z51.5)', 'Known atherosclerotic CAD', 'Workup already completed'],

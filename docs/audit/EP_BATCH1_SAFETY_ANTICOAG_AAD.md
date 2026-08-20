@@ -109,7 +109,7 @@ is module-wide / all medication-presence rules, not DOAC-only.
 or spec gap cites the 2024 HRS Cardiac Physiologic Pacing guideline; the Pacing gaps anchor to older
 guidance. **Recorded to the CANDIDATE HORIZON (BUILD_STATE §10), NOT the register** (per operator) as a
 v2.0 re-anchor: treat the Pacing 9 as **SPEC_ONLY-until-re-anchored**. Not actioned here (frozen
-denominator; Pacing is a later batch).
+denominator; Pacing is a later batch). (corrected 2026-08-20 per AUDIT-332; original read 2024, no such document; governing guideline is the 2023 HRS/APHRS/LAHRS Cardiac Physiologic Pacing Guideline)
 
 **(b) registry/evaluator/gapsPush 48/47/49 mismatch -> filed AUDIT-119 (MEDIUM P2).** registry=48,
 evaluator=47, gapsPush=49 (`EP.code.json`). Fold-in enumeration: the registry-without-evaluator is

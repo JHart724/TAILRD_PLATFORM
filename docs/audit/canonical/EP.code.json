@@ -1380,7 +1380,7 @@
     },
     {
       "classOfRecommendation": "1",
-      "guidelineSource": "2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF; 2022 ACC/AHA Perioperative Guidelines",
+      "guidelineSource": "2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF; perioperative anticoagulation guidance (specific edition pending ledger entry, AUDIT-332; prior text cited a 2022 ACC/AHA perioperative guideline, which is not a published document)",
       "id": "gap-ep-anticoag-interruption",
       "lastReviewDate": "2026-04-03",
       "levelOfEvidence": "B-NR",

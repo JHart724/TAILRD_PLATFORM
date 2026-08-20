@@ -53,7 +53,7 @@ pass. The 2024 HRS Cardiac Physiologic Pacing re-anchor is the existing candidat
 §10, "Pacing 9 = SPEC_ONLY-until-re-anchored"). **All Batch-4 Pacing classifications are therefore
 PROVISIONAL**: the v2.0 re-anchor against 2024 HRS CPP could change them (e.g. tighten DET_OK GAP-EP-037 if
 the 2024 guidance adds criteria the current rule does not encode). CIED Management gaps are not affected by
-the pacing re-anchor.
+the pacing re-anchor. (corrected 2026-08-20 per AUDIT-332; original read 2024, no such document; governing guideline is the 2023 HRS/APHRS/LAHRS Cardiac Physiologic Pacing Guideline)
 
 ## 4. Notes
 - No subagent was used this batch (dropped per instruction); the gap list is the authoritative canonical
