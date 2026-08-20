@@ -4,6 +4,13 @@
 // with serviceLineConfig.tsx (which imports HF_CLINICAL_GAPS + HFGapPatient).
 // ============================================================
 
+import type { Provenance } from '../../../../types/provenance';
+
+// AUDIT-208 provenance declaration. A pure data module, not a rendering surface, but it is the
+// SOURCE the surfaces above it render, so it declares too - the honest place for the claim is
+// where the fabricated numbers actually live, not only where they are displayed.
+export const PROVENANCE: Provenance = 'demo';
+
 export interface HFClinicalGap {
   id: string;
   name: string;

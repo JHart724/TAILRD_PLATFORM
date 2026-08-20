@@ -30,6 +30,13 @@
  * Do NOT wire any of this to an API field that does not exist (DRIFT-50).
  */
 
+import type { Provenance } from '../../../types/provenance';
+
+// AUDIT-208 provenance declaration. A pure data module, not a rendering surface, but it is the
+// SOURCE the surfaces above it render, so it declares too - the honest place for the claim is
+// where the fabricated numbers actually live, not only where they are displayed.
+export const PROVENANCE: Provenance = 'demo';
+
 // The single annual gap-closure-opportunity total (demo), in $M - the ruled anchor,
 // equal to the registry figure config.kpiData.totalOpportunity renders ("$8.1M"),
 // NOT the ~$42M program-revenue figures. (Registry exact = $8.05M; displayed $8.1M.)

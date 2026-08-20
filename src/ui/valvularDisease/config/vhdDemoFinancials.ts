@@ -25,6 +25,13 @@
  * Do NOT wire any of this to an API field that does not exist (DRIFT-50).
  */
 
+import type { Provenance } from '../../../types/provenance';
+
+// AUDIT-208 provenance declaration. A pure data module, not a rendering surface, but it is the
+// SOURCE the surfaces above it render, so it declares too - the honest place for the claim is
+// where the fabricated numbers actually live, not only where they are displayed.
+export const PROVENANCE: Provenance = 'demo';
+
 // The single annual gap-closure-opportunity total (demo), in $M - the ruled anchor
 // (= the old predictive totalIdentified), NOT the ~$50M program-revenue figures.
 export const VHD_DEMO_ANNUAL_OPPORTUNITY_M = 5.3;
