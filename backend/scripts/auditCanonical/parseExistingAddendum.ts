@@ -403,12 +403,14 @@ function main(): void {
   const targets = args.all ? MODULE_CONFIGS : MODULE_CONFIGS.filter((m) => m.code === args.module);
 
   console.log('=== parseExistingAddendum.ts ===');
+  let skippedModules = 0;
   for (const cfg of targets) {
     const specPath = path.join(inputDir, `${cfg.code}.spec.json`);
     const codePath = path.join(inputDir, `${cfg.code}.code.json`);
     const reconPath = path.join(inputDir, `${cfg.code}.reconciliation.json`);
     if (!fs.existsSync(specPath) || !fs.existsSync(codePath) || !fs.existsSync(reconPath)) {
       console.error(`  ${cfg.code}: SKIPPED — missing spec/code/reconciliation extracts`);
+      skippedModules++;
       continue;
     }
     const spec = JSON.parse(fs.readFileSync(specPath, 'utf8')) as SpecExtract;
@@ -428,6 +430,18 @@ function main(): void {
         `defaulted-SPEC_ONLY: ${parseStats.missingSpecGaps} | ` +
         `addendum lines [${parseStats.addendumLineRange[0]}-${parseStats.addendumLineRange[1]}]`,
     );
+  }
+
+  // AUDIT-328: a SKIPPED module means this stage did not do what it was asked. Denominated in
+  // targets.length, NOT MODULE_CONFIGS.length, so a --module run does not self-fail on the
+  // modules it was never asked to process. No --allow-skip flag exists, by operator ruling:
+  // the moment someone reaches for such a flag is the moment this gate should hold.
+  if (skippedModules > 0) {
+    console.error(
+      `\nAUDIT-328: ${skippedModules} of ${targets.length} module(s) SKIPPED - required inputs missing. ` +
+        'This stage regenerated nothing for them. Run the earlier pipeline stages first (see CLAUDE.md section 9.2).',
+    );
+    process.exit(1);
   }
   console.log(`Output: ${outputDir}`);
 }
