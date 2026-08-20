@@ -19,6 +19,7 @@ import ReportingEmptyState from '../../../components/reporting/ReportingEmptySta
 import CADClinicalGapDetectionDashboard, { CAD_CLINICAL_GAPS, CADGapPatient } from '../components/clinical/CADClinicalGapDetectionDashboard';
 import SAQOutcomesPanel from '../components/service-line/SAQOutcomesPanel';
 import { estimateSYNTAX } from '../../../utils/clinicalCalculators';
+import type { Provenance } from '../../../types/provenance';
 
 // Coronary Intervention Analytics Dashboard
 const CoronaryInterventionAnalytics: React.FC = () => (
@@ -814,3 +815,6 @@ export const coronaryServiceLineConfig: ServiceLineViewConfig = {
   exportData: coronaryExportData,
   hasExport: true
 };
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

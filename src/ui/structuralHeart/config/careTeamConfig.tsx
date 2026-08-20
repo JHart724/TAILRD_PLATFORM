@@ -14,6 +14,7 @@ import StructuralReferralNetworkVisualization from '../components/StructuralRefe
 import { apiService } from '../../../services/apiService';
 import SHRealTimeHospitalAlerts from '../components/care-team/SHRealTimeHospitalAlerts';
 import SHSTSRiskCalculator from '../components/STSRiskCalculator';
+import type { Provenance } from '../../../types/provenance';
 
 // Structural Heart Dashboard Component
 const StructuralDashboard: React.FC = () => (
@@ -933,3 +934,6 @@ export const structuralCareTeamConfig: CareTeamViewConfig = {
  'clinical-gaps': SHClinicalGaps
   }
 };
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

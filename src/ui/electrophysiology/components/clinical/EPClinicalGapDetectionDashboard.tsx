@@ -5,6 +5,7 @@ import { computeTrajectory, computeTimeHorizon, trajectoryDisplay, timeHorizonDi
 import GapActionButtons from '../../../../components/shared/GapActionButtons';
 import { useGapActions } from '../../../../hooks/useGapActions';
 import { fetchModuleGapsFromApi, type FrontendClinicalGap } from '../../../../adapters/gapAdapter';
+import type { Provenance } from '../../../../types/provenance';
 
 // ============================================================
 // CLINICAL GAP DETECTION — ELECTROPHYSIOLOGY MODULE
@@ -4904,3 +4905,7 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
 };
 
 export default EPClinicalGapDetectionDashboard;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

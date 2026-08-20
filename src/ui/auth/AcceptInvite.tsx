@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Logo from '../../components/TailrdLogo';
 import { Eye, EyeOff, Check, X, Shield, ArrowLeft, Loader2 } from 'lucide-react';
+import type { Provenance } from '../../types/provenance';
 
 // ─── Types ──────────────────────────────────────────────────────────────────────
 
@@ -385,3 +386,7 @@ const AcceptInvite: React.FC = () => {
 };
 
 export default AcceptInvite;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

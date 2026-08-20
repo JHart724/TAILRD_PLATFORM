@@ -7,6 +7,7 @@ import {
   HF_DEMO_ANNUAL_OPPORTUNITY_M,
   HF_DEMO_YTD_CAPTURED_M,
 } from '../../ui/heartFailure/config/hfDemoFinancials';
+import type { Provenance } from '../../types/provenance';
 
 /**
  * HF Executive summary KPI row (HF Exec batch 1 - data reconciliation).
@@ -300,3 +301,7 @@ export const HFExecutiveSummary: React.FC<HFExecutiveSummaryProps> = ({ dashboar
     </>
   );
 };
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

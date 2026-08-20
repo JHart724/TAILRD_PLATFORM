@@ -13,6 +13,7 @@ import SYNTAXScoreCalculator from '../../../components/riskCalculators/SYNTAXSco
 import { featureFlags } from '../../../config/featureFlags';
 import CADClinicalGapDetectionDashboard from '../components/clinical/CADClinicalGapDetectionDashboard';
 import CoronaryRiskScoreCalculator from '../components/clinical/CoronaryRiskScoreCalculator';
+import type { Provenance } from '../../../types/provenance';
 
 // Coronary Intervention Dashboard Component
 const CoronaryDashboard: React.FC = () => (
@@ -724,3 +725,6 @@ export const coronaryCareTeamConfig: CareTeamViewConfig = {
  'clinical-gaps': CADClinicalGaps
   }
 };
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

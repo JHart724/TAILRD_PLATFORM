@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Heart, Zap, Activity, AlertTriangle, Users } from 'lucide-react';
 import { getHeartFailureDashboard, getHeartFailureWorklist, type HFDashboardData, type HFWorklistPatient } from '../../../../services/api';
+import type { Provenance } from '../../../../types/provenance';
 
 const DevicePathwayFunnel: React.FC = () => {
   const [dashboard, setDashboard] = useState<HFDashboardData | null>(null);
@@ -144,3 +145,7 @@ const DevicePathwayFunnel: React.FC = () => {
 };
 
 export default DevicePathwayFunnel;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'live';

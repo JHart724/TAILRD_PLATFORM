@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Activity, Heart, Zap, Monitor, TrendingUp, AlertTriangle, DollarSign, Users, Eye, Crosshair , CheckCircle } from 'lucide-react';
 import { toFixed } from '../../../../utils/formatters';
+import type { Provenance } from '../../../../types/provenance';
 
 interface InterventionData {
   id: string;
@@ -419,3 +420,7 @@ const AdvancedInterventionTracker: React.FC = () => {
 };
 
 export default AdvancedInterventionTracker;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

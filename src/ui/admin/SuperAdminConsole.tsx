@@ -19,6 +19,7 @@ import PlatformConfiguration from './tabs/PlatformConfiguration';
 import AuditSecurity from './tabs/AuditSecurity';
 import CustomerSuccess from './tabs/CustomerSuccess';
 import DataManagement from './tabs/DataManagement';
+import type { Provenance } from '../../types/provenance';
 
 type TabId =
   | 'overview'
@@ -144,3 +145,7 @@ const SuperAdminConsole: React.FC = () => {
 };
 
 export default SuperAdminConsole;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

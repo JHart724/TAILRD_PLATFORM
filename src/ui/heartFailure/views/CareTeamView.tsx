@@ -21,6 +21,7 @@ import MAGGICCalculator from '../../../components/riskCalculators/MAGGICCalculat
 import INTERMACSCalculator from '../../../components/riskCalculators/INTERMACSCalculator';
 import AmyloidosisScreener from '../../../components/phenotypeDetection/AmyloidosisScreener';
 import PhenotypeScreeningPanel from '../../../components/phenotypeDetection/PhenotypeScreeningPanel';
+import type { Provenance } from '../../../types/provenance';
 
 // Clinical Intelligence sub-tab panel — patient selector backed by API worklist
 const ClinicalToolsPanel: React.FC<{ activeToolTab?: string; onToolTabChange?: (tab: string) => void }> = ({ activeToolTab: externalToolTab, onToolTabChange }) => {
@@ -415,3 +416,7 @@ const CareTeamView: React.FC = () => {
 };
 
 export default CareTeamView;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'live';

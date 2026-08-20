@@ -25,6 +25,7 @@ import ReportingEmptyState from '../../../components/reporting/ReportingEmptySta
 import ClinicalGapDetectionDashboard from '../components/clinical/ClinicalGapDetectionDashboard';
 import KCCQOutcomesPanel from '../components/service-line/KCCQOutcomesPanel';
 import PhenotypeDetectionChart from '../components/PhenotypeDetectionChart';
+import type { Provenance } from '../../../types/provenance';
 
 // ── Advanced Therapy Pipeline ────────────────────────────────────────────
 const HFAdvancedTherapyPipeline: React.FC = () => {
@@ -486,3 +487,6 @@ export const heartFailureServiceLineConfig: ServiceLineViewConfig = {
   exportData: heartFailureExportData,
   hasExport: true
 };
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

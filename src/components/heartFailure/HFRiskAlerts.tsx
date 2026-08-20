@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AlertCircle, AlertTriangle, TrendingUp, X } from 'lucide-react';
+import type { Provenance } from '../../types/provenance';
 
 interface Alert {
   id: string;
@@ -132,3 +133,6 @@ const HFRiskAlerts: React.FC = () => {
 };
 
 export default HFRiskAlerts;
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

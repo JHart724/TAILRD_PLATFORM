@@ -4,6 +4,7 @@ import { getTrialsSummary } from '../../../services/api';
 import type { TrialsSummary } from '../../../services/api';
 import { TrialAsOfIndicator } from '../components/TrialAsOfIndicator';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+import type { Provenance } from '../../../types/provenance';
 
 // -- Registry data: STILL MOCK, deliberately -------------------------------
 //
@@ -351,3 +352,7 @@ const ResearchExecutiveView: React.FC = () => {
 };
 
 export default ResearchExecutiveView;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'live';

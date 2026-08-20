@@ -6,6 +6,7 @@ import {
   VHD_DEMO_ANNUAL_OPPORTUNITY_M,
   VHD_DEMO_YTD_CAPTURED_M,
 } from '../config/vhdDemoFinancials';
+import type { Provenance } from '../../../types/provenance';
 
 /**
  * VHD dashboard contract (mirrors CAD/SH/EP/HFDashboardData typing). The endpoint
@@ -261,3 +262,7 @@ export const VHDExecutiveSummary: React.FC<VHDExecutiveSummaryProps> = ({ dashbo
 };
 
 export default VHDExecutiveSummary;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

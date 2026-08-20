@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Lock } from 'lucide-react';
 import SectionCard from '../../../design-system/SectionCard';
+import type { Provenance } from '../../../types/provenance';
 
 interface Registry {
   name: string;
@@ -100,3 +101,7 @@ const RegistryEligibility: React.FC = () => {
 };
 
 export default RegistryEligibility;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

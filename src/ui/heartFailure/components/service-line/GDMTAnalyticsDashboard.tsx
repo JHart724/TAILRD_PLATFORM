@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Pill, Target, Heart, TrendingUp, AlertTriangle, Activity, Users } from 'lucide-react';
 import { getHeartFailureDashboard, getHeartFailureWorklist, type HFDashboardData, type HFWorklistPatient } from '../../../../services/api';
+import type { Provenance } from '../../../../types/provenance';
 
 const GDMTAnalyticsDashboard: React.FC = () => {
   const [dashboard, setDashboard] = useState<HFDashboardData | null>(null);
@@ -222,3 +223,7 @@ const GDMTAnalyticsDashboard: React.FC = () => {
 };
 
 export default GDMTAnalyticsDashboard;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'live';

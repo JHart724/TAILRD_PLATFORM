@@ -28,6 +28,7 @@ import {
   EP_DEMO_SAFETY_ALERT,
 } from '../config/epDemoFinancials';
 import { Heart } from 'lucide-react';
+import type { Provenance } from '../../../types/provenance';
 
 // Get electrophysiology data
 const electrophysiologyData = modulesClinicalData.electrophysiology;
@@ -890,3 +891,6 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 };
 
 export default ElectrophysiologyExecutiveView;
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'live';

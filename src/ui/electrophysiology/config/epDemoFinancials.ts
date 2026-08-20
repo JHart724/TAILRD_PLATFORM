@@ -21,6 +21,13 @@
  * Do NOT wire any of this to an API field that does not exist (DRIFT-50).
  */
 
+import type { Provenance } from '../../../types/provenance';
+
+// AUDIT-208 provenance declaration. A pure data module, not a rendering surface, but it is the
+// SOURCE the surfaces above it render, so it declares too - the honest place for the claim is
+// where the fabricated numbers actually live, not only where they are displayed.
+export const PROVENANCE: Provenance = 'demo';
+
 // The single annual revenue-opportunity total (demo), in $M - matches the prior
 // pipeline headline so this RECONCILES the tier rather than re-numbering it.
 export const EP_DEMO_ANNUAL_OPPORTUNITY_M = 8.9;

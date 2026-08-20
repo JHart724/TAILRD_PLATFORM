@@ -21,6 +21,13 @@
  * When a real revenue source lands, replace THIS module, not card literals.
  */
 
+import type { Provenance } from '../../../types/provenance';
+
+// AUDIT-208 provenance declaration. A pure data module, not a rendering surface, but it is the
+// SOURCE the surfaces above it render, so it declares too - the honest place for the claim is
+// where the fabricated numbers actually live, not only where they are displayed.
+export const PROVENANCE: Provenance = 'demo';
+
 // The single annual revenue-opportunity total (demo), in $M.
 export const HF_DEMO_ANNUAL_OPPORTUNITY_M = 6.2;
 

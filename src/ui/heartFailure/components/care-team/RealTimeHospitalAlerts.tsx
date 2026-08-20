@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Bell, AlertTriangle, Activity, Heart } from 'lucide-react';
 import { getHeartFailureDashboard, type HFDashboardData } from '../../../../services/api';
+import type { Provenance } from '../../../../types/provenance';
 
 const RealTimeHospitalAlerts: React.FC = () => {
   const [dashboard, setDashboard] = useState<HFDashboardData | null>(null);
@@ -113,3 +114,7 @@ const RealTimeHospitalAlerts: React.FC = () => {
 };
 
 export default RealTimeHospitalAlerts;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'live';

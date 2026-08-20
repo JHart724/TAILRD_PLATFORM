@@ -14,6 +14,7 @@ import VDClinicalGapDetectionDashboard from '../components/clinical/VDClinicalGa
 import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHeatmap';
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
 import ReportingEmptyState from '../../../components/reporting/ReportingEmptyState';
+import type { Provenance } from '../../../types/provenance';
 
 // VD Clinical Gap Detection with Pipeline Forecast
 const VDGapDetectionWithForecast: React.FC = () => (
@@ -424,3 +425,6 @@ export const valvularDiseaseServiceLineConfig: ServiceLineViewConfig = {
   exportData: valvularDiseaseExportData,
   hasExport: true
 };
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

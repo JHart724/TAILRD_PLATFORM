@@ -6,6 +6,7 @@ import { peripheralVascularConfig } from '../config/executiveConfig';
 import {
   PV_DEMO_YTD_CAPTURED_M,
 } from '../config/pvDemoFinancials';
+import type { Provenance } from '../../../types/provenance';
 
 /**
  * PV dashboard contract (mirrors VHD/CAD/SH/EP/HFDashboardData typing). The endpoint
@@ -274,3 +275,7 @@ export const PVExecutiveSummary: React.FC<PVExecutiveSummaryProps> = ({ dashboar
 };
 
 export default PVExecutiveSummary;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

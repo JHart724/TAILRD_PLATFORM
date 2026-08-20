@@ -1,6 +1,7 @@
 import { ExecutiveViewConfig } from '../../../components/shared/BaseExecutiveView';
 import { DRGOpportunity } from '../../../components/shared/DRGOptimizationAlert';
 import { PLATFORM_TOTALS, formatDollars, formatPatients } from '../../../data/platformTotals';
+import type { Provenance } from '../../../types/provenance';
 
 // Valvular Disease DRG Optimization Opportunities
 const valvularDiseaseDRGOpportunities: DRGOpportunity[] = [
@@ -105,3 +106,6 @@ export const valvularDiseaseConfig: ExecutiveViewConfig = {
  }
   ]
 };
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

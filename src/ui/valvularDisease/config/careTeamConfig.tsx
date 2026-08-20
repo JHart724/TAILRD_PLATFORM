@@ -11,6 +11,7 @@ import STSRiskCalculator from '../../../components/riskCalculators/STSRiskCalcul
 import { featureFlags } from '../../../config/featureFlags';
 import ValveRiskScoreCalculator from '../components/clinical/ValveRiskScoreCalculator';
 import VDClinicalGapDetectionDashboard from '../components/clinical/VDClinicalGapDetectionDashboard';
+import type { Provenance } from '../../../types/provenance';
 
 // Valvular Disease Dashboard Component
 const ValvularDashboard: React.FC = () => (
@@ -861,3 +862,6 @@ export const valvularCareTeamConfig: CareTeamViewConfig = {
  documentation: ValvularDocumentation
   }
 };
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

@@ -12,6 +12,7 @@ import {
   postACSStatinPatients, carotidPatientsCAD, cinPatients, medReconciliationPatients,
   colchicinePatients
 } from '../../../../data/cadDashboardData';
+import type { Provenance } from '../../../../types/provenance';
 
 // ============================================================
 // CLINICAL GAP DETECTION — CAD / CORONARY INTERVENTION MODULE
@@ -6581,3 +6582,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
 };
 
 export default CADClinicalGapDetectionDashboard;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'live';

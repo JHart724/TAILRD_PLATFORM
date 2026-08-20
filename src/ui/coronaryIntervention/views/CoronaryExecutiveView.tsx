@@ -24,6 +24,7 @@ import {
   CAD_DEMO_TOPGAPS,
   CAD_DEMO_SAFETY_ALERT,
 } from '../config/cadDemoFinancials';
+import type { Provenance } from '../../../types/provenance';
 
 const CoronaryExecutiveView: React.FC = () => {
   // useModuleDashboard returns `data: any`; the CAD dashboard endpoint emits the
@@ -411,3 +412,7 @@ const CoronaryExecutiveView: React.FC = () => {
 };
 
 export default CoronaryExecutiveView;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'live';

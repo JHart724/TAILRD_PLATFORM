@@ -20,6 +20,7 @@ import EPAlertDashboard from '../components/care-team/EPAlertDashboard';
 import EPRealTimeHospitalAlerts from '../components/care-team/EPRealTimeHospitalAlerts';
 import EPAnticoagulationContraindicationChecker from '../components/clinical/EPAnticoagulationContraindicationChecker';
 import EPRiskStratification from '../components/executive/EPRiskStratification';
+import type { Provenance } from '../../../types/provenance';
 
 // EP Dashboard Component
 const EPDashboard: React.FC = () => (
@@ -785,3 +786,6 @@ export const electrophysiologyCareTeamConfig: CareTeamViewConfig = {
  'clinical-gaps': EPClinicalGaps
   }
 };
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AlertTriangle, Target, TrendingUp, Clock, Users, Activity, Heart } from 'lucide-react';
 import { getHeartFailureDashboard, getHeartFailureWorklist, type HFDashboardData, type HFWorklistPatient } from '../../../../services/api';
+import type { Provenance } from '../../../../types/provenance';
 
 interface GapCategory {
   type: string;
@@ -193,3 +194,7 @@ const CareGapAnalyzer: React.FC = () => {
 };
 
 export default CareGapAnalyzer;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'live';
