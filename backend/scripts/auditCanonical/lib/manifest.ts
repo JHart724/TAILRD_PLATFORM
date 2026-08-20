@@ -34,10 +34,11 @@
  * always delete-and-regenerate; see AUDIT_METHODOLOGY section 24.
  */
 
+import { createHash } from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 import { CANONICAL_OUTPUT_DIR, REPO_ROOT } from './modules';
-import { relativePosix, sha256, stableStringify } from './utils';
+import { relativePosix, stableStringify } from './utils';
 
 export const MANIFEST_SCHEMA_VERSION = 1;
 export const MANIFEST_DIR = path.join(CANONICAL_OUTPUT_DIR, '.manifests');
@@ -71,9 +72,29 @@ export function manifestPath(stage: string): string {
   return path.join(MANIFEST_DIR, `${stage}.manifest.json`);
 }
 
-/** Hash a file into a repo-relative ref. Missing files are the caller's problem, not silently dropped. */
+/**
+ * Hash a file into a repo-relative ref.
+ *
+ * THIS IS A CONTENT HASH, NOT A FILE HASH: CR bytes are stripped before hashing, so a file that
+ * differs ONLY in line endings verifies as UNCHANGED. That is deliberate and correct, because the
+ * question the manifest asks is "did the input change", and a representation difference is not a
+ * change - the same bytes rendered for a different platform are the same content.
+ *
+ * WHY IT HAD TO BE THIS WAY (AUDIT-330): hashing the raw working-tree bytes made the manifest valid
+ * only on the machine that wrote it. Manifests generated on Windows (CRLF working tree) failed
+ * verification in CI (LF checkout) with INPUT_DRIFT on every recorded input while nothing had
+ * actually changed. The mechanism was working; the EQUIVALENCE RELATION was wrong.
+ *
+ * Missing files are the caller's problem, not silently dropped.
+ */
 export function fileRef(absPath: string): ManifestFileRef {
-  return { path: relativePosix(absPath, REPO_ROOT), sha256: sha256(absPath) };
+  return { path: relativePosix(absPath, REPO_ROOT), sha256: contentSha256(absPath) };
+}
+
+/** sha256 over line-ending-normalized content, so the digest is identical on every platform. */
+export function contentSha256(absPath: string): string {
+  const normalized = fs.readFileSync(absPath, 'utf8').split(String.fromCharCode(13)).join('');
+  return createHash('sha256').update(normalized, 'utf8').digest('hex');
 }
 
 function dedupeSorted(refs: ManifestFileRef[]): ManifestFileRef[] {
@@ -200,7 +221,7 @@ export function verifyManifests(opts: VerifyOptions): ManifestProblem[] {
           problems.push({ stage, kind: 'FILE_ABSENT', detail: `${ref.path} is recorded in the manifest but absent` });
           continue;
         }
-        const actual = sha256(abs);
+        const actual = contentSha256(abs);
         if (actual !== ref.sha256) {
           problems.push({
             stage,

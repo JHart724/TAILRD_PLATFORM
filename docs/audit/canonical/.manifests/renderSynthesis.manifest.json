@@ -3,27 +3,27 @@
   "inputs": [
     {
       "path": "docs/audit/canonical/CAD.crosswalk.json",
-      "sha256": "a7f7f7b2a28d4da2e6d36ae313c92377f20151cbef34ee5ccac3a47966f0edbb"
+      "sha256": "ad3ddf994335da2b1da5b687da5e592923b8e1e733bbb3664e43aa90dcd20650"
     },
     {
       "path": "docs/audit/canonical/EP.crosswalk.json",
-      "sha256": "81b6ef2e81318710b23d65fa28b19131dccf5da63eb62e6d8bbff6ef268f2473"
+      "sha256": "eea19509ed9c3b9fa4d79be9e9f1ad471277bd127189c158aa488dba67cfe900"
     },
     {
       "path": "docs/audit/canonical/HF.crosswalk.json",
-      "sha256": "20297d0e882241bc40ae4df9a7721acf64329ce4784a5ef671e8c6765dd17f6f"
+      "sha256": "ef8b7ad7e4e46810bc606581f57b2de62c305523d00923b9b5e9b7d9f272a5e9"
     },
     {
       "path": "docs/audit/canonical/PV.crosswalk.json",
-      "sha256": "234d29cabd7e8cfb5aa029e695896655467fa740cbda041055c3c2ba065a9aa5"
+      "sha256": "a127311057bcc86cd77c00c185ac0901b51c266db89e9a634a1a0f4a5429be0e"
     },
     {
       "path": "docs/audit/canonical/SH.crosswalk.json",
-      "sha256": "d8bb2e8eae6fe1d661cd366cec00abdadd87c619b3b677382b93b9abc42cba2a"
+      "sha256": "c0ed279ccf681cac07f82237e5746c3b0cc6d8e82167b699ef1c364bff1a20fe"
     },
     {
       "path": "docs/audit/canonical/VHD.crosswalk.json",
-      "sha256": "65425d1d47033e069455233b2e6e1a20088f2eb7c66d42b7dd5b36980de2c22e"
+      "sha256": "0ee35629fc4aaad0bc57378156bdc8008e96181a5e00ead3d8d1d877526560cd"
     }
   ],
   "modulesProcessed": [
