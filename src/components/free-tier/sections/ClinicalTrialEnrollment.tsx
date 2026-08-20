@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Lock } from 'lucide-react';
 import SectionCard from '../../../design-system/SectionCard';
+import type { Provenance } from '../../../types/provenance';
 
 const carmonaGradient: React.CSSProperties = {
   background: 'linear-gradient(145deg, #1A3B5C, #2C4A60, #1A3B5C)',
@@ -193,3 +194,7 @@ const ClinicalTrialEnrollment: React.FC = () => {
 };
 
 export default ClinicalTrialEnrollment;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

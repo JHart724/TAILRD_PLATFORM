@@ -6,6 +6,7 @@ import {
   CAD_DEMO_ANNUAL_OPPORTUNITY_M,
   CAD_DEMO_YTD_CAPTURED_M,
 } from '../config/cadDemoFinancials';
+import type { Provenance } from '../../../types/provenance';
 
 /**
  * CAD dashboard contract (mirrors SH/EP/HFDashboardData typing). The endpoint
@@ -261,3 +262,7 @@ export const CADExecutiveSummary: React.FC<CADExecutiveSummaryProps> = ({ dashbo
 };
 
 export default CADExecutiveSummary;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

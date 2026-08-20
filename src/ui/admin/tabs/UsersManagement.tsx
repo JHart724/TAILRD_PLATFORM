@@ -11,6 +11,7 @@ import {
   XCircle,
   UserPlus,
 } from 'lucide-react';
+import type { Provenance } from '../../../types/provenance';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -342,3 +343,7 @@ const UsersManagement: React.FC = () => {
 };
 
 export default UsersManagement;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

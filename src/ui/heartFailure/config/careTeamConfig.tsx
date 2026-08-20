@@ -14,6 +14,7 @@ import ReferralTrackerEnhanced from '../components/care-team/ReferralTrackerEnha
 import TeamCollaborationPanel from '../components/care-team/TeamCollaborationPanel';
 import CareGapAnalyzer from '../components/care-team/CareGapAnalyzer';
 import RealTimeHospitalAlerts from '../components/care-team/RealTimeHospitalAlerts';
+import type { Provenance } from '../../../types/provenance';
 
 // Heart Failure Dashboard Component
 const HFDashboard: React.FC = () => (
@@ -689,3 +690,6 @@ export const heartFailureCareTeamConfig: CareTeamViewConfig = {
  'clinical-gaps': HFClinicalGaps
   }
 };
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

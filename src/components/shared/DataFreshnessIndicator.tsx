@@ -1,8 +1,14 @@
 import React from 'react';
+import type { Provenance } from '../../types/provenance';
 
 interface DataFreshnessProps {
   lastSyncedAt?: Date | string | null;
-  source?: 'api' | 'demo' | 'unknown';
+  /**
+   * AUDIT-208: was a private union ('api' | 'demo' | 'unknown') - a SECOND vocabulary for the same
+   * question the backend and the Badge component were each answering differently. Collapsed into the
+   * shared Provenance type so there is one vocabulary rather than three.
+   */
+  source?: Provenance;
   className?: string;
 }
 

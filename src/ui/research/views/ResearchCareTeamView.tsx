@@ -3,6 +3,7 @@ import { FileText, Beaker, AlertTriangle, Clock, CheckCircle, Filter, Users, Hel
 import { getTrials, getTrialEligiblePatients } from '../../../services/api';
 import { TrialAsOfIndicator } from '../components/TrialAsOfIndicator';
 import type { Trial, TrialMatchCandidate, TrialMatchStatus, TrialAsOf } from '../../../services/api';
+import type { Provenance } from '../../../types/provenance';
 
 // -- Registry Abstraction Queue Data -----------------------------------------
 //
@@ -501,3 +502,7 @@ const ResearchCareTeamView: React.FC = () => {
 };
 
 export default ResearchCareTeamView;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'live';

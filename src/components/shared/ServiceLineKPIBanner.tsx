@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Users, AlertTriangle, ClipboardList } from 'lucide-react';
 import { useModuleDashboard } from '../../hooks/useModuleDashboard';
 import { apiFetch } from '../../services/api';
+import type { Provenance } from '../../types/provenance';
 
 interface ServiceLineKPIBannerProps {
   moduleSlug: string;
@@ -117,3 +118,7 @@ const ServiceLineKPIBanner: React.FC<ServiceLineKPIBannerProps> = ({
 };
 
 export default ServiceLineKPIBanner;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'live';

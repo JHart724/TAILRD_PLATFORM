@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, AlertTriangle, Activity, Heart, Zap, Shield, Eye, Flame, Users, TrendingUp } from 'lucide-react';
+import type { Provenance } from '../../../../types/provenance';
 interface PhenotypeData { id: string; name: string; prevalence: string; detectionRate: number; clinicalFeatures: string[]; diagnosticCriteria: string[]; managementPriority: 'Critical' | 'High' | 'Moderate' | 'Standard'; patientGap: number; totalEstimated: number; category: 'ischemic' | 'inflammatory' | 'structural' | 'metabolic'; }
 const PAD_PHENOTYPES: PhenotypeData[] = [
   { id: 'clti', name: 'Chronic Limb-Threatening Ischemia (CLTI)', prevalence: '11-15%', detectionRate: 65, clinicalFeatures: ['Rest pain > 2 weeks', 'Non-healing ulcers/gangrene', 'Ankle pressure < 50 mmHg', 'Toe pressure < 30 mmHg'], diagnosticCriteria: ['Rutherford 4-6', 'WIfI classification', 'Tissue loss with ischemia'], managementPriority: 'Critical', patientGap: 44, totalEstimated: 186, category: 'ischemic' },
@@ -86,3 +87,7 @@ const PADSpecialtyPhenotypesDashboard: React.FC = () => {
   );
 };
 export default PADSpecialtyPhenotypesDashboard;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

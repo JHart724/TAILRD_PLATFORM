@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Lock, TrendingUp } from 'lucide-react';
 import SectionCard from '../../../design-system/SectionCard';
 import Badge from '../../../design-system/Badge';
+import type { Provenance } from '../../../types/provenance';
 
 /**
  * OPERATOR RULING 2026-08-05 (AUDIT-233): market intelligence KEEPS its place on the freemium
@@ -181,3 +182,7 @@ const CompetitorMarketShare: React.FC = () => {
 };
 
 export default CompetitorMarketShare;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'estimate';

@@ -23,6 +23,7 @@ import {
   PV_DEMO_TOPGAPS,
   PV_DEMO_SAFETY_ALERT,
 } from '../config/pvDemoFinancials';
+import type { Provenance } from '../../../types/provenance';
 
 // -- Icons -----------------------------------------------------------
 const VascularIcon = () => (
@@ -428,3 +429,9 @@ const PeripheralExecutiveView: React.FC = () => {
 };
 
 export default PeripheralExecutiveView;
+
+// AUDIT-208: MIXED SURFACE - renders live API data AND its own fabricated arrays.
+// Declares the WEAKER value per the floor rule: a reader must not assume this is live.
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

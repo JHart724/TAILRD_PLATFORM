@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Activity, Heart, Zap, Monitor, TrendingUp, AlertTriangle, DollarSign, Users, Scissors, Pill } from 'lucide-react';
 import { toFixed } from '../../../../utils/formatters';
+import type { Provenance } from '../../../../types/provenance';
 interface InterventionData { id: string; name: string; eligiblePercent: string; nationalUtilization: string; currentUtilization: number; avgReimbursement: string; strategicValue: string; eligiblePatients: number; utilizedPatients: number; revenueGap: number; category: 'percutaneous' | 'surgical' | 'therapeutic' | 'pharmacologic' | 'diagnostic'; }
 const PAD_INTERVENTIONS: InterventionData[] = [
   { id: 'supervised-exercise', name: 'Supervised Exercise Therapy', eligiblePercent: '~60%', nationalUtilization: '~10%', currentUtilization: 8, avgReimbursement: '$2K-4K/program', strategicValue: 'First-line therapy, high patient volume', eligiblePatients: 744, utilizedPatients: 60, revenueGap: 2740000, category: 'therapeutic' },
@@ -87,3 +88,7 @@ const AdvancedInterventionTracker: React.FC = () => {
   );
 };
 export default AdvancedInterventionTracker;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

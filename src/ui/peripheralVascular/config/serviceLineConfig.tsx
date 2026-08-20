@@ -15,6 +15,7 @@ import LimbSalvageScreening from '../components/LimbSalvageScreening';
 import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHeatmap';
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
 import PVClinicalGapDetectionDashboard, { PV_CLINICAL_GAPS, PVGapPatient } from '../components/clinical/PVClinicalGapDetectionDashboard';
+import type { Provenance } from '../../../types/provenance';
 
 // Peripheral Vascular Analytics Dashboard
 const PeripheralVascularAnalytics: React.FC = () => (
@@ -760,3 +761,6 @@ export const peripheralVascularServiceLineConfig: ServiceLineViewConfig = {
   exportData: peripheralVascularExportData,
   hasExport: true
 };
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

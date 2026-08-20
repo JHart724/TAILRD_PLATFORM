@@ -11,6 +11,7 @@ import { featureFlags } from '../../../config/featureFlags';
 import PVClinicalGapDetectionDashboard from '../components/clinical/PVClinicalGapDetectionDashboard';
 import InterventionContraindicationChecker from '../components/clinical/InterventionContraindicationChecker';
 import PADRiskScoreCalculator from '../components/clinical/PADRiskScoreCalculator';
+import type { Provenance } from '../../../types/provenance';
 
 // Sample PAD patient data
 const padPatients = [
@@ -547,3 +548,6 @@ export const peripheralCareTeamConfig: CareTeamViewConfig = {
  'clinical-gaps': PVClinicalGaps
   }
 };
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

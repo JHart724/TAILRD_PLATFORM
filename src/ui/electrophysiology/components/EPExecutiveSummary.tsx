@@ -6,6 +6,7 @@ import {
   EP_DEMO_ANNUAL_OPPORTUNITY_M,
   EP_DEMO_YTD_CAPTURED_M,
 } from '../config/epDemoFinancials';
+import type { Provenance } from '../../../types/provenance';
 
 /**
  * EP dashboard contract (mirrors HFDashboardData typing). The endpoint
@@ -263,3 +264,7 @@ export const EPExecutiveSummary: React.FC<EPExecutiveSummaryProps> = ({ dashboar
 };
 
 export default EPExecutiveSummary;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

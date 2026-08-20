@@ -4,6 +4,7 @@ import Badge from '../../../design-system/Badge';
 import { CareGapFunnel } from '../types';
 import { formatNumber } from '../utils';
 import { Lock } from 'lucide-react';
+import type { Provenance } from '../../../types/provenance';
 
 interface CareGapFunnelsProps {
   funnels: CareGapFunnel[];
@@ -158,3 +159,7 @@ const CareGapFunnels: React.FC<CareGapFunnelsProps> = ({
 };
 
 export default CareGapFunnels;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

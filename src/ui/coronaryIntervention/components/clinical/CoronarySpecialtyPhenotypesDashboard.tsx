@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Heart, Search, AlertTriangle, DollarSign, TrendingUp, Users, Activity , ChevronDown, ChevronUp, CheckCircle } from 'lucide-react';
 import { toFixed } from '../../../../utils/formatters';
+import type { Provenance } from '../../../../types/provenance';
 
 interface PhenotypeData {
   id: string;
@@ -494,3 +495,7 @@ const CoronarySpecialtyPhenotypesDashboard: React.FC = () => {
 };
 
 export default CoronarySpecialtyPhenotypesDashboard;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

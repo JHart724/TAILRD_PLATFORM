@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AlertCircle, Filter, Heart, Search, Activity, User } from 'lucide-react';
 import { getHeartFailureWorklist, type HFWorklistPatient } from '../../../../services/api';
+import type { Provenance } from '../../../../types/provenance';
 
 const PatientWorklistEnhanced: React.FC = () => {
   const [patients, setPatients] = useState<HFWorklistPatient[]>([]);
@@ -220,3 +221,7 @@ const PatientWorklistEnhanced: React.FC = () => {
 };
 
 export default PatientWorklistEnhanced;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'live';

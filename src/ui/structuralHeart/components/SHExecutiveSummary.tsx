@@ -6,6 +6,7 @@ import {
   SH_DEMO_ANNUAL_OPPORTUNITY_M,
   SH_DEMO_YTD_CAPTURED_M,
 } from '../config/shDemoFinancials';
+import type { Provenance } from '../../../types/provenance';
 
 /**
  * SH dashboard contract (mirrors EPDashboardData / HFDashboardData typing). The
@@ -264,3 +265,7 @@ export const SHExecutiveSummary: React.FC<SHExecutiveSummaryProps> = ({ dashboar
 };
 
 export default SHExecutiveSummary;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

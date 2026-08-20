@@ -26,6 +26,7 @@ import {
   Legend,
 } from 'recharts';
 import { useAdminDashboard, useAdminHospitals } from '../../../hooks/useAdminData';
+import type { Provenance } from '../../../types/provenance';
 
 // ─── KPI card layout (labels are constant; values come from /api/admin/dashboard) ──
 // Default values render as "—" when API data is absent so labels never flip mid-load.
@@ -321,3 +322,7 @@ const PlatformOverview: React.FC = () => {
 };
 
 export default PlatformOverview;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

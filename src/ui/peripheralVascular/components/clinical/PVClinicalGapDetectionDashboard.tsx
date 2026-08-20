@@ -6,6 +6,7 @@ import GapActionButtons from '../../../../components/shared/GapActionButtons';
 import { useGapActions } from '../../../../hooks/useGapActions';
 import { fetchModuleGapsFromApi, type FrontendClinicalGap } from '../../../../adapters/gapAdapter';
 import { useModuleDashboard } from '../../../../hooks/useModuleDashboard';
+import type { Provenance } from '../../../../types/provenance';
 
 // ============================================================
 // CLINICAL GAP DETECTION — PERIPHERAL VASCULAR MODULE
@@ -3671,3 +3672,9 @@ const PVClinicalGapDetectionDashboard: React.FC<PVClinicalGapDetectionDashboardP
 };
 
 export default PVClinicalGapDetectionDashboard;
+
+// AUDIT-208: MIXED SURFACE - renders live API data AND its own fabricated arrays.
+// Declares the WEAKER value per the floor rule: a reader must not assume this is live.
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

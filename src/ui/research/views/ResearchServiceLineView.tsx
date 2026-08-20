@@ -4,6 +4,7 @@ import { PLATFORM_TOTALS } from '../../../data/platformTotals';
 import { getTrials, getTrialsSummary, getTrialReferrals } from '../../../services/api';
 import type { TrialsSummary, TrialReferralRow } from '../../../services/api';
 import { TrialAsOfIndicator } from '../components/TrialAsOfIndicator';
+import type { Provenance } from '../../../types/provenance';
 
 // -- Types ---------------------------------------------------
 
@@ -1192,3 +1193,9 @@ const ResearchServiceLineView: React.FC = () => {
 };
 
 export default ResearchServiceLineView;
+
+// AUDIT-208: MIXED SURFACE - renders live API data AND its own fabricated arrays.
+// Declares the WEAKER value per the floor rule: a reader must not assume this is live.
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

@@ -2,6 +2,7 @@ import React from 'react';
 import SectionCard from '../../../design-system/SectionCard';
 import LockedOverlay from '../../../design-system/LockedOverlay';
 import Badge from '../../../design-system/Badge';
+import type { Provenance } from '../../../types/provenance';
 
 /**
  * OPERATOR RULING 2026-08-05 (AUDIT-233): referral leakage KEEPS its place on the freemium
@@ -91,3 +92,7 @@ const ReferralLeakage: React.FC<ReferralLeakageProps> = () => {
 };
 
 export default ReferralLeakage;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'estimate';

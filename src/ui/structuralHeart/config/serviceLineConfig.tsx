@@ -17,6 +17,7 @@ import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHe
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
 import ReportingEmptyState from '../../../components/reporting/ReportingEmptyState';
 import SHClinicalGapDetectionDashboard, { SH_CLINICAL_GAPS, SHGapPatient } from '../components/clinical/SHClinicalGapDetectionDashboard';
+import type { Provenance } from '../../../types/provenance';
 
 // Structural Heart Analytics Dashboard
 const StructuralHeartAnalytics: React.FC = () => (
@@ -768,3 +769,6 @@ export const structuralHeartServiceLineConfig: ServiceLineViewConfig = {
   exportData: structuralHeartExportData,
   hasExport: true
 };
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'demo';

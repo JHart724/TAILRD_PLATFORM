@@ -29,6 +29,7 @@ import {
   formatDemoDollars,
 } from '../config/hfDemoFinancials';
 import { Heart } from 'lucide-react';
+import type { Provenance } from '../../../types/provenance';
 
 const ExecutiveView: React.FC = () => {
   const [selectedWaterfallCategory, setSelectedWaterfallCategory] = useState<'GDMT' | 'Devices' | 'Phenotypes' | '340B' | null>(null);
@@ -597,3 +598,7 @@ const ExecutiveView: React.FC = () => {
 };
 
 export default ExecutiveView;
+
+// AUDIT-208 provenance declaration. States where THIS surface's data comes from, so that
+// "is this figure database-derived" has a mechanical answer instead of requiring someone to know.
+export const PROVENANCE: Provenance = 'live';
