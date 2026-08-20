@@ -9,7 +9,7 @@
  *   - guideline YEAR set intersection (multi-guideline ';'/'+'-joined)
  *
  * Integration tests run analyzeSource against:
- *   - the live gapRuleEngine.ts  -> MUST report 0 inconsistencies + 0 warnings
+ *   - the live gapRuleEngine.ts  -> MUST report 0 inconsistencies + 0 comment divergences
  *     (baseline clean post-AUDIT-103; pushCount == evidenceCount == 263)
  *   - the negative-control FIXTURE -> MUST flag the synthetic bad rule on all
  *     three fields (proves the gate fires, not just passes vacuously) while
@@ -167,8 +167,8 @@ describe('validateEvidenceObjects - live gapRuleEngine.ts baseline', () => {
     expect(result.inconsistencies).toEqual([]);
   });
 
-  it('reports ZERO soft comment warnings', () => {
-    expect(result.warnings).toEqual([]);
+  it('reports ZERO comment divergences (AUDIT-329: this tier is now FATAL)', () => {
+    expect(result.commentDivergences).toEqual([]);
   });
 });
 
