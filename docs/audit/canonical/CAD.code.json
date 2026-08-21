@@ -772,7 +772,7 @@
     },
     {
       "classOfRecommendation": "1",
-      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "guidelineSource": "2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
       "id": "gap-cad-acei",
       "lastReviewDate": "2026-04-03",
       "levelOfEvidence": "A",
@@ -782,7 +782,7 @@
     },
     {
       "classOfRecommendation": "1",
-      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "guidelineSource": "2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
       "id": "gap-cad-bb-post-mi",
       "lastReviewDate": "2026-04-03",
       "levelOfEvidence": "A",
@@ -1102,7 +1102,7 @@
     },
     {
       "classOfRecommendation": "1",
-      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "guidelineSource": "2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
       "id": "gap-cad-echo-cad",
       "lastReviewDate": "2026-04-03",
       "levelOfEvidence": "B",
@@ -1112,7 +1112,7 @@
     },
     {
       "classOfRecommendation": "2a",
-      "guidelineSource": "2022 AHA/ACC/HFSA HF Guideline; 2022 ACC/AHA Chest Pain Guideline",
+      "guidelineSource": "2022 AHA/ACC/HFSA HF Guideline; 2021 ACC/AHA Chest Pain Guideline",
       "id": "gap-cad-bnp-cad",
       "lastReviewDate": "2026-04-03",
       "levelOfEvidence": "B",
@@ -1122,7 +1122,7 @@
     },
     {
       "classOfRecommendation": "1",
-      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "guidelineSource": "2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
       "id": "gap-cad-renal-monitor",
       "lastReviewDate": "2026-04-03",
       "levelOfEvidence": "B",
@@ -1172,7 +1172,7 @@
     },
     {
       "classOfRecommendation": "1",
-      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "guidelineSource": "2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
       "id": "gap-cad-anemia",
       "lastReviewDate": "2026-04-03",
       "levelOfEvidence": "B",
@@ -1272,7 +1272,7 @@
     },
     {
       "classOfRecommendation": "1",
-      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain (SCOT-HEART, PROMISE)",
+      "guidelineSource": "2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain (SCOT-HEART, PROMISE)",
       "id": "gap-cad-cardiac-ct",
       "lastReviewDate": "2026-04-03",
       "levelOfEvidence": "A",
@@ -1372,7 +1372,7 @@
     },
     {
       "classOfRecommendation": "2a",
-      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "guidelineSource": "2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
       "id": "gap-cad-coronary-cta-fu",
       "lastReviewDate": "2026-04-03",
       "levelOfEvidence": "B-NR",
@@ -1382,7 +1382,7 @@
     },
     {
       "classOfRecommendation": "1",
-      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "guidelineSource": "2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
       "id": "gap-cad-nuclear-stress",
       "lastReviewDate": "2026-04-03",
       "levelOfEvidence": "B",
@@ -1422,7 +1422,7 @@
     },
     {
       "classOfRecommendation": "1",
-      "guidelineSource": "2022 ACC/AHA Guideline for Evaluation and Diagnosis of Chest Pain; AHA MINOCA Scientific Statement",
+      "guidelineSource": "2021 ACC/AHA Guideline for Evaluation and Diagnosis of Chest Pain; AHA MINOCA Scientific Statement",
       "id": "gap-cad-minoca",
       "lastReviewDate": "2026-04-03",
       "levelOfEvidence": "B-NR",
@@ -1522,7 +1522,7 @@
     },
     {
       "classOfRecommendation": "1",
-      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "guidelineSource": "2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
       "id": "gap-cad-chest-pain-protocol",
       "lastReviewDate": "2026-04-03",
       "levelOfEvidence": "B",
@@ -1552,7 +1552,7 @@
     },
     {
       "classOfRecommendation": "1",
-      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "guidelineSource": "2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
       "id": "gap-cad-young-mi",
       "lastReviewDate": "2026-04-03",
       "levelOfEvidence": "C-LD",

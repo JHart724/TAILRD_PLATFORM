@@ -1,8 +1,8 @@
 {
   "extractorScript": "backend/scripts/auditCanonical/extractSpec.ts",
   "extractorVersion": "1.0.0",
-  "generatedAt": "2026-08-18T02:32:10.589Z",
+  "generatedAt": "2026-08-21T17:48:34.148Z",
   "generatedBy": "extractSpec",
   "module": "VHD",
-  "sourceSha256": "17ac600ae444302d188d820155524bb1aeea0ea35609bf7cbd75bc18fc33f5c9"
+  "sourceSha256": "0a12c45782267c9c5346ef1e394092c20b89831693baba275fa66b51880d4ff0"
 }

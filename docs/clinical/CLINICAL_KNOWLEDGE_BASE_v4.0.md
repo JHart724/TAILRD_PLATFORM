@@ -1240,7 +1240,7 @@ SDOH/Disparities (8 gaps)
 Preventive (3 gaps)
 | Priority | ID | Gap Name and Detection Logic | Structured Data Elements | Domains | PHI |
 |---|---|---|---|---|---|
-| T2 | GAP-CX-079 | 2024 ACC/AHA lipid update: LDL goal <55 extreme risk. Extreme risk + LDL>=55 despite max | Extreme risk criteria, LDL, meds | D2, D3, D5 | Non-PHI |
+| T2 | GAP-CX-079 | Extreme-risk LDL goal <55 mg/dL (citation pending ledger entry, AUDIT-332; the prior text named a 2024 ACC/AHA lipid update, which is not a published document). Extreme risk + LDL>=55 despite max | Extreme risk criteria, LDL, meds | D2, D3, D5 | Non-PHI |
 | T2 | GAP-CX-080 | PREVENT risk calculator (ACC 2023) utilization. Primary prevention eval without PREVENT scoring | Primary prev eligible, PREVENT components | D2, D5, D6 | Non-PHI |
 | T2 | GAP-CX-081 | 2025 ACS guideline adherence: multi-discipline review. ACS admission without guideline-aligned discharge bundle | ACS dx, discharge bundle components | D2, D3, D11 | Non-PHI |
 

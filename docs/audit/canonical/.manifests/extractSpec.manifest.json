@@ -3,7 +3,7 @@
   "inputs": [
     {
       "path": "docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md",
-      "sha256": "280a198be5edb94207f98c26c7e6f4b3559f57228ba1cd2fb1f73116b132754a"
+      "sha256": "efc1ac49d19e9e52c486dfaea5b5f1990272d681f1ba573aeac3c656ec02cbb7"
     }
   ],
   "modulesProcessed": [
