@@ -554,6 +554,52 @@ Mandatory for the M2 binding implementation:
 8. **Tikosyn rebind disposition** - the rule keeps its clinical content and rebinds to the current Tikosyn label
    (boxed warning, in-hospital initiation, QTc/CrCl dosing). The REMS reference is dropped, not replaced.
 
+## 8d. AMENDMENTS 2026-08-22 (later) - M2 Phase 1b, ledger completion
+
+The first binder dry-run bound 54% of clauses. This section is what closing the other 46% required.
+
+### 8d.1 Schema: `aliases` - and they must PARTITION
+
+Every entry carries `aliases: []`, the authored citation strings that resolve to it. **This was the single
+largest gap.** The 84 synonym-merges that collapsed 173 candidates to 123 existed only in a scratch grouping;
+the ledger carried one canonical title and nothing else, so `2022 AHA/ACC/HFSA HF Guideline` (22 clause-refs)
+resolved to nothing. **Identity-level binding cannot work without the alias table, because the variation the
+aliases capture is exactly the variation the ledger exists to absorb.**
+
+**PARTITION RULE, enforced by self-check: no alias may appear on two entries.** A string that resolved two ways
+would make binding ambiguous, which is the failure this artifact exists to remove. 186 aliases, partition clean.
+
+### 8d.2 Two binder fixes (both were mine, both found by the dry-run)
+
+- **Paren-balance-aware trailing strip.** Section 8c.4 specified removing a stray trailing `)`. Applied
+  unconditionally it mangled 134 clause-refs - `CHEST-1 (riociguat)` became `CHEST-1 (riociguat`. Strip only
+  when the clause is unbalanced.
+- **Pending-tag exemption extended to bare forms.** The regex caught the parenthetical form and missed the bare
+  `perioperative anticoagulation guidance` left by the AUDIT-332 correction.
+
+### 8d.3 `docType: device-ifu`
+
+Manufacturer instructions-for-use are legitimate clinical basis and cannot be carried as guideline entries: no
+year, no society, revised continuously per device. Schema per operator ruling - **manufacturer as `society`,
+`publicationYear` null, `editionCycle: continuous`, `verifiedVia: manufacturer-ifu-page`**. Generic IFU strings
+(`device IFU`, `closure-device IFUs`) alias to the SPECIFIC device the bound rule concerns, resolved by
+rule-assertion. Two entries: WATCHMAN LAA closure, septal/PFO occluders.
+
+### 8d.4 FAMILY STRINGS - a citation that names no instalment is NO_SOURCE_EXISTS, never a family entry
+
+**Operator ruling.** `SVS Practice Guidelines`, `AHA/ACC Secondary Prevention Recommendations` and
+`ASE Structural Heart Imaging Guideline` name a document FAMILY, not a document. A family entry would be a
+ledger row that cannot resolve to one publication - an artifact asserting provenance it does not have, which is
+the AUDIT-327 defect in ledger form. They resolve by rule-assertion to a specific instalment, or they are
+`NO_SOURCE_EXISTS` and surface for resolution. **This is distinct from shape 6 (series slide), where a real
+instalment is named with the wrong year: here no instalment is named at all.**
+
+### 8d.5 `verifiedVia` gains `manufacturer-ifu-page`; final sizing 141
+
+116 -> **141 entries** (25 added: 19 real documents/trials/registries/IFUs, 6 `no-source-exists`), 186 aliases,
+3 declared `sourceAnnotations`. **Dry-run 3: unresolvable 0, rows touched 775 of 775, sourceIds assigned 141 of
+141, ledger entries never bound 0, judgment beyond spec 0.**
+
 ## 9. Rollback
 
 Every step is designed to be reversible without a data migration:
