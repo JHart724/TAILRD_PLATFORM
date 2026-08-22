@@ -157,7 +157,7 @@ that step is not left to be remembered.
 
 **One entry per DOCUMENT** (Q1 ruling). Not per citation string, not per rule, not per recommendation.
 
-Expected size **~193-210 entries**: the ~193 distinct documents behind the current corpus, plus the standalone
+**[CORRECTED 2026-08-22 - M1 Phase 1 measured this. The real figure is ~123, not ~193-210. See the SIZING CORRECTION below; the original estimate is retained here per section 18.]** Expected size **~193-210 entries**: the ~193 distinct documents behind the current corpus, plus the standalone
 trials (INVICTUS, COMPASS, CAPRIE, AFFIRM-AHF, PARADIGM-HF and siblings) and FDA labels (Pradaxa, Effient,
 Xarelto, Kerendia) that appear today as trailing clauses rather than as documents in their own right.
 
@@ -244,7 +244,7 @@ evidence: {
 
 This is the structural resolution of the title-drift class (Q2).
 
-Today `guidelineSource` is an authored string, and 279 of them describe ~193 documents. After the migration it is
+Today `guidelineSource` is an authored string, and 278 of them describe ~123 documents (figures corrected 2026-08-22; the note originally read 279 and ~193). After the migration it is
 **generated at regen time** from `sourceIds` against the ledger: look up each id, compose
 `publicationYear + title`, join. It is written by the pipeline into the derived artifacts, exactly as
 `AUDIT_METHODOLOGY.md` section 2.2 already governs derived outputs.
@@ -319,6 +319,51 @@ not silently treated as CURRENT, because nobody has checked them.
 **Gate 1 - `validateEvidenceObjects`, existing, UNCHANGED.** Internal consistency: the evidence object against its
 own rule's `recommendations` text and preceding comment. Hardened to fatal on both tiers under AUDIT-329. Current
 baseline 371/371 rows, 0 inconsistencies, 0 comment divergences, 387 non-failing HYGIENE.
+
+### SIZING CORRECTION 2026-08-22 (M1 Phase 1, measured)
+
+The ~193-210 estimate above is **wrong by roughly 40 percent**. M1 Phase 1 re-extracted the census at `b7e1776` and grouped it properly:
+
+```
+distinct guidelineSource strings   278   (279 pre-AUDIT-332; the sweep netted -1, not -2,
+                                          because the perioperative pending tag is itself a new string)
+raw grouping                       173   143 documents + 16 trials + 14 FDA labels
+after abbreviation-synonym merge   123    93 documents + 16 trials + 14 FDA labels
+```
+
+**WHY THE ORIGINAL ESTIMATE WAS HIGH: it under-merged abbreviation variants.** The first pass grouped on a raw word set, so `2020 ACC/AHA VHD Guideline` and `2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease` counted as two documents. A synonym-expansion pass (VHD -> valvular heart disease, HF -> heart failure, AF -> atrial fibrillation, and 25 more) collapsed **84 such pairs**, including the 2017 ventricular-arrhythmia guideline written **seven** different ways. The estimate was measuring title drift, not documents - which is the same confusion the ledger exists to end.
+
+**M1 AND M2 EFFORT SHOULD FOLLOW THE CONCENTRATION CURVE, NOT THE ENTRY COUNT.** Measured:
+
+```
+top 10 entries  ->  65.0% of all clause-refs
+top 20 entries  ->  74.4%
+top 30 entries  ->  79.1%
+top 50 entries  ->  85.9%
+```
+
+Six entries carry 25+ rows each; 150 of the 123 entries' peers sit at 1-4 rows. Adjudicating the top 30 buys 79 percent of the corpus. **The tail is long, cheap per entry, and low-consequence** - a wrong year on a 1-row entry misleads one rule, a wrong year on the 154-row VHD entry misleads a sixth of the corpus. Sequence M1 by rows-bound descending.
+
+### GATE-2 SCOPE CORRECTION 2026-08-22 (M1 Phase 1 found two shapes this gate does not catch)
+
+Section 6.3's coverage table was built from the four AUDIT-332 instances, all of which are **wrong-year**. Phase 1 adjudication surfaced two further shapes, and **a year-only comparator passes both**:
+
+- **WRONG SOCIETY, right year.** `2022 ACC/AHA Guideline for Cardio-Oncology` (4 rows). The 2022 cardio-oncology guideline is **ESC**; no ACC/AHA cardio-oncology guideline exists. A check asking only "does a 2022 cardio-oncology document exist" says yes.
+- **WRONG TITLE, right year and society.** `2023 AHA/ACC Guideline Update: Colchicine for Atherosclerotic CVD` (2 rows) and `2024 HRS Expert Consensus on Pulsed Field Ablation` (2 rows). Neither document exists; the recommendations live inside the 2023 Chronic Coronary Disease guideline and the 2024 EHRA/HRS/APHRS/LAHRS AF ablation consensus respectively - both real, both already separate entries.
+
+**THE DESIGN CHANGE, and it is small if made now and expensive after M2 binds 313 rows:** M2 binding is **IDENTITY-LEVEL, not year-level**. A row binds to a ledger entry only when **society AND title AND year** reconcile against that entry. Consequences, all mandatory:
+
+1. **No silent mapping.** A discrepant string may NEVER be quietly bound to the plausible-looking entry. Every string-to-entry resolution that required a correction is recorded as a **`bindingNote`** on the row, naming the string as authored and the entry it truly resolves to.
+2. **Unreconcilable strings do not bind.** They surface for adjudication rather than defaulting to the nearest match, because a confident wrong binding is worse than an unbound row - it launders a phantom into a ledger-backed citation.
+3. **Gate 2 asserts identity, not existence.** `sourceId` resolves AND the resolved entry's society and title match what the row claims.
+
+**POST-M2 THIS CLASS CLOSES STRUCTURALLY, which is why the correction is worth making rather than patching:** after M2 no rule carries an authored society, title or year at all. All three are derived from the ledger entry the `sourceId` points at, so a wrong-society or wrong-title citation becomes **unrepresentable** rather than merely detectable - the same argument section 4 makes for wrong-year.
+
+### CLASSIFIER CORRECTIONS FOR M2 (M1 Phase 1)
+
+- **Seven trials are misclassified as documents** because they carry a year: SAMMPRIS, VEST, CAST, GiACTA, STELLAR, FINEARTS-HF, RHAPSODY. They re-class to `docType: trial` at M2. This is a grouping-script defect, not a citation defect.
+- **`2012 Stable IHD Guideline` merges** into the existing `2012 ACCF/AHA/ACP/AATS/PCNA/SCAI/STS Guideline for Stable Ischemic Heart Disease` entry - an abbreviation variant the synonym pass did not reach because it carries no society token at all.
+- **`docType` gains `study`** for systematic reviews and meta-analyses cited as primary basis (operator ruling). First member: DiNicolantonio 2013, thiamine in heart failure.
 
 **Gate 2 - currency gate, NEW.** For every rule row:
 - every `sourceId` resolves to a ledger entry - **an unresolvable id is a hard fail**;
