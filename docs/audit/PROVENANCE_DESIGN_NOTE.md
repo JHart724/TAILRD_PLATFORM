@@ -435,6 +435,125 @@ intended, not a gap.
 
 ---
 
+## 8b. AMENDMENTS 2026-08-22 - M1 Phase 3 complete adjudication
+
+All 123 candidate entries are adjudicated. The amendments below are what that data forced. Section 18
+supersede-not-overwrite applies: nothing above is rewritten, and where a figure here contradicts an earlier
+one, this section wins by date.
+
+### 8b.1 Sizing confirmed - the ledger is 116 entries
+
+`~193-210` (original) -> `~123` (2026-08-22 correction) -> **116 authored**. The final drop is mechanical, not
+a new measurement: 123 candidates minus 6 merge-candidate variant strings minus 1 parser artifact. The M1
+estimate is now a count, not a projection.
+
+### 8b.2 Series schema - BOTH shapes, and the parallel case is not an edge case
+
+`seriesId` groups instalments; `seriesScope` discriminates them; `successorId` is populated ONLY where an
+instalment REPLACES another. Two shapes, both real in this corpus:
+
+- **TEMPORAL** - worked example `ishlt-mcs`: 2013 -> 2023 ten-year update. Later instalment supersedes earlier,
+  `successorId` meaningful, `seriesScope` largely constant.
+- **PARALLEL** - worked example `acr-vf-2021-vasculitis`: FOUR instalments published in the SAME year (ANCA-
+  associated vasculitis, GCA + Takayasu, polyarteritis nodosa, Kawasaki). Nothing supersedes anything;
+  `successorId` is null by construction and **`seriesScope` is the only discriminator**. A schema that models
+  series purely as a temporal chain cannot represent this, and the corpus contains a live citation
+  (`2021 ACR/VF Guideline for the Management of Vasculitis`) that names the series without naming an instalment.
+
+10 series identified across 116 entries.
+
+### 8b.3 Shapes 5-8 added to the section 6.3 coverage table, including the rows where the answer is NO
+
+Sections 6.3 and the 2026-08-22 Gate-2 correction covered shapes 1-4. Complete adjudication surfaced four more.
+**Two of them no proposed gate catches**, and that is recorded here rather than discovered later:
+
+| # | Shape | Example | Caught by |
+|---|---|---|---|
+| 5 | **Transposed years across a dual citation** | FMD pair: consensus is 2019 and the AHA statement 2014, cited swapped | **Pairing validation** (per-clause-position) |
+| 6 | **Series slide** - right scope, wrong instalment | ASH VTE diagnosis cited 2020 when it is 2018 | **Series-scope check** - see the hard-gate ruling below |
+| 7 | **Attribute fusion** - type/body from one document, year from another | Takotsubo: ESC/HFA position statement is 2016, fused with the 2018 international consensus year | **NOTHING PROPOSED.** Both documents are real, both on-topic, and they are NOT instalments of one series, so series-scope does not see it. Catching it requires asserting that type + body + year jointly describe ONE ledger entry. |
+| 8 | **Retired regulatory instrument** | `FDA REMS Program for Dofetilide (Tikosyn)` - FDA ELIMINATED that REMS in March 2016 | **NOTHING CAN.** Every token was correct when written; the document did not change, the world did. |
+
+**Shape 8 has no gate answer, only a cadence answer.** No year, society, title, pairing or series check detects a
+citation that was true when authored and has since been withdrawn. The only defence is `lastVerifiedDate` plus a
+review cadence that re-checks entries against their sources - which is precisely the STATE property section 1
+named and section 2.3 measured as absent. **Shape 8 is the argument for the review cadence, and it is the first
+concrete instance of the harm that property exists to prevent.** Note also what is NOT wrong in that instance:
+the rule's clinical substance survives in the current label as a boxed warning with in-hospital initiation and
+QTc/CrCl dosing. The citation is void; the medicine is not.
+
+### 8b.4 RULING 2026-08-22 - shape 6 gets a HARD GATE, cost accepted
+
+Gate 2 validates `seriesScope`, not merely `seriesId` resolution. A row binding to a series entry must match the
+instalment whose scope covers the rule's assertion.
+
+RATIONALE, recorded so it is not re-litigated: series slide is the **largest single defect family** in the
+corpus - 5 of 24 instances (ASH VTE x2, CHEST VTE, SVS venous x2). Both the ASH and SVS slides happened *within
+a series the author was demonstrably consulting*, which is what makes them invisible to inspection: the society
+is right, the topic is right, the year names a real document in the same family. A binder-only check would fix
+these five and go blind to the next. THE COST IS REAL AND IS ACCEPTED: M1 must encode which instalment covers
+which scope, which is authoring work rather than lookup work.
+
+### 8b.4b RULING 2026-08-22 - the two pending rebinds, and the rule that governs every future rebind
+
+LVNC binds to the 2023 ESC cardiomyopathies guideline; myocarditis to the 2024 ACC ECDP on myocarditis. **THE GENERAL RULE THE TWO CASES ESTABLISH: COR and LOE are NEVER carried across a rebind.** A class that came from a nonexistent document has no provenance, so it cannot be inherited - it must be re-read from the target document's own language at M2, and where the target issues no classes (Expert Consensus Decision Pathways frequently do not) the rule is re-labelled rather than assigned one. A class carried across unexamined would be a fabricated class wearing a verified citation, which survives every check this ledger adds and is therefore strictly worse than the phantom it replaced.
+
+### 8b.5 Edition-cycle vocabulary
+
+`editionCycle`: `null` (one-time document) / `annual` (ADA Standards of Care) / `periodic` (AGS Beers, ISL
+lymphedema consensus) / `continuous` (all 13 FDA labels). Pin to the RELIED-UPON edition or approval; do not
+churn the ledger on every revision. Live example of why the pin matters: the Kerendia label gained a SECOND
+indication (HF with LVEF >=40%) on 2025-07-14 while the CKD+T2DM indication the rule relies on is unchanged.
+
+### 8b.6 METHOD NOTE - acronym collision, and name-matching is never sufficient
+
+**A trial or study citation must be verified against the BOUND RULE'S ASSERTION, never against its name.** Three
+same-name traps in one adjudication, in BOTH failure directions:
+
+- **DiNicolantonio 2013** - two papers, same author and year. The thiamine review is the rule's basis; a
+  carvedilol meta-analysis surfaced first. Would have **wrongly cleared** a citation by matching author+year.
+- **BBEST vs BEST** - a name search returns the Beta-Blocker Evaluation of Survival Trial (bucindolol, HF). The
+  rule asserts celiprolol in vascular Ehlers-Danlos, which is BBEST (Lancet 2010). Would have **wrongly
+  condemned** a correct citation.
+- **CAST vs CASTLE-AF** - both live in this corpus as separate strings. No contamination occurred, but the
+  adjacency is a standing hazard for any future name-based matcher.
+
+`verifiedVia` gains **`registry-record`** for trials verified against a registry entry (NCT id as pointer).
+
+### 8b.7 Label supersession is a distinct lifecycle state
+
+`superseded` (a newer edition replaced the document) and **label-supersession** (the cited regulatory instrument
+was withdrawn, or the label text no longer supports the assertion) are different failures with different
+remedies. The first rebinds to a successor; the second may have NO successor, because a retired REMS is not
+replaced by anything.
+
+### 8b.8 `docType` gains `study`
+
+For systematic reviews and meta-analyses cited as primary basis. First member: DiNicolantonio 2013.
+
+---
+
+## 8c. M2 BINDER SPEC (accumulated across M1 Phase 3)
+
+Mandatory for the M2 binding implementation:
+
+1. **Per-clause-position pairing validation** - each `sourceId` in the ordered array resolves to an entry whose
+   identity matches THAT clause, not merely exists in the ledger (shape 5).
+2. **Series-scope check** - hard gate per ruling 8b.4, temporal and parallel (shape 6).
+3. **Pending-tag parenthetical exemption** - the clause splitter must not treat an honest NO_SOURCE_EXISTS tag
+   as a citation. Left unfixed, every honest tag manufactures a phantom ledger entry: the remediation generating
+   the defect it remediates. One live instance found.
+4. **Trailing-paren splitter fix** - same class; the GUIDE-HF/TIM-HF2 entry acquired a stray `)`.
+5. **7 trial reclassifications** - SAMMPRIS, VEST, CAST, GiACTA, STELLAR, FINEARTS-HF, RHAPSODY move from
+   document to `trial`.
+6. **6 merges** - `2012 Stable IHD Guideline`, `2017 ACC/AHA Hypertension Guideline`, `2021 ASA/AHA Stroke
+   Guideline`, `2018 AHA SS on SCAD`, `2023 ACC Expert Consensus on ATTR-CM`, `FDA approval (FIX-HF-5C)`.
+7. **Title-normalization notes** - roughly 8 entries where society order or scope wording drifts without
+   changing identity (e.g. `2018 ACC/AHA` for a document whose real order is AHA/ACC; ESVS cited as ESVS/SVS).
+   Normalize at bind time from the ledger title; do NOT hand-edit the strings, which M2 deletes anyway.
+8. **Tikosyn rebind disposition** - the rule keeps its clinical content and rebinds to the current Tikosyn label
+   (boxed warning, in-hospital initiation, QTc/CrCl dosing). The REMS reference is dropped, not replaced.
+
 ## 9. Rollback
 
 Every step is designed to be reversible without a data migration:
