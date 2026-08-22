@@ -4,7 +4,7 @@
   "generatedBy": "M1 Phase 3 Step 2B, authored from the complete 123-entry adjudication",
   "generatedDate": "2026-08-22",
   "notImplementedYet": "NOT parsed by any CI gate in this PR. The CLAUDE.md section 19.4 fast-path listing obligation attaches to the Gate 2 implementation PR that first reads this file.",
-  "entryCount": 116,
+  "entryCount": 141,
   "entries": [
     {
       "sourceId": "2008-aha-science-advisory-depression-and-chd-reaffirmed-2021",
@@ -24,7 +24,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2008-aha-scientific-statement-on-cocaine-associated-chest-pain-and-mi",
@@ -44,7 +45,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2008 AHA Scientific Statement on Management of Cocaine-Associated Chest Pain and Myocardial Infarction"
+      ]
     },
     {
       "sourceId": "2011-asa-accf-aha-carotid-guideline",
@@ -64,7 +68,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2012-accf-aha-acp-aats-pcna-scai-sts-guideline-for-stable-ischemic-heart",
@@ -84,7 +89,11 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 7,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2012 ACC/AHA/AATS/PCNA/SCAI/STS Guideline for Diagnosis and Management of Stable Ischemic Heart Disease",
+        "2012 Stable IHD Guideline"
+      ]
     },
     {
       "sourceId": "2012-aha-acc-scientific-statement-on-sexual-activity-and-cardiovascular-",
@@ -104,7 +113,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2013-eacvi-ase-consensus-on-radiation-induced-heart-disease",
@@ -124,7 +134,11 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2013 EACVI/ASE Expert Consensus on Multimodality Imaging in Radiation-Induced Heart Disease",
+        "EACVI/ASE Radiation Heart Disease Consensus"
+      ]
     },
     {
       "sourceId": "2014-first-international-consensus-on-the-diagnosis-and-management-of-fi",
@@ -144,7 +158,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2014 First International Consensus on the Diagnosis and Management of Fibromuscular Dysplasia'. SHAPE 5 - TRANSPOSED YEARS (the other half of the FMD pair). The First International Consensus on FMD is **2019**, not 2014 (Vasc Med / J Hypertens, PMID 30648921). The 2014 FMD document is the AHA scientific statement. See the paired entry '2019 AHA Scientific Statement'."
+      "bindingNote": "AUTHORED STRING: '2014 First International Consensus on the Diagnosis and Management of Fibromuscular Dysplasia'. SHAPE 5 - TRANSPOSED YEARS (the other half of the FMD pair). The First International Consensus on FMD is **2019**, not 2014 (Vasc Med / J Hypertens, PMID 30648921). The 2014 FMD document is the AHA scientific statement. See the paired entry '2019 AHA Scientific Statement'.",
+      "aliases": []
     },
     {
       "sourceId": "2014-hrs-expert-consensus-on-cardiac-sarcoidosis",
@@ -164,7 +179,11 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2014 HRS Expert Consensus Statement on Arrhythmias in Cardiac Sarcoidosis",
+        "2014 HRS Expert Consensus on Arrhythmias in Cardiac Sarcoidosis"
+      ]
     },
     {
       "sourceId": "2015-acc-aha-hrs-guideline-for-the-management-of-adult-patients-with-sup",
@@ -184,7 +203,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 8,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2015 ACC/AHA/HRS Guideline for the Management of Adult Patients with SVT"
+      ]
     },
     {
       "sourceId": "2015-aha-scientific-statement-on-infective-endocarditis",
@@ -204,7 +226,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2015-esc-guideline-for-the-diagnosis-and-management-of-pericardial-disea",
@@ -224,7 +247,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2016-acc-aha-focused-update-on-duration-of-dual-antiplatelet-therapy-ele",
@@ -244,7 +268,11 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2016 ACC/AHA Focused Update on Duration of Dual Antiplatelet Therapy (delay elective NCS 30d post-BMS / optimally 6mo post-DES)",
+        "2016 ACC/AHA Guideline Focused Update on Duration of DAPT"
+      ]
     },
     {
       "sourceId": "2017-acc-aha-guideline-for-the-prevention-detection-evaluation-and-manag",
@@ -264,7 +292,11 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2017 ACC/AHA High Blood Pressure Guideline",
+        "2017 ACC/AHA Hypertension Guideline"
+      ]
     },
     {
       "sourceId": "2017-acc-aha-hrs-guideline-for-the-evaluation-and-management-of-syncope",
@@ -284,7 +316,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2017-aha-acc-hrs-guideline-for-management-of-patients-with-ventricular-a",
@@ -304,7 +337,19 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 40,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2017 ACC/AHA/HRS Ventricular Arrhythmia Guideline",
+        "2017 AHA/ACC/HRS Guideline",
+        "2017 AHA/ACC/HRS Guideline for Management of Patients With Ventricular Arrhythmias and the Prevention of Sudden Cardiac Death",
+        "2017 AHA/ACC/HRS Guideline for Management of Patients with Ventricular Arrhythmias and Prevention of SCD",
+        "2017 AHA/ACC/HRS Guideline for Management of Ventricular Arrhythmias",
+        "2017 AHA/ACC/HRS Guideline for Management of Ventricular Arrhythmias (VANISH)",
+        "2017 AHA/ACC/HRS Guideline for VA/SCD",
+        "2017 AHA/ACC/HRS Guideline for Ventricular Arrhythmias",
+        "2017 AHA/ACC/HRS Guideline for Ventricular Arrhythmias and Sudden Cardiac Death",
+        "2017 AHA/ACC/HRS Ventricular Arrhythmia Guideline"
+      ]
     },
     {
       "sourceId": "2017-hrs-expert-consensus-on-lead-management-and-cied-infection",
@@ -324,7 +369,11 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2017 HRS Expert Consensus Statement on CIED Lead Management and Extraction",
+        "2017 HRS Expert Consensus on CIED Lead Management"
+      ]
     },
     {
       "sourceId": "2017-hrs-expert-consensus-statement-on-mri-and-radiation-exposure-in-pat",
@@ -344,7 +393,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2018-acc-aha-guideline-on-the-management-of-blood-cholesterol",
@@ -364,7 +414,15 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 14,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2018 ACC/AHA Cholesterol Guideline",
+        "2018 ACC/AHA Guideline on Management of Blood Cholesterol",
+        "2018 ACC/AHA Guideline on Management of Blood Cholesterol (FOURIER, ODYSSEY)",
+        "2018 ACC/AHA Guideline on the Management of Blood Cholesterol (CANTOS Trial)",
+        "2018 AHA/ACC Guideline on the Management of Blood Cholesterol",
+        "2018 AHA/ACC Guideline on the Management of Blood Cholesterol (IMPROVE-IT"
+      ]
     },
     {
       "sourceId": "2018-acc-aha-hrs-guideline-on-evaluation-and-management-of-bradycardia",
@@ -384,7 +442,11 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 8,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2018 ACC/AHA/HRS Bradycardia Guideline",
+        "2018 ACC/AHA/HRS Guideline on the Evaluation and Management of Bradycardia"
+      ]
     },
     {
       "sourceId": "2018-aha-acc-guideline-for-the-management-of-adults-with-congenital-hear",
@@ -404,7 +466,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 21,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2018 AHA/ACC Adult Congenital Heart Disease Guideline"
+      ]
     },
     {
       "sourceId": "2018-aha-scientific-statement-on-spontaneous-coronary-artery-dissection",
@@ -424,7 +489,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2018 AHA Scientific Statement on SCAD"
+      ]
     },
     {
       "sourceId": "2018-esc-position-statement-on-takotsubo-syndrome",
@@ -444,7 +512,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2018 ESC Position Statement on Takotsubo Syndrome'. WRONG YEAR FOR THE NAMED DOCUMENT TYPE. The ESC/HFA POSITION STATEMENT on Takotsubo is **2016** (Lyon et al., Eur J Heart Fail 2016, 10.1002/ejhf.424). The **2018** Takotsubo document is the INTERNATIONAL EXPERT CONSENSUS DOCUMENT (Eur Heart J 2018;39(22):2032 and :2047) - a different body and a different document type, not an ESC position statement. The string fuses the 2016 document's type/society with the 2018 document's year. NOTE: the corpus separately carries the 2018 InterTAK criteria correctly, so if the rule relies on the diagnostic criteria it should bind THERE and this entry collapses."
+      "bindingNote": "AUTHORED STRING: '2018 ESC Position Statement on Takotsubo Syndrome'. WRONG YEAR FOR THE NAMED DOCUMENT TYPE. The ESC/HFA POSITION STATEMENT on Takotsubo is **2016** (Lyon et al., Eur J Heart Fail 2016, 10.1002/ejhf.424). The **2018** Takotsubo document is the INTERNATIONAL EXPERT CONSENSUS DOCUMENT (Eur Heart J 2018;39(22):2032 and :2047) - a different body and a different document type, not an ESC position statement. The string fuses the 2016 document's type/society with the 2018 document's year. NOTE: the corpus separately carries the 2018 InterTAK criteria correctly, so if the rule relies on the diagnostic criteria it should bind THERE and this entry collapses.",
+      "aliases": []
     },
     {
       "sourceId": "2018-eular-recommendations-for-the-management-of-behcet-syndrome",
@@ -464,7 +533,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2018-international-takotsubo-diagnostic-criteria-intertak",
@@ -484,7 +554,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2019-acc-aha-guideline-on-the-primary-prevention-of-cardiovascular-disea",
@@ -504,7 +575,16 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 27,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2019 ACC/AHA Guideline on Primary Prevention",
+        "2019 ACC/AHA Guideline on Primary Prevention of CVD",
+        "2019 ACC/AHA Guideline on Primary Prevention of CVD (EMPA-REG, CANVAS)",
+        "2019 ACC/AHA Guideline on Primary Prevention of CVD (REDUCE-IT)",
+        "2019 ACC/AHA Guideline on Primary Prevention of CVD (SUSTAIN-6, LEADER)",
+        "2019 ACC/AHA Guideline on Primary Prevention of Cardiovascular Disease",
+        "2019 ACC/AHA Primary Prevention Guideline"
+      ]
     },
     {
       "sourceId": "2019-ags-beers-criteria",
@@ -524,7 +604,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2019-aha-scientific-statement",
@@ -544,7 +625,11 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2019 AHA Scientific Statement'. TRANSPOSED YEARS ACROSS A DUAL CITATION - A SHAPE NOT PREVIOUSLY SEEN. The First International Consensus on FMD is **2019** (Vasc Med / J Hypertens, online 2019-01-16, PMID 30648921; SVM + ESH Working Group, NOT AHA). The AHA FMD scientific statement is **2014** (Olin et al., Circulation 2014). The repo string carries 2014 on the International Consensus and 2019 on the AHA statement - i.e. the two documents' years are SWAPPED, and the International Consensus is additionally mis-attributed to AHA by adjacency. Both halves are real documents, which is why nothing looks wrong; a per-clause year check passes because both years exist in the pair. Bound to the FMD screening rule at gapRuleEngine.ts:759 and :17287."
+      "bindingNote": "AUTHORED STRING: '2019 AHA Scientific Statement'. TRANSPOSED YEARS ACROSS A DUAL CITATION - A SHAPE NOT PREVIOUSLY SEEN. The First International Consensus on FMD is **2019** (Vasc Med / J Hypertens, online 2019-01-16, PMID 30648921; SVM + ESH Working Group, NOT AHA). The AHA FMD scientific statement is **2014** (Olin et al., Circulation 2014). The repo string carries 2014 on the International Consensus and 2019 on the AHA statement - i.e. the two documents' years are SWAPPED, and the International Consensus is additionally mis-attributed to AHA by adjacency. Both halves are real documents, which is why nothing looks wrong; a per-clause year check passes because both years exist in the pair. Bound to the FMD screening rule at gapRuleEngine.ts:759 and :17287.",
+      "aliases": [
+        "2019 AHA Scientific Statement on Tachycardia-Induced CM",
+        "2019 AHA Scientific Statement on Tachycardia-Induced Cardiomyopathy"
+      ]
     },
     {
       "sourceId": "2019-esc-guideline-for-chronic-coronary-syndromes",
@@ -564,7 +649,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2019-esc-guideline-on-acute-pulmonary-embolism",
@@ -584,7 +670,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2019-esc-position-statement-on-lvnc",
@@ -604,7 +691,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "REBOUND BY OPERATOR RULING 2026-08-22. AUTHORED STRING: '2019 ESC Position Statement on LVNC' - NO SUCH DOCUMENT EXISTS. The bound rule (gapRuleEngine.ts:14571) asserts cardiac MRI for LVNC evaluation in a young patient with unexplained cardiomyopathy (I42.8). Rebind target is the 2023 ESC Guidelines for the management of cardiomyopathies, which cover LVNC imaging. **M2 CAVEAT - DO NOT CARRY THE PHANTOM'S CLASSES ACROSS THE REBIND.** The 2023 framework treats LVNC as a PHENOTYPIC TRAIT rather than a distinct cardiomyopathy, so the rebind is not a like-for-like swap of one document for another making the same claim. The rule's COR 2a / LOE C came from a document that does not exist and therefore has no provenance at all. **COR and LOE must be RE-READ from the 2023 guideline's own language at M2 verification**, and if that guideline states no class for this recommendation the rule must be re-labelled rather than assigned one. Carrying 2a/C forward unexamined would launder a fabricated class into a ledger-backed citation - the precise failure this ledger exists to end."
+      "bindingNote": "REBOUND BY OPERATOR RULING 2026-08-22. AUTHORED STRING: '2019 ESC Position Statement on LVNC' - NO SUCH DOCUMENT EXISTS. The bound rule (gapRuleEngine.ts:14571) asserts cardiac MRI for LVNC evaluation in a young patient with unexplained cardiomyopathy (I42.8). Rebind target is the 2023 ESC Guidelines for the management of cardiomyopathies, which cover LVNC imaging. **M2 CAVEAT - DO NOT CARRY THE PHANTOM'S CLASSES ACROSS THE REBIND.** The 2023 framework treats LVNC as a PHENOTYPIC TRAIT rather than a distinct cardiomyopathy, so the rebind is not a like-for-like swap of one document for another making the same claim. The rule's COR 2a / LOE C came from a document that does not exist and therefore has no provenance at all. **COR and LOE must be RE-READ from the 2023 guideline's own language at M2 verification**, and if that guideline states no class for this recommendation the rule must be re-labelled rather than assigned one. Carrying 2a/C forward unexamined would launder a fabricated class into a ledger-backed citation - the precise failure this ledger exists to end.",
+      "aliases": [
+        "2019 ESC Position Statement on LVNC"
+      ]
     },
     {
       "sourceId": "2019-hrs-expert-consensus-on-arvc",
@@ -624,7 +714,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2019-hrs-expert-consensus-statement-on-arrhythmogenic-right-ventricular-",
@@ -644,7 +735,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2020-acc-aha-guideline-for-management-of-patients-with-valvular-heart-di",
@@ -664,7 +756,15 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 154,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease (COAPT Trial)",
+        "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease (RE-ALIGN Trial)",
+        "2020 ACC/AHA Guideline for Valvular Heart Disease",
+        "2020 ACC/AHA Guideline for the Management of Patients with Valvular Heart Disease (serial-imaging surveillance intervals)",
+        "2020 ACC/AHA VHD Guideline",
+        "2020 ACC/AHA Valvular Heart Disease Guideline"
+      ]
     },
     {
       "sourceId": "2020-acc-expert-consensus-on-gi-bleeding-in-patients-on-antithrombotic-t",
@@ -684,7 +784,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2020-acc-pulmonary-embolism-guidance",
@@ -704,7 +805,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2020 ACC Pulmonary Embolism guidance'. SECOND CLAUSE NAMES NO REAL DOCUMENT. There is no 2020 ACC pulmonary-embolism guidance. The nearest real documents are the 2019 AHA Scientific Statement on Interventional Therapies for Acute PE (10.1161/CIR.0000000000000707) and - much later - the FIRST ACC/AHA PE guideline, which is 2026. The first clause (2019 ESC PE) is CONFIRMED separately. Bound at gapRuleEngine.ts:10544."
+      "bindingNote": "AUTHORED STRING: '2020 ACC Pulmonary Embolism guidance'. SECOND CLAUSE NAMES NO REAL DOCUMENT. There is no 2020 ACC pulmonary-embolism guidance. The nearest real documents are the 2019 AHA Scientific Statement on Interventional Therapies for Acute PE (10.1161/CIR.0000000000000707) and - much later - the FIRST ACC/AHA PE guideline, which is 2026. The first clause (2019 ESC PE) is CONFIRMED separately. Bound at gapRuleEngine.ts:10544.",
+      "aliases": []
     },
     {
       "sourceId": "2020-aha-asa-guideline-for-prevention-of-stroke-in-patients-with-stroke-",
@@ -724,7 +826,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2020 AHA/ASA Guideline for Prevention of Stroke in Patients with Stroke and TIA'. WRONG YEAR, AND THE CORPUS ALREADY CARRIES THE CORRECT TWIN. The AHA/ASA secondary stroke prevention guideline is **2021** (Stroke 2021, PMID 34024117); there is no 2020 edition. The corpus separately carries '2021 AHA/ASA Secondary Stroke Prevention Guideline' (4 rows), already CONFIRMED - so right and wrong years for the same document coexist, the AUDIT-332 instance-A shape again."
+      "bindingNote": "AUTHORED STRING: '2020 AHA/ASA Guideline for Prevention of Stroke in Patients with Stroke and TIA'. WRONG YEAR, AND THE CORPUS ALREADY CARRIES THE CORRECT TWIN. The AHA/ASA secondary stroke prevention guideline is **2021** (Stroke 2021, PMID 34024117); there is no 2020 edition. The corpus separately carries '2021 AHA/ASA Secondary Stroke Prevention Guideline' (4 rows), already CONFIRMED - so right and wrong years for the same document coexist, the AUDIT-332 instance-A shape again.",
+      "aliases": []
     },
     {
       "sourceId": "2020-aha-scientific-statement-on-rheumatic-heart-disease",
@@ -744,7 +847,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2020 AHA / World Heart Federation Rheumatic Heart Disease guidance"
+      ]
     },
     {
       "sourceId": "2020-ash-guideline-on-vte-diagnosis",
@@ -764,7 +870,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2020 ASH Guideline on VTE Diagnosis'. WRONG YEAR. The ASH VTE **DIAGNOSIS** guideline is **2018** (Blood Adv 2018). The **2020** ASH VTE guideline covers TREATMENT of DVT/PE. Scope right, year wrong - and see the paired defect below."
+      "bindingNote": "AUTHORED STRING: '2020 ASH Guideline on VTE Diagnosis'. WRONG YEAR. The ASH VTE **DIAGNOSIS** guideline is **2018** (Blood Adv 2018). The **2020** ASH VTE guideline covers TREATMENT of DVT/PE. Scope right, year wrong - and see the paired defect below.",
+      "aliases": []
     },
     {
       "sourceId": "2020-chest-guideline-on-antithrombotic-therapy-for-vte",
@@ -784,7 +891,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2020 CHEST Guideline on Antithrombotic Therapy for VTE'. WRONG YEAR. CHEST 'Antithrombotic Therapy for VTE Disease: Second Update of the CHEST Guideline and Expert Panel Report' is **2021** (published 2021-08-02), with a further 2022 update. There is no 2020 CHEST VTE guideline."
+      "bindingNote": "AUTHORED STRING: '2020 CHEST Guideline on Antithrombotic Therapy for VTE'. WRONG YEAR. CHEST 'Antithrombotic Therapy for VTE Disease: Second Update of the CHEST Guideline and Expert Panel Report' is **2021** (published 2021-08-02), with a further 2022 update. There is no 2020 CHEST VTE guideline.",
+      "aliases": []
     },
     {
       "sourceId": "2020-isl-consensus-document-on-lymphedema-management",
@@ -804,7 +912,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2021-acc-aha-guideline-for-the-evaluation-and-diagnosis-of-chest-pain",
@@ -824,7 +933,12 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 24,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2021 ACC/AHA Chest Pain Guideline",
+        "2021 ACC/AHA Guideline for Evaluation and Diagnosis of Chest Pain",
+        "2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain (SCOT-HEART, PROMISE)"
+      ]
     },
     {
       "sourceId": "2021-acc-aha-scai-guideline-for-coronary-artery-revascularization",
@@ -844,7 +958,21 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 31,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2021 ACC/AHA Coronary Revascularization Guideline",
+        "2021 ACC/AHA Revascularization (AUGUSTUS, AFIRE)",
+        "2021 ACC/AHA/SCAI Coronary Artery Revascularization Guideline (TWILIGHT",
+        "2021 ACC/AHA/SCAI Coronary Artery Revascularization Guideline (TWILIGHT, TICO)",
+        "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (COMPLETE Trial)",
+        "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (FAME, FAME 2)",
+        "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (ISCHEMIA Trial)",
+        "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (PLATO / TRITON-TIMI 38)",
+        "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (PLATO Trial)",
+        "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (STICH, REVIVED-BCIS2)",
+        "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (TRITON-TIMI 38)",
+        "2021 ACC/AHA/SCAI Guideline for Coronary Revascularization"
+      ]
     },
     {
       "sourceId": "2021-acr-vf-guideline-for-the-management-of-takayasu-arteritis",
@@ -864,7 +992,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2021 ACR/VF Guideline for the Management of Giant Cell Arteritis"
+      ]
     },
     {
       "sourceId": "2021-acr-vf-guideline-for-the-management-of-vasculitis",
@@ -884,7 +1015,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2021-aha-asa-secondary-stroke-prevention-guideline",
@@ -904,7 +1036,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2021 ASA/AHA Stroke Guideline"
+      ]
     },
     {
       "sourceId": "2021-aha-scientific-statement-on-prevention-of-infective-endocarditis",
@@ -924,7 +1059,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 8,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2021-ash-guideline-on-vte-treatment-sox-trial",
@@ -944,7 +1080,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "DISCREPANT-AMBIGUOUS",
-      "bindingNote": "AUTHORED STRING: '2021 ASH Guideline on VTE Treatment (SOX Trial)'. YEAR AND SCOPE NAME DIFFERENT ASH DOCUMENTS. The ASH VTE guideline for TREATMENT of DVT/PE is **2020** (Blood Adv, Oct 2020). The **2021** ASH VTE guideline covers CANCER-ASSOCIATED VTE - a different document with a different population. The cited string takes the treatment scope from the 2020 document and the year from the 2021 one. Requires rule-assertion reconciliation to determine which the rule relies on; if the bound rule is not cancer-specific the answer is the 2020 document. RESOLVED BY RULE-ASSERTION. Rule (:16840) asserts graduated compression stockings and early mobilisation for POST-THROMBOTIC SYNDROME PREVENTION after DVT (I82), COR 2a / LOE B, citing SOX. The rule is NOT cancer-specific, so per the operator rule the document is the **2020** ASH VTE guideline (treatment of DVT/PE), not the 2021 cancer-associated VTE guideline. SOX (Kahn et al., Lancet 2014) is real and apposite."
+      "bindingNote": "AUTHORED STRING: '2021 ASH Guideline on VTE Treatment (SOX Trial)'. YEAR AND SCOPE NAME DIFFERENT ASH DOCUMENTS. The ASH VTE guideline for TREATMENT of DVT/PE is **2020** (Blood Adv, Oct 2020). The **2021** ASH VTE guideline covers CANCER-ASSOCIATED VTE - a different document with a different population. The cited string takes the treatment scope from the 2020 document and the year from the 2021 one. Requires rule-assertion reconciliation to determine which the rule relies on; if the bound rule is not cancer-specific the answer is the 2020 document. RESOLVED BY RULE-ASSERTION. Rule (:16840) asserts graduated compression stockings and early mobilisation for POST-THROMBOTIC SYNDROME PREVENTION after DVT (I82), COR 2a / LOE B, citing SOX. The rule is NOT cancer-specific, so per the operator rule the document is the **2020** ASH VTE guideline (treatment of DVT/PE), not the 2021 cancer-associated VTE guideline. SOX (Kahn et al., Lancet 2014) is real and apposite.",
+      "aliases": [
+        "2021 ASH Guidelines on VTE Management"
+      ]
     },
     {
       "sourceId": "2021-international-expert-consensus-on-fabry-disease",
@@ -964,7 +1103,11 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2021 International Expert Consensus on Fabry Disease'. The **2021** Fabry cardiac consensus is **TSOC** (Taiwan Society of Cardiology, PMID 34257484) - a national society, not an international one. The INTERNATIONAL expert consensus on cardiovascular manifestations of Fabry disease is **2020** (Linhart et al., Eur J Heart Fail 2020). The string fuses the 2020 document's descriptor with the 2021 document's year."
+      "bindingNote": "AUTHORED STRING: '2021 International Expert Consensus on Fabry Disease'. The **2021** Fabry cardiac consensus is **TSOC** (Taiwan Society of Cardiology, PMID 34257484) - a national society, not an international one. The INTERNATIONAL expert consensus on cardiovascular manifestations of Fabry disease is **2020** (Linhart et al., Eur J Heart Fail 2020). The string fuses the 2020 document's descriptor with the 2021 document's year.",
+      "aliases": [
+        "2021 International Expert Consensus on Fabry Disease (Ortiz et al.)",
+        "ESC Fabry Expert Consensus"
+      ]
     },
     {
       "sourceId": "2022-acc-aha-aats-sts-guideline-for-the-diagnosis-and-management-of-aort",
@@ -984,7 +1127,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 17,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2022 ACC/AHA Aortic Disease Guideline"
+      ]
     },
     {
       "sourceId": "2022-acc-aha-guideline-for-cardio-oncology",
@@ -1004,7 +1150,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2022 ACC/AHA Guideline for Cardio-Oncology'. WRONG SOCIETY, RIGHT YEAR - a NEW sub-shape not seen in AUDIT-332. The 2022 cardio-oncology guideline is ESC (with EHA/ESTRO/IC-OS), Eur Heart J 2022;43(41):4229. There is NO ACC/AHA cardio-oncology guideline. A year-only currency check would PASS this string."
+      "bindingNote": "AUTHORED STRING: '2022 ACC/AHA Guideline for Cardio-Oncology'. WRONG SOCIETY, RIGHT YEAR - a NEW sub-shape not seen in AUDIT-332. The 2022 cardio-oncology guideline is ESC (with EHA/ESTRO/IC-OS), Eur Heart J 2022;43(41):4229. There is NO ACC/AHA cardio-oncology guideline. A year-only currency check would PASS this string.",
+      "aliases": []
     },
     {
       "sourceId": "2022-acc-expert-consensus-decision-pathway-on-nonstatin-therapies-clear-",
@@ -1024,7 +1171,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2022-aha-acc-hfsa-guideline-for-the-management-of-heart-failure",
@@ -1044,7 +1192,32 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 124,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2022 AHA/ACC/HFSA",
+        "2022 AHA/ACC/HFSA Guideline",
+        "2022 AHA/ACC/HFSA Guideline (DAPA-HF, EMPEROR-Reduced)",
+        "2022 AHA/ACC/HFSA Guideline for Heart Failure",
+        "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure (A-HeFT Trial)",
+        "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure (AFFIRM-AHF, IRONMAN)",
+        "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure (CHAMPION Trial)",
+        "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure (EPHESUS Trial)",
+        "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure (PARADIGM-HF)",
+        "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure (RALES, EMPHASIS-HF)",
+        "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure (remote monitoring",
+        "2022 AHA/ACC/HFSA Guideline §7.19 (AFFIRM-AHF, IRONMAN trials)",
+        "2022 AHA/ACC/HFSA HF Guideline",
+        "2022 AHA/ACC/HFSA HF Guideline (AFFIRM-AHF, IRONMAN)",
+        "2022 AHA/ACC/HFSA HF Guideline (CHAMPION, GUIDE-HF)",
+        "2022 AHA/ACC/HFSA HF Guideline (EPHESUS Trial)",
+        "2022 AHA/ACC/HFSA HF Guideline (EVEREST, SALT)",
+        "2022 AHA/ACC/HFSA HF Guideline (Stage B)",
+        "2022 AHA/ACC/HFSA HF Guideline (Stage D / advanced HF)",
+        "2022 AHA/ACC/HFSA HF Guideline (Stage D)",
+        "2022 AHA/ACC/HFSA Heart Failure Guideline",
+        "2022 AHA/ACC/HFSA Heart Failure Guideline (PARADIGM-HF)",
+        "2022 AHA/ACC/HFSA Heart Failure Guideline (RALES/EMPHASIS-HF)"
+      ]
     },
     {
       "sourceId": "2022-aha-scientific-statement-on-myocarditis",
@@ -1064,7 +1237,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "REBOUND BY OPERATOR RULING 2026-08-22. AUTHORED STRING: '2022 AHA Scientific Statement on Myocarditis' - NO SUCH DOCUMENT EXISTS. **TWO-DIMENSION FUSION VARIANT of shape 7: the YEAR and the SOCIETY are BOTH wrong, and unlike the Takotsubo and Fabry instances there is no identifiable source PAIR whose attributes were fused** - no 2022 myocarditis document of any society, and no AHA myocarditis document in any adjacent year matching this rule's population. The nearest real documents each fail on a different axis: the 2021 AHA statement is PAEDIATRIC (this rule has no paediatric gate) and the 2020 AHA statement is FULMINANT myocarditis only (narrower than I40.* with LVEF<50). The bound rule `gap-hf-88-myocarditis` (:9693) asserts cardiac MRI plus serial echo follow-up for acute myocarditis with LVEF<50; the 2024 ACC ECDP is the document that supports it. **M2 CAVEAT - THE CLASS MAY NOT EXIST TO CARRY.** Expert Consensus Decision Pathways frequently carry NO COR/LOE classes at all, being decision pathways rather than guidelines. The rule currently asserts COR 1 / LOE C. **That class must be re-derived from the ECDP's actual language at M2, or the rule re-labelled as consensus-based without a class.** A Class 1 assigned from a document that issues no classes would be a fabricated class with a real citation attached - worse than the phantom it replaces, because it would look verified."
+      "bindingNote": "REBOUND BY OPERATOR RULING 2026-08-22. AUTHORED STRING: '2022 AHA Scientific Statement on Myocarditis' - NO SUCH DOCUMENT EXISTS. **TWO-DIMENSION FUSION VARIANT of shape 7: the YEAR and the SOCIETY are BOTH wrong, and unlike the Takotsubo and Fabry instances there is no identifiable source PAIR whose attributes were fused** - no 2022 myocarditis document of any society, and no AHA myocarditis document in any adjacent year matching this rule's population. The nearest real documents each fail on a different axis: the 2021 AHA statement is PAEDIATRIC (this rule has no paediatric gate) and the 2020 AHA statement is FULMINANT myocarditis only (narrower than I40.* with LVEF<50). The bound rule `gap-hf-88-myocarditis` (:9693) asserts cardiac MRI plus serial echo follow-up for acute myocarditis with LVEF<50; the 2024 ACC ECDP is the document that supports it. **M2 CAVEAT - THE CLASS MAY NOT EXIST TO CARRY.** Expert Consensus Decision Pathways frequently carry NO COR/LOE classes at all, being decision pathways rather than guidelines. The rule currently asserts COR 1 / LOE C. **That class must be re-derived from the ECDP's actual language at M2, or the rule re-labelled as consensus-based without a class.** A Class 1 assigned from a document that issues no classes would be a fabricated class with a real citation attached - worse than the phantom it replaces, because it would look verified.",
+      "aliases": [
+        "2022 AHA Scientific Statement on Myocarditis"
+      ]
     },
     {
       "sourceId": "2022-esc-ers-pulmonary-hypertension-guideline",
@@ -1084,7 +1260,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 9,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2022 ESC/ERS Guidelines for Diagnosis and Treatment of Pulmonary Hypertension"
+      ]
     },
     {
       "sourceId": "2022-esvs-svs-guidelines-on-chronic-venous-disease",
@@ -1104,7 +1283,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2023-acc-aha-accp-hrs-atrial-fibrillation-guideline-fda-eliquis-prescrib",
@@ -1124,7 +1304,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 6,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Savaysa Prescribing Information (boxed warning)"
+      ]
     },
     {
       "sourceId": "2023-acc-aha-accp-hrs-atrial-fibrillation-guideline-fda-pradaxa-dabigatr",
@@ -1144,7 +1327,11 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 3,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2023 ACC/AHA/ACCP/HRS AFib Guideline + FDA Pradaxa Prescribing Information",
+        "2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Pradaxa Prescribing Information"
+      ]
     },
     {
       "sourceId": "2023-acc-aha-accp-hrs-atrial-fibrillation-guideline-fda-xarelto-prescrib",
@@ -1164,7 +1351,11 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "FDA Xarelto (rivaroxaban) Prescribing Information",
+        "FDA Xarelto Prescribing Information (>=15 mg with food)"
+      ]
     },
     {
       "sourceId": "2023-acc-aha-accp-hrs-guideline-for-diagnosis-and-management-of-af",
@@ -1184,7 +1375,26 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 68,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2023 ACC/AHA/ACCP/HRS AF Guideline",
+        "2023 ACC/AHA/ACCP/HRS AF Guideline (BRIDGE Trial)",
+        "2023 ACC/AHA/ACCP/HRS AFib",
+        "2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline",
+        "2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline (CASTLE-AF)",
+        "2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + LAAC device IFU",
+        "2023 ACC/AHA/ACCP/HRS Guideline (SVT management)",
+        "2023 ACC/AHA/ACCP/HRS Guideline for AF Management",
+        "2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (ANDROMEDA + PALLAS Trials)",
+        "2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (ANDROMEDA Trial)",
+        "2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (ASSERT)",
+        "2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (BRIDGE Trial)",
+        "2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (CABANA)",
+        "2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (CASTLE-AF, CABANA)",
+        "2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (EAST-AFNET 4)",
+        "2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (EAST-AFNET 4, EARLY-AF)",
+        "2023 ACC/AHA/ACCP/HRS Guideline for the Diagnosis and Management of Atrial Fibrillation"
+      ]
     },
     {
       "sourceId": "2023-acc-aha-chronic-coronary-disease-guideline-fda-effient-prasugrel-bl",
@@ -1204,7 +1414,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2023 ACC/AHA Chronic Coronary Disease Guideline + FDA Effient Black-Box Warning"
+      ]
     },
     {
       "sourceId": "2023-acc-aha-guideline-for-the-management-of-patients-with-chronic-coron",
@@ -1224,7 +1437,12 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 8,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2023 ACC/AHA CCD",
+        "2023 ACC/AHA Chronic Coronary Disease Guideline",
+        "2023 ACC/AHA Guideline for Chronic Coronary Disease"
+      ]
     },
     {
       "sourceId": "2023-acc-expert-consensus-decision-pathway-on-cardiac-amyloidosis",
@@ -1244,7 +1462,13 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 7,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2023 ACC Expert Consensus Decision Pathway on Cardiac Amyloidosis (ATTR-ACT)",
+        "2023 ACC Expert Consensus Decision Pathway on Comprehensive Multidisciplinary Care for Cardiac Amyloidosis",
+        "2023 ACC Expert Consensus Decision Pathway on Comprehensive Multidisciplinary Care for the Patient with Cardiac Amyloidosis",
+        "2023 ACC Expert Consensus on ATTR-CM"
+      ]
     },
     {
       "sourceId": "2023-acc-expert-consensus-decision-pathway-on-management-of-hfpef",
@@ -1264,7 +1488,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2023 ACC Expert Consensus Decision Pathway on HFpEF (EMPEROR-Preserved, DELIVER Trials)"
+      ]
     },
     {
       "sourceId": "2023-aha-acc-guideline-update-colchicine-for-atherosclerotic-cvd-colcot-",
@@ -1284,7 +1511,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2023 AHA/ACC Guideline Update: Colchicine for Atherosclerotic CVD (COLCOT, LoDoCo2)'. WRONG TITLE, RIGHT YEAR AND SOCIETY - a second new sub-shape. There is no standalone colchicine guideline update. The colchicine COR 2b / LOE B-R recommendation lives INSIDE the 2023 AHA/ACC/ACCP/ASPC/NLA/PCNA Chronic Coronary Disease guideline (PMID 37471501), which this corpus already carries as a separate entry. Should COLLAPSE into that entry at M2, with COLCOT/LoDoCo2 as annotations."
+      "bindingNote": "AUTHORED STRING: '2023 AHA/ACC Guideline Update: Colchicine for Atherosclerotic CVD (COLCOT, LoDoCo2)'. WRONG TITLE, RIGHT YEAR AND SOCIETY - a second new sub-shape. There is no standalone colchicine guideline update. The colchicine COR 2b / LOE B-R recommendation lives INSIDE the 2023 AHA/ACC/ACCP/ASPC/NLA/PCNA Chronic Coronary Disease guideline (PMID 37471501), which this corpus already carries as a separate entry. Should COLLAPSE into that entry at M2, with COLCOT/LoDoCo2 as annotations.",
+      "aliases": []
     },
     {
       "sourceId": "2023-esc-guidelines-on-endocarditis",
@@ -1304,7 +1532,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2023-hf-device-therapy-consensus",
@@ -1324,7 +1553,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "NO_SOURCE_EXISTS",
-      "bindingNote": "AUTHORED STRING: '2023 HF device-therapy consensus'. Names no society and resolves to nothing. Real basis of gap-hf-126-ccm-candidate is its own first clause, FDA approval (FIX-HF-5C). Filed in AUDIT-333."
+      "bindingNote": "AUTHORED STRING: '2023 HF device-therapy consensus'. Names no society and resolves to nothing. Real basis of gap-hf-126-ccm-candidate is its own first clause, FDA approval (FIX-HF-5C). Filed in AUDIT-333.",
+      "aliases": []
     },
     {
       "sourceId": "2023-hrs-aphrs-lahrs-guideline-on-cardiac-physiologic-pacing",
@@ -1344,7 +1574,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2023-hrs-expert-consensus-on-icd-programming-madit-rit-advance-iii",
@@ -1364,7 +1595,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2023 HRS Expert Consensus on ICD Programming (MADIT-RIT, ADVANCE III)'. WRONG YEAR. Real document is the 2015 HRS/EHRA/APHRS/SOLAECE expert consensus on optimal ICD programming and testing (Europace 2016;18(2):159; Heart Rhythm 2016), with a 2019 HRS/EHRA/APHRS/LAHRS focused update. NO 2023 edition exists. MADIT-RIT and ADVANCE III are cohorts analysed IN the 2015 statement, which is consistent with the rule relying on that document."
+      "bindingNote": "AUTHORED STRING: '2023 HRS Expert Consensus on ICD Programming (MADIT-RIT, ADVANCE III)'. WRONG YEAR. Real document is the 2015 HRS/EHRA/APHRS/SOLAECE expert consensus on optimal ICD programming and testing (Europace 2016;18(2):159; Heart Rhythm 2016), with a 2019 HRS/EHRA/APHRS/LAHRS focused update. NO 2023 edition exists. MADIT-RIT and ADVANCE III are cohorts analysed IN the 2015 statement, which is consistent with the rule relying on that document.",
+      "aliases": [
+        "2023 HRS Expert Consensus on ICD Programming (MADIT-RIT)"
+      ]
     },
     {
       "sourceId": "2023-hrs-expert-consensus-statement-on-cied-lead-management",
@@ -1384,7 +1618,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2023 HRS Expert Consensus Statement on CIED Lead Management'. WRONG YEAR. Real document is the 2017 HRS Expert Consensus Statement on CIED Lead Management and Extraction (Heart Rhythm 2017;14:e503-e551). NO 2023 edition. AGGRAVATING: this corpus ALREADY carries the same document correctly dated 2017 in a separate entry (4 rows) - the same split-year shape as AUDIT-332 instance A."
+      "bindingNote": "AUTHORED STRING: '2023 HRS Expert Consensus Statement on CIED Lead Management'. WRONG YEAR. Real document is the 2017 HRS Expert Consensus Statement on CIED Lead Management and Extraction (Heart Rhythm 2017;14:e503-e551). NO 2023 edition. AGGRAVATING: this corpus ALREADY carries the same document correctly dated 2017 in a separate entry (4 rows) - the same split-year shape as AUDIT-332 instance A.",
+      "aliases": [
+        "2023 HRS Expert Consensus Statement on CIED Lead Management and Generator Replacement"
+      ]
     },
     {
       "sourceId": "2023-hrs-expert-consensus-statement-on-evaluation-and-management-of-arrh",
@@ -1404,7 +1641,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2023 HRS Expert Consensus Statement on Evaluation and Management of Arrhythmic Risk in Cardiac Sarcoidosis'. WRONG YEAR. Real document is the 2014 HRS Expert Consensus Statement on the Diagnosis and Management of Arrhythmias Associated With Cardiac Sarcoidosis. NO 2023 HRS edition (a 2024 ESC clinical consensus statement on cardiac sarcoidosis exists but is a different society and document). AGGRAVATING: this corpus ALREADY carries the same document correctly dated 2014 in a separate entry (4 rows)."
+      "bindingNote": "AUTHORED STRING: '2023 HRS Expert Consensus Statement on Evaluation and Management of Arrhythmic Risk in Cardiac Sarcoidosis'. WRONG YEAR. Real document is the 2014 HRS Expert Consensus Statement on the Diagnosis and Management of Arrhythmias Associated With Cardiac Sarcoidosis. NO 2023 HRS edition (a 2024 ESC clinical consensus statement on cardiac sarcoidosis exists but is a different society and document). AGGRAVATING: this corpus ALREADY carries the same document correctly dated 2014 in a separate entry (4 rows).",
+      "aliases": []
     },
     {
       "sourceId": "2023-hrs-expert-consensus-statement-on-remote-interrogation-and-monitori",
@@ -1424,7 +1662,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "DISCREPANT-AMBIGUOUS",
-      "bindingNote": "AUTHORED STRING: '2023 HRS Expert Consensus Statement on Remote Interrogation and Monitoring of CIEDs'. TITLE AND YEAR DISAGREE WITH EACH OTHER. The cited TITLE matches the 2015 HRS Expert Consensus Statement on Remote Interrogation and Monitoring for CIEDs (Heart Rhythm 2015;12(7):e69-e100). The cited YEAR matches a DIFFERENT real document, the 2023 HRS/EHRA/APHRS/LAHRS Expert Consensus Statement on Practical Management of the Remote Device Clinic (Europace 2023;25(5):euad123). NEEDS CLINICAL ADJUDICATION of which document the rule actually relies on - this is not resolvable from the string."
+      "bindingNote": "AUTHORED STRING: '2023 HRS Expert Consensus Statement on Remote Interrogation and Monitoring of CIEDs'. TITLE AND YEAR DISAGREE WITH EACH OTHER. The cited TITLE matches the 2015 HRS Expert Consensus Statement on Remote Interrogation and Monitoring for CIEDs (Heart Rhythm 2015;12(7):e69-e100). The cited YEAR matches a DIFFERENT real document, the 2023 HRS/EHRA/APHRS/LAHRS Expert Consensus Statement on Practical Management of the Remote Device Clinic (Europace 2023;25(5):euad123). NEEDS CLINICAL ADJUDICATION of which document the rule actually relies on - this is not resolvable from the string.",
+      "aliases": []
     },
     {
       "sourceId": "2023-ishlt-mechanical-circulatory-support-guideline",
@@ -1444,7 +1683,11 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "ISHLT MCS guidance",
+        "ISHLT Mechanical Circulatory Support guidelines"
+      ]
     },
     {
       "sourceId": "2023-pericarditis-management",
@@ -1464,7 +1707,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "NO_SOURCE_EXISTS",
-      "bindingNote": "AUTHORED STRING: '2023 pericarditis management'. Names no society. Real basis of gap-hf-144-pericarditis-il1 is RHAPSODY (NEJM 2021). Filed in AUDIT-333."
+      "bindingNote": "AUTHORED STRING: '2023 pericarditis management'. Names no society. Real basis of gap-hf-144-pericarditis-il1 is RHAPSODY (NEJM 2021). Filed in AUDIT-333.",
+      "aliases": []
     },
     {
       "sourceId": "2023-svs-avf-avls-clinical-practice-guidelines-for-venous-ulceration",
@@ -1484,7 +1728,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2023 SVS/AVF/AVLS Clinical Practice Guidelines for Venous Ulceration'. SHAPE 6 - SERIES SLIDE. The SVS/AVF VENOUS LEG ULCER guideline is **2014** (J Vasc Surg 2014;60:3S-59S). The **2023** SVS/AVF/AVLS document is VARICOSE VEINS Part II (PMID 37652254) - right family, wrong instalment, wrong scope. Society and year both name real documents, so society+title+year+pairing validation all pass."
+      "bindingNote": "AUTHORED STRING: '2023 SVS/AVF/AVLS Clinical Practice Guidelines for Venous Ulceration'. SHAPE 6 - SERIES SLIDE. The SVS/AVF VENOUS LEG ULCER guideline is **2014** (J Vasc Surg 2014;60:3S-59S). The **2023** SVS/AVF/AVLS document is VARICOSE VEINS Part II (PMID 37652254) - right family, wrong instalment, wrong scope. Society and year both name real documents, so society+title+year+pairing validation all pass.",
+      "aliases": []
     },
     {
       "sourceId": "2024-acc-aha-guideline-on-peripheral-artery-disease",
@@ -1504,7 +1749,15 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 54,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "2024 ACC/AHA Guideline for Peripheral Artery Disease",
+        "2024 ACC/AHA Guideline on Peripheral Artery Disease (CAPRIE Trial)",
+        "2024 ACC/AHA Guideline on Peripheral Artery Disease (COMPASS Trial)",
+        "2024 ACC/AHA PAD Guideline",
+        "2024 ACC/AHA/SVM/SCAI Guideline for the Management of Lower Extremity Peripheral Artery Disease",
+        "2024 ACC/AHA/SVM/SCAI Lower Extremity PAD Guideline"
+      ]
     },
     {
       "sourceId": "2024-aha-acc-guideline-for-the-diagnosis-and-treatment-of-hypertrophic-c",
@@ -1524,7 +1777,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 6,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2024-esc-ers-ph-update",
@@ -1544,7 +1798,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2024 ESC/ERS PH update'. WRONG YEAR. The ESC/ERS pulmonary hypertension guideline is 2022 (Eur Heart J 2022;43(38):3618). NO 2024 ESC/ERS PH update exists; the 2024 ESC hypertension guideline is a different condition. This corpus already carries the correct 2022 ESC/ERS PH entry (9 rows) - split-year shape again."
+      "bindingNote": "AUTHORED STRING: '2024 ESC/ERS PH update'. WRONG YEAR. The ESC/ERS pulmonary hypertension guideline is 2022 (Eur Heart J 2022;43(38):3618). NO 2024 ESC/ERS PH update exists; the 2024 ESC hypertension guideline is a different condition. This corpus already carries the correct 2022 ESC/ERS PH entry (9 rows) - split-year shape again.",
+      "aliases": []
     },
     {
       "sourceId": "2024-esc-esvs-guideline-on-peripheral-arterial-and-aortic-diseases",
@@ -1564,7 +1819,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "2024-hrs-expert-consensus-on-pulsed-field-ablation",
@@ -1584,7 +1840,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2024 HRS Expert Consensus on Pulsed Field Ablation'. WRONG TITLE. No standalone HRS PFA consensus; PFA is covered by the 2024 EHRA/HRS/APHRS/LAHRS AF ablation consensus. Filed in AUDIT-333."
+      "bindingNote": "AUTHORED STRING: '2024 HRS Expert Consensus on Pulsed Field Ablation'. WRONG TITLE. No standalone HRS PFA consensus; PFA is covered by the 2024 EHRA/HRS/APHRS/LAHRS AF ablation consensus. Filed in AUDIT-333.",
+      "aliases": []
     },
     {
       "sourceId": "2024-svs-avf-clinical-practice-guidelines-for-varicose-veins",
@@ -1604,7 +1861,31 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: '2024 SVS/AVF Clinical Practice Guidelines for Varicose Veins'. SHAPE 6 - SERIES SLIDE. The SVS/AVF/AVLS varicose-vein guidelines are **2022 Part I** (PMID 36326210, duplex scanning and superficial truncal reflux) and **2023 Part II** (PMID 37652254). There is NO 2024 edition. The cited year sits one step past the end of the series."
+      "bindingNote": "AUTHORED STRING: '2024 SVS/AVF Clinical Practice Guidelines for Varicose Veins'. SHAPE 6 - SERIES SLIDE. The SVS/AVF/AVLS varicose-vein guidelines are **2022 Part I** (PMID 36326210, duplex scanning and superficial truncal reflux) and **2023 Part II** (PMID 37652254). There is NO 2024 edition. The cited year sits one step past the end of the series.",
+      "aliases": []
+    },
+    {
+      "sourceId": "acc-tvt-registry",
+      "society": "ACC/STS",
+      "title": "ACC/STS Transcatheter Valve Therapy (TVT) Registry",
+      "publicationYear": null,
+      "docType": "registry-standard",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": "continuous",
+      "externalPointer": "https://www.ncdr.com/WebNCDR/tvt",
+      "verifiedVia": "society-publication-page",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Registry rather than a guideline; docType registry-standard per operator ruling. Continuous edition cycle - the registry's data standards and reporting are revised on an ongoing basis; pin to the version the rule relies on at M2.",
+      "aliases": [
+        "ACC TVT Registry"
+      ]
     },
     {
       "sourceId": "ada-standards-of-care-2024",
@@ -1624,7 +1905,80 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 4,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "ADA Standards of Care"
+      ]
+    },
+    {
+      "sourceId": "aha-2019-minoca-scientific-statement",
+      "society": "AHA",
+      "title": "Contemporary Diagnosis and Management of Patients With Myocardial Infarction in the Absence of Obstructive Coronary Artery Disease (MINOCA)",
+      "publicationYear": 2019,
+      "docType": "scientific-statement",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": "10.1161/CIR.0000000000000670",
+      "verifiedVia": "doi",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Rule (gapRuleEngine.ts:13314) asserts cardiac MRI and vasospasm provocation testing for MINOCA. Circulation 2019, PMID 30913893.",
+      "aliases": [
+        "AHA MINOCA Scientific Statement"
+      ]
+    },
+    {
+      "sourceId": "aha-2021-obstructive-sleep-apnea-and-cvd",
+      "society": "AHA",
+      "title": "Obstructive Sleep Apnea and Cardiovascular Disease: A Scientific Statement From the American Heart Association",
+      "publicationYear": 2021,
+      "docType": "scientific-statement",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": "10.1161/CIR.0000000000000988",
+      "verifiedVia": "doi",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Rule (:13766) asserts polysomnography or home sleep testing in the obese CAD patient. Circulation 2021-06-21.",
+      "aliases": [
+        "AHA Sleep Apnea and CVD Scientific Statement",
+        "AHA Sleep Apnea and CVD Statement"
+      ]
+    },
+    {
+      "sourceId": "aha-asa-2016-palliative-care-cardiovascular-disease-and-stroke",
+      "society": "AHA/ASA",
+      "title": "Palliative Care and Cardiovascular Disease and Stroke: A Policy Statement From the AHA/ASA",
+      "publicationYear": 2016,
+      "docType": "scientific-statement",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": "10.1161/CIR.0000000000000438",
+      "verifiedVia": "doi",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Circulation 2016;134:e198-e225, PMID 27503067.",
+      "aliases": [
+        "AHA Palliative Care Scientific Statement"
+      ]
     },
     {
       "sourceId": "ambition",
@@ -1644,7 +1998,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "bbest-trial",
@@ -1664,7 +2019,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "cast-nejm-1991",
@@ -1684,7 +2040,33 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "CAST"
+      ]
+    },
+    {
+      "sourceId": "cdc-acip-immunization-schedules",
+      "society": "CDC/ACIP",
+      "title": "CDC/ACIP Immunization Schedules and Recommendations",
+      "publicationYear": null,
+      "docType": "registry-standard",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": "periodic",
+      "externalPointer": "https://www.cdc.gov/vaccines/hcp/imz-schedules/",
+      "verifiedVia": "society-publication-page",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Rule relies on immunization recommendations (influenza/pneumococcal in cardiovascular disease). EDITION-CYCLE PERIODIC per operator ruling - ACIP schedules are revised at least annually; pin to the relied-upon schedule year at M2.",
+      "aliases": [
+        "CDC Immunization Guidelines"
+      ]
     },
     {
       "sourceId": "chest-1-riociguat",
@@ -1704,7 +2086,34 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "CHEST-1"
+      ]
+    },
+    {
+      "sourceId": "covadis-2018-microvascular-angina-criteria",
+      "society": "COVADIS",
+      "title": "International standardization of diagnostic criteria for microvascular angina (Coronary Vasomotion Disorders International Study Group)",
+      "publicationYear": 2018,
+      "docType": "consensus",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": "covadis-criteria",
+      "seriesScope": "microvascular angina",
+      "editionCycle": null,
+      "externalPointer": "10.1016/j.ijcard.2017.08.068",
+      "verifiedVia": "doi",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Rule (:13445) asserts coronary microvascular function assessment (CFR/IMR). COVADIS issues TWO criteria sets - vasospastic angina (2017, Eur Heart J 38:2565) and MICROVASCULAR angina (2018). The rule's CFR/IMR assertion is the MICROVASCULAR set; the corpus separately carries JCS 2013 for vasospastic angina. Series-scope discriminated by rule-assertion.",
+      "aliases": [
+        "COVADIS Criteria",
+        "COVADIS criteria"
+      ]
     },
     {
       "sourceId": "danish-nejm-2016",
@@ -1724,7 +2133,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "DANISH trial (NEJM 2016)"
+      ]
     },
     {
       "sourceId": "dapa-hf-emperor-reduced",
@@ -1744,7 +2156,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "dig-trial-post-hoc",
@@ -1764,7 +2177,196 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "DIG trial post-hoc analysis"
+      ]
+    },
+    {
+      "sourceId": "enets-2022-carcinoid-syndrome-and-carcinoid-heart-disease",
+      "society": "ENETS",
+      "title": "European Neuroendocrine Tumor Society 2022 Guidance Paper for Carcinoid Syndrome and Carcinoid Heart Disease",
+      "publicationYear": 2022,
+      "docType": "consensus",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": "10.1111/jne.13146",
+      "verifiedVia": "doi",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Rule (:16214) asserts echocardiographic surveillance and 5-HIAA monitoring for carcinoid heart disease. PMID 35613326.",
+      "aliases": [
+        "ENETS",
+        "ENETS Consensus Guidelines on Carcinoid Heart Disease"
+      ]
+    },
+    {
+      "sourceId": "esc-hfa-2019-peripartum-cardiomyopathy-position-statement",
+      "society": "ESC/HFA",
+      "title": "Pathophysiology, diagnosis and management of peripartum cardiomyopathy: a position statement from the HFA of the ESC Study Group on PPCM",
+      "publicationYear": 2019,
+      "docType": "scientific-statement",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": "10.1002/ejhf.1493",
+      "verifiedVia": "doi",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Rule (:9679) asserts peripartum cardiomyopathy evaluation. Eur J Heart Fail 2019, PMID 31243866.",
+      "aliases": [
+        "ESC PPCM Position Statement",
+        "ESC Position Statement on PPCM"
+      ]
+    },
+    {
+      "sourceId": "family-acc-aha-cardiac-masses-consensus",
+      "society": "ACC/AHA",
+      "title": "ACC/AHA cardiac-masses consensus (not identified)",
+      "publicationYear": null,
+      "docType": "guideline",
+      "status": "no-source-exists",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": null,
+      "verifiedVia": "operator-attestation",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "NO_SOURCE_EXISTS. Rule asserts surgical referral for benign cardiac neoplasm (atrial myxoma). No ACC/AHA cardiac-masses consensus was identified. The paired clause 'standard surgical management of atrial myxoma' is a genuine sourceAnnotation. NEEDS OPERATOR RESOLUTION.",
+      "aliases": [
+        "ACC/AHA cardiac-masses consensus"
+      ]
+    },
+    {
+      "sourceId": "family-aha-acc-secondary-prevention-recommendations",
+      "society": "AHA/ACC",
+      "title": "AHA/ACC Secondary Prevention Recommendations (family string - no instalment named)",
+      "publicationYear": null,
+      "docType": "guideline",
+      "status": "no-source-exists",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": null,
+      "verifiedVia": "operator-attestation",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "FAMILY STRING, NO_SOURCE_EXISTS per operator ruling. Rule asserts a comprehensive secondary-prevention bundle review for CAD. The nearest real documents are the 2011 AHA/ACC Secondary Prevention and Risk Reduction Therapy guideline and the 2023 Chronic Coronary Disease guideline, which the corpus already carries. Not resolved by rule-assertion; NEEDS RESOLUTION at M2.",
+      "aliases": [
+        "AHA/ACC Secondary Prevention Recommendations"
+      ]
+    },
+    {
+      "sourceId": "family-aha-cvd-in-women-scientific-statement",
+      "society": "AHA",
+      "title": "AHA Cardiovascular Disease in Women Scientific Statement (not identified)",
+      "publicationYear": null,
+      "docType": "guideline",
+      "status": "no-source-exists",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": null,
+      "verifiedVia": "operator-attestation",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "NO_SOURCE_EXISTS. No single AHA scientific statement of this name identified; AHA publishes several women-and-CVD statements across years. NEEDS OPERATOR RESOLUTION.",
+      "aliases": [
+        "AHA Cardiovascular Disease in Women Scientific Statement"
+      ]
+    },
+    {
+      "sourceId": "family-aha-venous-disease-scientific-statement",
+      "society": "AHA",
+      "title": "AHA Venous Disease Scientific Statement (not identified)",
+      "publicationYear": null,
+      "docType": "guideline",
+      "status": "no-source-exists",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": null,
+      "verifiedVia": "operator-attestation",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "NO_SOURCE_EXISTS. Rule asserts compression-therapy assessment in venous disease with edema. No AHA venous disease scientific statement was identified against society or PubMed sources. The corpus separately carries the ESVS 2022 chronic venous disease guideline, which DOES support compression therapy and is the likely rebind. NEEDS OPERATOR RESOLUTION - a rebind is a clinical-content call per section 19.3(b).",
+      "aliases": [
+        "AHA Venous Disease Scientific Statement"
+      ]
+    },
+    {
+      "sourceId": "family-ase-structural-heart-imaging-guideline",
+      "society": "ASE",
+      "title": "ASE Structural Heart Imaging Guideline (family string - instalment not named)",
+      "publicationYear": null,
+      "docType": "guideline",
+      "status": "no-source-exists",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": null,
+      "verifiedVia": "operator-attestation",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "NO_SOURCE_EXISTS as cited. Rule asserts 3D echocardiography for structural intervention planning. ASE publishes interventional-echocardiography guidance for structural heart disease, but the cited string names no instalment or year and no single document was confirmed. NEEDS OPERATOR RESOLUTION at M2.",
+      "aliases": [
+        "ASE Structural Heart Imaging Guideline"
+      ]
+    },
+    {
+      "sourceId": "family-svs-practice-guidelines",
+      "society": "SVS",
+      "title": "SVS Practice Guidelines (family string - no instalment named)",
+      "publicationYear": null,
+      "docType": "guideline",
+      "status": "no-source-exists",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": null,
+      "verifiedVia": "operator-attestation",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "FAMILY STRING, NO_SOURCE_EXISTS per operator ruling. Rule asserts interval duplex surveillance for a peripheral bypass graft. 'SVS Practice Guidelines' names a FAMILY, not an instalment, and the corpus separately carries three specific SVS documents. A family entry is forbidden by ruling, and rule-assertion does not pick one instalment: duplex graft surveillance appears across several. NEEDS OPERATOR OR CLINICAL RESOLUTION at M2 to a specific SVS document, or the rule is re-cited.",
+      "aliases": [
+        "SVS Practice Guidelines"
+      ]
     },
     {
       "sourceId": "fda-approval-fix-hf-5c-abraham-et-al",
@@ -1784,7 +2386,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "FDA approval (FIX-HF-5C)"
+      ]
     },
     {
       "sourceId": "fda-approved-for-ckd-t2dm",
@@ -1804,7 +2409,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "fda-dapagliflozin-empagliflozin-labels",
@@ -1824,7 +2430,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "fda-dopamine-agonist-labeling",
@@ -1844,7 +2451,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "fda-label-for-kerendia",
@@ -1864,7 +2472,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "fda-metformin-label",
@@ -1884,7 +2493,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "fda-pregnancy-labeling",
@@ -1904,7 +2514,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "fda-rems-program-for-dofetilide-tikosyn",
@@ -1924,7 +2535,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "DISCREPANT",
-      "bindingNote": "AUTHORED STRING: 'FDA REMS Program for Dofetilide (Tikosyn)'. **LABEL-SUPERSEDED - THE CITED REGULATORY PROGRAM NO LONGER EXISTS.** The FDA ELIMINATED the Tikosyn (dofetilide) REMS in **March 2016**, having determined the risk-benefit balance no longer required it. The rule asserts 'Dofetilide REMS monitoring recommended for review', so it cites a WITHDRAWN program as its basis. IMPORTANT DISTINCTION, because this is not a clinical error: the underlying SAFETY CONTENT survives in the current label as a boxed warning plus mandatory in-hospital initiation with QTc and CrCl-based dosing. The rule's clinical substance is sound; its CITATION is void. This is the label analogue of SUPERSEDED and the first instance of a NEW verdict class - a live citation to a retired regulatory instrument, which no year check, society check, title check or pairing check can detect because every token in the string was correct when written."
+      "bindingNote": "AUTHORED STRING: 'FDA REMS Program for Dofetilide (Tikosyn)'. **LABEL-SUPERSEDED - THE CITED REGULATORY PROGRAM NO LONGER EXISTS.** The FDA ELIMINATED the Tikosyn (dofetilide) REMS in **March 2016**, having determined the risk-benefit balance no longer required it. The rule asserts 'Dofetilide REMS monitoring recommended for review', so it cites a WITHDRAWN program as its basis. IMPORTANT DISTINCTION, because this is not a clinical error: the underlying SAFETY CONTENT survives in the current label as a boxed warning plus mandatory in-hospital initiation with QTc and CrCl-based dosing. The rule's clinical substance is sound; its CITATION is void. This is the label analogue of SUPERSEDED and the first instance of a NEW verdict class - a live citation to a retired regulatory instrument, which no year check, society check, title check or pairing check can detect because every token in the string was correct when written.",
+      "aliases": []
     },
     {
       "sourceId": "fda-sglt2i-labels",
@@ -1944,7 +2556,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "fidelio-dkd-figaro-dkd-trials",
@@ -1964,7 +2577,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "FIDELIO-DKD / FIGARO-DKD Trials"
+      ]
     },
     {
       "sourceId": "finearts-hf-solomon-et-al-nejm-2024",
@@ -1984,7 +2600,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "FINEARTS-HF (Solomon et al., NEJM 2024) - finerenone in LVEF>=40% HF"
+      ]
     },
     {
       "sourceId": "giacta-nejm-2017",
@@ -2004,7 +2623,32 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
+    },
+    {
+      "sourceId": "gvg-2019-chronic-limb-threatening-ischemia",
+      "society": "SVS/ESVS/WFVS",
+      "title": "Global Vascular Guidelines on the Management of Chronic Limb-Threatening Ischemia",
+      "publicationYear": 2019,
+      "docType": "guideline",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": "10.1016/j.jvs.2019.02.016",
+      "verifiedVia": "doi",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Rule asserts surgical bypass evaluation for CLTI. J Vasc Surg 2019;69(6S):3S-125S.",
+      "aliases": [
+        "GVG CLI",
+        "GVG CLI Guidelines"
+      ]
     },
     {
       "sourceId": "hope-trial",
@@ -2024,7 +2668,56 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
+    },
+    {
+      "sourceId": "ifu-septal-occluder-closure-devices",
+      "society": "Abbott (Amplatzer) / device manufacturers",
+      "title": "Septal/PFO Occluder Closure Devices - Instructions for Use",
+      "publicationYear": null,
+      "docType": "device-ifu",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": "continuous",
+      "externalPointer": "https://www.cardiovascular.abbott/us/en/hcp/products/structural-heart/structural-interventions/amplatzer-pfo-occluder.html",
+      "verifiedVia": "manufacturer-ifu-page",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "docType device-ifu per operator ruling. Bound rules concern post-closure antithrombotic and follow-up for PFO/ASD closure devices, so the generic strings alias here.",
+      "aliases": [
+        "closure-device IFUs",
+        "closure-device Instructions for Use"
+      ]
+    },
+    {
+      "sourceId": "ifu-watchman-laa-closure-device",
+      "society": "Boston Scientific",
+      "title": "WATCHMAN Left Atrial Appendage Closure Device - Instructions for Use",
+      "publicationYear": null,
+      "docType": "device-ifu",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": "continuous",
+      "externalPointer": "https://www.watchman.com/content/dam/watchman/downloads/dtr/watchman-matters-resources/WATCHMAN_Device_DFU_US.pdf",
+      "verifiedVia": "manufacturer-ifu-page",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "docType device-ifu per operator ruling: manufacturer as society, year null, editionCycle continuous. Rule (:6517) asserts the post-LAAC antithrombotic regimen per device IFU; rule (WATCHMAN follow-up) asserts post-implant device follow-up. The GENERIC string 'device IFU' aliases HERE because the bound rule concerns LAA closure, per the operator ruling that generic IFU strings alias to the specific device the rule concerns.",
+      "aliases": [
+        "WATCHMAN post-implant protocol",
+        "device IFU"
+      ]
     },
     {
       "sourceId": "invictus",
@@ -2044,7 +2737,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "INVICTUS trial"
+      ]
     },
     {
       "sourceId": "ishlt-2010-guideline-on-cardiac-allograft-vasculopathy",
@@ -2064,7 +2760,34 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": "RESOLVED BY RULE-ASSERTION. Rule (:13464) asserts ANNUAL CAV SURVEILLANCE in heart transplant recipients (Z94.1). That is the 2010 ISHLT Guidelines for the CARE OF HEART TRANSPLANT RECIPIENTS (Task Force 3), NOT the ISHLT CAV nomenclature working formulation, which defines CAV0-CAV3 grading rather than surveillance cadence. Ambiguity closed."
+      "bindingNote": "RESOLVED BY RULE-ASSERTION. Rule (:13464) asserts ANNUAL CAV SURVEILLANCE in heart transplant recipients (Z94.1). That is the 2010 ISHLT Guidelines for the CARE OF HEART TRANSPLANT RECIPIENTS (Task Force 3), NOT the ISHLT CAV nomenclature working formulation, which defines CAV0-CAV3 grading rather than surveillance cadence. Ambiguity closed.",
+      "aliases": [
+        "ISHLT Heart Transplant guidelines (CAV surveillance)",
+        "ISHLT Heart Transplant guidelines (rejection surveillance)"
+      ]
+    },
+    {
+      "sourceId": "ishlt-2016-listing-criteria-heart-transplantation",
+      "society": "ISHLT",
+      "title": "The 2016 ISHLT Listing Criteria for Heart Transplantation: A 10-Year Update",
+      "publicationYear": 2016,
+      "docType": "guideline",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": "ishlt-listing",
+      "seriesScope": "heart transplant candidacy",
+      "editionCycle": null,
+      "externalPointer": "https://pubmed.ncbi.nlm.nih.gov/26776864/",
+      "verifiedVia": "pubmed-record",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Rule asserts cardiac transplant evaluation referral. J Heart Lung Transplant 2016.",
+      "aliases": [
+        "ISHLT Listing Criteria"
+      ]
     },
     {
       "sourceId": "jcs-2013-vasospastic-angina-guideline",
@@ -2084,7 +2807,55 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
+    },
+    {
+      "sourceId": "kdigo-2024-ckd-evaluation-and-management",
+      "society": "KDIGO",
+      "title": "KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease",
+      "publicationYear": 2024,
+      "docType": "guideline",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": "kdigo-ckd",
+      "seriesScope": "CKD evaluation and management",
+      "editionCycle": null,
+      "externalPointer": "https://pubmed.ncbi.nlm.nih.gov/38490803/",
+      "verifiedVia": "pubmed-record",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Rule asserts heart-failure screening in advanced CKD (cardiorenal type 4). Kidney Int 2024; updates KDIGO 2012.",
+      "aliases": [
+        "KDIGO CKD Guideline"
+      ]
+    },
+    {
+      "sourceId": "olin-2000-thromboangiitis-obliterans",
+      "society": "NEJM",
+      "title": "Thromboangiitis Obliterans (Buerger's Disease), Olin JW, N Engl J Med 2000",
+      "publicationYear": 2000,
+      "docType": "study",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": "10.1056/NEJM200009213431207",
+      "verifiedVia": "doi",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Rule (:17362) asserts intensive tobacco cessation in Buerger disease with continued tobacco use. The Olin diagnostic criteria are this paper. docType study per the 8b.8 amendment.",
+      "aliases": [
+        "thromboangiitis obliterans evidence",
+        "thromboangiitis obliterans evidence (Olin)"
+      ]
     },
     {
       "sourceId": "pa-pressure-sensor-2b-basis-per-guide-hf-champion-supporting-telemonitor",
@@ -2104,7 +2875,10 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "PA-pressure-sensor 2b basis per GUIDE-HF/CHAMPION, supporting telemonitoring trial TIM-HF2"
+      ]
     },
     {
       "sourceId": "popular-tavi",
@@ -2124,7 +2898,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "rales-emphasis-hf",
@@ -2144,7 +2919,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "respect-close-reduce",
@@ -2164,7 +2940,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "rhapsody-trial-rilonacept-nejm-2021",
@@ -2184,7 +2961,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "sammpris-nejm-2011",
@@ -2204,7 +2982,32 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
+    },
+    {
+      "sourceId": "scai-2022-shock-stage-classification-update",
+      "society": "SCAI",
+      "title": "SCAI SHOCK Stage Classification Expert Consensus Update: A Review and Incorporation of Validation Studies",
+      "publicationYear": 2022,
+      "docType": "consensus",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": "scai-shock",
+      "seriesScope": "cardiogenic shock staging",
+      "editionCycle": null,
+      "externalPointer": "10.1016/j.jacc.2022.01.018",
+      "verifiedVia": "doi",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Rule asserts mechanical circulatory support in inotrope-refractory cardiogenic shock. Updates the original 2019 SCAI SHOCK classification.",
+      "aliases": [
+        "SCAI Cardiogenic Shock Classification",
+        "SCAI shock"
+      ]
     },
     {
       "sourceId": "serve-hf-trial",
@@ -2224,7 +3027,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "stellar-sotatercept-nejm-2023",
@@ -2244,7 +3048,33 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "STELLAR (NEJM 2023)"
+      ]
+    },
+    {
+      "sourceId": "svs-2016-thoracic-outlet-syndrome-reporting-standards",
+      "society": "SVS",
+      "title": "Reporting Standards of the Society for Vascular Surgery for Thoracic Outlet Syndrome",
+      "publicationYear": 2016,
+      "docType": "registry-standard",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": "10.1016/j.jvs.2016.04.039",
+      "verifiedVia": "doi",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Rule asserts thoracic outlet syndrome evaluation in a young patient with upper-extremity vascular symptoms. J Vasc Surg 2016-09; first-ever TOS reporting standards.",
+      "aliases": [
+        "SVS Reporting Standards for Thoracic Outlet Syndrome"
+      ]
     },
     {
       "sourceId": "systematic-review-dinicolantonio-2013",
@@ -2264,7 +3094,77 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
+    },
+    {
+      "sourceId": "trial-fourier",
+      "society": "trial-consortium",
+      "title": "FOURIER - evolocumab in established atherosclerotic cardiovascular disease",
+      "publicationYear": 2017,
+      "docType": "trial",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": "https://clinicaltrials.gov/study/NCT01764633",
+      "verifiedVia": "registry-record",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Rule asserts lipid intensification when LDL is not at goal on a statin. NEJM 2017, 10.1056/NEJMoa1615664. Rule-assertion CHECKED: FOURIER is the evolocumab outcomes trial supporting non-statin intensification.",
+      "aliases": [
+        "FOURIER"
+      ]
+    },
+    {
+      "sourceId": "trial-odyssey-outcomes",
+      "society": "trial-consortium",
+      "title": "ODYSSEY OUTCOMES - alirocumab after acute coronary syndrome",
+      "publicationYear": 2018,
+      "docType": "trial",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": "https://clinicaltrials.gov/study/NCT01663402",
+      "verifiedVia": "registry-record",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Rule asserts lipid intensification when LDL is not at goal on a statin. NEJM 2018, 10.1056/NEJMoa1801174.",
+      "aliases": [
+        "ODYSSEY OUTCOMES"
+      ]
+    },
+    {
+      "sourceId": "trial-tico",
+      "society": "trial-consortium",
+      "title": "TICO - ticagrelor monotherapy after 3-month DAPT in acute coronary syndrome",
+      "publicationYear": 2020,
+      "docType": "trial",
+      "status": "current",
+      "successorId": null,
+      "supersedeReason": null,
+      "seriesId": null,
+      "seriesScope": null,
+      "editionCycle": null,
+      "externalPointer": "https://pubmed.ncbi.nlm.nih.gov/32543684/",
+      "verifiedVia": "pubmed-record",
+      "addedDate": "2026-08-22",
+      "addedBy": "M2 Phase 1b ledger completion",
+      "rowsBound": null,
+      "adjudicationVerdict": "CONFIRMED",
+      "bindingNote": "Rule (:11919) asserts evaluating ticagrelor monotherapy with aspirin discontinuation per TWILIGHT/TICO. JAMA 2020.",
+      "aliases": [
+        "TICO"
+      ]
     },
     {
       "sourceId": "triluminate-clasp-tr",
@@ -2284,7 +3184,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 1,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "triscend-ii",
@@ -2304,7 +3205,8 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": []
     },
     {
       "sourceId": "vest-nejm-2018",
@@ -2324,7 +3226,28 @@
       "addedBy": "M1 Phase 3 Step 2B ledger authoring",
       "rowsBound": 2,
       "adjudicationVerdict": "CONFIRMED",
-      "bindingNote": null
+      "bindingNote": null,
+      "aliases": [
+        "VEST trial (NEJM 2018)"
+      ]
+    }
+  ],
+  "schemaNote": "Each entry carries `aliases`: the authored citation strings that resolve to it. Aliases PARTITION - no string may appear on two entries - because a string that resolved two ways would make binding ambiguous, which is the failure the ledger exists to remove.",
+  "sourceAnnotations": [
+    {
+      "clause": "cardiorenal syndrome consensus",
+      "clauseRefs": 2,
+      "reason": "Descriptive phrase naming no society, year or document. Not resolvable to a publication; the paired clause (KDIGO CKD Guideline) carries the citable basis."
+    },
+    {
+      "clause": "LVAD GI-bleeding registry data",
+      "clauseRefs": 2,
+      "reason": "Describes a body of registry evidence rather than naming a document. The paired ISHLT MCS clause carries the citable basis."
+    },
+    {
+      "clause": "standard surgical management of atrial myxoma",
+      "clauseRefs": 2,
+      "reason": "Describes accepted practice rather than naming a document. Genuine annotation."
     }
   ]
 }
